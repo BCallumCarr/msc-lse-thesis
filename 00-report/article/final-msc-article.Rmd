@@ -1,0 +1,169 @@
+---
+title: "Department of Statistics 2019: Mapping Inequalities Online Using GitHub Data"
+author: "Candidate Number: 10140"
+date: ""
+bibliography: tex/ref.bib       # Do not edit: Keep this naming convention and location
+# When you want to include more references you will need to update your ref.bib file
+csl: tex/harvard-cite-them-right.csl        # You can update this to suit the style of your referencing
+toc: yes        # Table of contents
+lot: yes        # List of tables
+lof: yes        # List of figures
+numbersections: yes             # Should sections (and thus figures and tables) be numbered?
+fontsize: 11pt                  # Set fontsize
+linestretch: 1.5                # Set distance between lines.
+output:
+  pdf_document:
+    keep_tex: TRUE
+    template: tex/tex-default.txt        # Default tex file where you can do some niggly work
+    fig_width: 3.5        # Adjust default figure sizes. This can also be done in the chunks of the text.
+    fig_height: 3.5
+documentclass: "article"
+BottomCFooter: "\\footnotesize \\thepage\\"       # Add a '#' before this line to remove footer.
+header-includes:        # Here you can include with extra packages
+- \usepackage{amsmath}
+- \usepackage{graphicx}
+- \usepackage{pdflscape}
+- \usepackage[bottom]{footmisc}
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE)
+# Note: Include false implies the code is executed, but not printed in your pdf.
+```
+\renewcommand{\vec}[1]{\mathbf{#1}}
+
+
+<!-- SUMMARY: 300 WORDS -->
+
+<!-- INTRODUCTION: Aims of the study and a brief outline of the main sections of the dissertation -->
+
+# Introduction \label{Intro}
+
+
+
+<!-- MAIN SECTIONS: Review of the literature, description of methods used and the results of the study -->
+
+
+\newpage
+
+# Brief Literature Review \label{Lit}
+
+## A Summary of the Research
+
+@Brinton2014
+
+@Stadtfeld2019
+
+@Currarini2010
+
+
+
+\newpage
+
+# Datasets I Have Found \label{Data} 
+
+
+
+
+\newpage
+
+# Empirical Methodology \label{Meth} 
+
+## Empirical Model \label{Model} 
+
+This is an equation:
+
+\begin{align} \label{eq:EP1}
+A_{it}=f(T_i^{(t)},S_i^{(t)},P_i^{(t)},B_i^{(t)},I_i),
+\end{align}
+
+
+
+\footnotesize
+\renewcommand{\thetable}{\arabic{table}}
+
+\begin{longtable} {@{} l r r c r @{}} \caption{\textbf{Learner achievement (\%)}}
+\label{tab:Dep}\\ \hline \hline
+Subject & Mean & Q1 & Median & Q3 \\
+\hline
+Maths&      27& 15&   23&  35\\ \hline \hline
+\end{longtable}
+\begin{center} Source: Own calculations in Stata using 2004 Grade 6 Intermediate Phase Systemic Evaluation.\end{center}
+\normalsize
+
+
+
+\setcounter{figure}{0}
+\renewcommand{\thefigure}{\arabic{figure}}
+
+\begin{figure}
+\caption{\textbf{\footnotesize Cumulative graph for subject scores}}
+\label{fig:1}
+```{r echo=FALSE, out.width='40%', fig.align='center'}
+knitr::include_graphics("./results/graphs/figure.png")
+```
+\centering
+{\footnotesize Source: Own calculations in Stata using 2004 Grade 6 Intermediate Phase Systemic Evaluation.}
+\end{figure}
+\normalsize
+
+Again, you can reference the figure in-text: figure \ref{fig:1} is a figure and it displays etc. etc. etc.
+
+This is an organic figure generated with an R chunk that is executed when the document is knitted (the image is also saved in the folder `final-article-template_files`):
+
+```{r echo=FALSE, out.width='40%', fig.align='center'}
+x <- c(1, 2, 6, 8)
+plot(x)
+```
+
+Regarding R chunks: If you want a chunk's code to be printed, include set `echo = TRUE`. `message = FALSE` stops R printing package loading details and setting `warning = FALSE` should suppress most warnings.
+
+
+
+<!-- CONCLUSION: Conclusions that can be drawn from your work, possible extensions and further work -->
+
+\newpage
+
+# Recommendations for Further Research \label{Recom}
+
+
+\newpage
+
+# Concluding Remarks \label{Concl}
+
+
+
+
+
+
+
+<!-- BIBLIOGRAPHY -->
+
+\newpage
+
+# References
+
+
+<!-- APPENDICES: Not encouraged
+
+\newpage
+
+# Appendix {.unnumbered}
+
+\setcounter{table}{0}
+\renewcommand{\thetable}{A\arabic{table}}
+
+A table in the Appendix:
+
+\begin{longtable}[htbp] {@{} l r r r r r @{}} \caption{
+\textbf{Summary statistics of model variables}} \label{tab:Desc}  \\ \hline\hline
+                \textbf{Variable } & \textbf{Mean} & \textbf{S.D.} & \textbf{Min} & \textbf{Max} & \textbf{N}\\
+\hline
+\bf{\emph{Educational Outcomes}} & & & & \\
+   Maths Score (\%)  &   27.58797 &   17.82077 &          0 &        100 &     102048 \\
+   Science Score (\%) &   41.04531 &   18.54542 &          0 &   95.83334 &     102045 \\
+   English Score (\%) &   38.49276 &    24.3848 &          0 &        100 &     102048 \\
+\hline \hline
+\multicolumn{5}{@{}l}{Source: Own calculations in Stata using 2004 Grade 6 Intermediate Phase Systemic Evaluation.}
+\end{longtable}
+
+ -->
