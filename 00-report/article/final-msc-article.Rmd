@@ -1,5 +1,5 @@
 ---
-title: "Department of Statistics 2019: Mapping Inequalities Online Using GitHub Data"
+title: "Department of Statistics 2019: Mapping Inequalities Online Using Data"
 author: "Candidate Number: 10140"
 date: ""
 bibliography: tex/ref.bib       # Do not edit: Keep this naming convention and location
@@ -14,29 +14,35 @@ linestretch: 1.5                # Set distance between lines.
 output:
   pdf_document:
     keep_tex: TRUE
-    template: tex/tex-default.txt        # Default tex file where you can do some niggly work
+    template: tex/tex-default.tex        # Default tex file where you can do some niggly work
     fig_width: 3.5        # Adjust default figure sizes. This can also be done in the chunks of the text.
     fig_height: 3.5
 documentclass: "article"
 BottomCFooter: "\\footnotesize \\thepage\\"       # Add a '#' before this line to remove footer.
 header-includes:        # Here you can include with extra packages
-- \usepackage{amsmath}
-- \usepackage{graphicx}
-- \usepackage{pdflscape}
-- \usepackage[bottom]{footmisc}
 ---
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, message = FALSE)
-# Note: Include false implies the code is executed, but not printed in your pdf.
+# Note: Include = false implies code is executed but not printed in pdf
 ```
 \renewcommand{\vec}[1]{\mathbf{#1}}
-
+\newgeometry{left=3.5cm, right=2cm, top=20mm,bottom=4cm,top=2.5cm}
 
 <!-- SUMMARY: 300 WORDS -->
 
 <!-- INTRODUCTION: Aims of the study and a brief outline of the main sections of the dissertation -->
 
 # Introduction \label{Intro}
+
+Aims: 
+
+1. Literature review on natural language processing for GH/SE data and information retrieval
+
+2. Exploratory and descriptive analysis of small dataset
+
+3. Explore small dataset and employ ML methods to get predict quality of question/commit
+
+4. 
 
 
 
@@ -48,6 +54,8 @@ knitr::opts_chunk$set(echo = FALSE, message = FALSE)
 # Brief Literature Review \label{Lit}
 
 ## A Summary of the Research
+
+
 
 @Brinton2014
 

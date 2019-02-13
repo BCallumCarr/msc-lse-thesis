@@ -49,7 +49,7 @@
 \bibliographystyle{natbib}
 \def\bibsection{\section*{References}} %%% Make "References" appear before bibliography
 \usepackage{longtable}
-\usepackage[margin=2cm,bottom=4cm,top=2.5cm, includefoot]{geometry}
+\usepackage[left=2cm, right=2cm, top=20mm, bottom=4cm, top=2.5cm, includefoot]{geometry}
 \usepackage{fancyhdr}
 \usepackage[bottom, hang, flushmargin]{footmisc}
 \usepackage{graphicx}
@@ -95,7 +95,6 @@
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
 
 %%% Include extra packages specified by user
-\usepackage{amsmath}
 
 %%% Change title format to be more compact
 \usepackage{titling}
@@ -108,8 +107,7 @@
 %}
 
 \setlength{\droptitle}{-1em}
-\title{Department of Statistics 2019: Mapping Inequalities Online Using GitHub
-Data}
+\title{Department of Statistics 2019: Mapping Inequalities Online Using Data}
 \pretitle{\vspace{\droptitle}\centering\huge}
 \posttitle{\par\vskip 0.5em}
 \author{Candidate Number: 10140}
@@ -156,14 +154,11 @@ Data}
 
 \pagenumbering{roman}
 
-
-
 \maketitle
 \thispagestyle{empty}
 
 %\author{Candidate Number: 10140}
 %\date{}
-
 
 %\end{frontmatter}
 
@@ -187,9 +182,25 @@ Data}
 
 \renewcommand{\vec}[1]{\mathbf{#1}}
 
+\newgeometry{left=3.5cm, right=2cm, top=20mm,bottom=4cm,top=2.5cm}
 
 \section{\texorpdfstring{Introduction
 \label{Intro}}{Introduction }}\label{introduction}
+
+Aims:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Literature review on natural language processing for GH/SE data and
+  information retrieval
+\item
+  Exploratory and descriptive analysis of small dataset
+\item
+  Explore small dataset and employ ML methods to get predict quality of
+  question/commit
+\item
+\end{enumerate}
 
 \newpage
 

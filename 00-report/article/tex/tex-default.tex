@@ -1,4 +1,4 @@
-﻿\documentclass[$if(fontsize)$$fontsize$,$endif$$if(lang)$$lang$,$endif$$if(papersize)$$papersize$,$endif$$for(classoption)$$classoption$$sep$,$endfor$preprint, authoryear]{$documentclass$}
+\documentclass[$if(fontsize)$$fontsize$,$endif$$if(lang)$$lang$,$endif$$if(papersize)$$papersize$,$endif$$for(classoption)$$classoption$$sep$,$endfor$preprint, authoryear]{$documentclass$}
 
 \pagestyle{plain}
 
@@ -66,7 +66,7 @@ $endif$
 \bibliographystyle{natbib}
 \def\bibsection{\section*{References}} %%% Make "References" appear before bibliography
 \usepackage{longtable}
-\usepackage[margin=2cm,bottom=4cm,top=2.5cm, includefoot]{geometry}
+\usepackage[left=2cm, right=2cm, top=20mm, bottom=4cm, top=2.5cm, includefoot]{geometry}
 \usepackage{fancyhdr}
 \usepackage[bottom, hang, flushmargin]{footmisc}
 \usepackage{graphicx}
@@ -211,14 +211,11 @@ $endif$
 
 \pagenumbering{roman}
 
-
-
 \maketitle
 \thispagestyle{empty}
 
 %\author{$author$}
 %\date{$date$}
-
 
 %\end{frontmatter}
 
