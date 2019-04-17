@@ -1,119 +1,146 @@
 ### Brad Carruthers ###
 
-### LISTEN BRAD MY BRU. ALL YOU NEED TO DO FOR THIS ASSIGNMENT IS BUILD A WORD EMBEDDINGS SENTIMENT LDA MODEL TO PREDICT ON A CONTINUOUS (OR BINARY) VARIABLE. START REAL SMALL WITH A RANDOM SAMPLE OF QUESTIONS FROM A SMALL DATASET, AND BUILD YOUR MODEL UP FROM THERE. THAT'S IT!
-
 #####################################################################
 ############################# LOAD DATA #############################
 #####################################################################
 
+## choose datasets
+datasets <- c(
+  #"anime",
+  #"boardgames",
+  #"buddhism",
+  #"emacs",
+  #"law",
+  #"networkengineering",
+  #"quant",
+  #"rus",
+  "beer",
+  "opensource"
+)
+
 ## load packages
-packages = c("quanteda", "XML", "tidyr", "dplyr", "topicmodels", "ggplot2", "caret", "quanteda.dictionaries")
+packages = c("quanteda", "XML", "tidyr", "dplyr", "topicmodels", "ggplot2", "caret", "quanteda.dictionaries", "stargazer")
 lapply(packages, require, character.only = TRUE)
 
 ## set random seed
 set.seed(1777)
 
-## point to directory with data
-setwd("/Users/brad/Dropbox/lse-msc/03-lent/qta-my459/final-assignment/data/boardgames.stackexchange.com")
+### LOOP THROUGH ALL DATASETS
+dataset_stats <- list()
+for (k in 1:length(datasets)) {
+  
+  ## point to directory with data
+  cat("\n------------------\n", datasets[k], "\n------------------\n")
+  dir <- paste("/Users/brad/Dropbox/lse-msc/03-lent/qta-my459/final-assignment/data/", datasets[k], ".stackexchange.com/Posts.xml",
+               sep = "")
+  
+  ## parse to list from xml, files larger than 45MB are a pain because they take ages when collecting columns
+  posts_lis <- xmlToList(xmlParse(dir))
+  
+  ## find out names of columns - some rows have extra columns like FavoriteCount and ClosedDate
+  names(posts_lis$row)
+  
+  ## select columns to include in dataset
+  Id <- NULL; PostTypeId <- NULL; Score <- NULL; ViewCount <- NULL; Body <- NULL
+  Title <- NULL; Tags <- NULL; AnswerCount <- NULL; CommentCount <- NULL; FavoriteCount <- NULL;
+  
+  ## choose amount of data to include
+  l <- length(posts_lis)
+  
+  ## collect columns
+  for (i in 1:l) { # for some reason working with length(posts_lis) crashes R
+    # elongate vectors with consecutive entries
+    # remember: these include both answers and questions
+    Id <- as.integer(c(Id, posts_lis[i]$row['Id']))
+    PostTypeId <- as.integer(c(PostTypeId, posts_lis[i]$row['PostTypeId']))
+    Score <- as.integer(c(Score, posts_lis[i]$row['Score']))
+    ViewCount <- as.integer(c(ViewCount, posts_lis[i]$row['ViewCount']))
+    Body <- as.character(c(Body, posts_lis[i]$row['Body']))
+    Title <- as.character(c(Title, posts_lis[i]$row['Title']))
+    Tags <- as.character(c(Tags, posts_lis[i]$row['Tags']))
+    AnswerCount <- as.character(c(AnswerCount, posts_lis[i]$row['AnswerCount']))
+    CommentCount <- as.character(c(CommentCount, posts_lis[i]$row['CommentCount']))
+    # don't include FavoriteCount because of missing values
+  }
+  
+  for (i in 1:length(Body)) {
+    ## get rid of some html ugliness
+    Body[i] <- gsub('\n|<.*?>'," ", Body[i])
+  }
+  
+  ## create dataframe of both questions and answers, PostTypeId = 1 is question, = 2 is answer and convert factor columns
+  sxdf <- as_tibble(data.frame(Id=Id, PostTypeId=PostTypeId, Score=Score, ViewCount=ViewCount, Body=Body, 
+                               Title=as.character(Title), Tags=Tags, AnswerCount=as.integer(AnswerCount), 
+                               CommentCount=as.integer(CommentCount)))
+  
+  ## convert to character
+  sxdf$Body <- as.character(sxdf$Body)
+  sxdf$Title <- as.character(sxdf$Title)
+  
+  ## different question and answer datasets
+  sxdf_q <- sxdf[sxdf["PostTypeId"]==1,]
+  #sxdf_a <- sxdf[sxdf["PostTypeId"]==2,]
+  cat("This forum has", nrow(sxdf_q), "questions\n")
+  
+  ## delete variables not needed
+  rm("Id", "PostTypeId", "Score", "ViewCount", "Body", "Title", "Tags", "AnswerCount", "CommentCount", "FavoriteCount", "sxdf")
+  
+  
+  
+  #####################################################################
+  ######################### BINARY CLASSIFIER #########################
+  #####################################################################
+  
+  ## plot cumulative view counts
+  ggplot(as.data.frame(sxdf_q$ViewCount), aes(sxdf_q$ViewCount)) + 
+    stat_ecdf(geom = "step") + scale_x_continuous(trans='log10') + 
+    labs(x = "ViewCount", y = "Cumulative % of Question Posts")
+  
+  ## find threshold for views
+  thresh <- round(quantile(sxdf_q$ViewCount, .40), -1)
+  
+  ## focus on questions above threshold to address possibility of users that can vote not seeing question
+  temp <- nrow(sxdf_q)
+  sxdf_q <- sxdf_q[sxdf_q$ViewCount > thresh,]
+  temp <- temp - nrow(sxdf_q)
+  cat("Removed", temp, "questions above threshold of", thresh, "views\n")
+  
+  ## create response variable normalised by views
+  sxdf_q$y <- sxdf_q["Score"]/sxdf_q["ViewCount"]
+  cat("The average value of y is", round(mean(sxdf_q$y$Score),3), '\n')
+  cat("Conditioned on positive y the average is", round(mean(sxdf_q$y[sxdf_q$y>0]),3), "\n")
+  
+  ## MUST INCORPORATE INTO FUNCTION
+  ## "best" question based on Score/ViewCount
+  sxdf_q[sxdf_q$y==max(sxdf_q$y),][,c("Score", "ViewCount", "Body", "y")]
+  
+  ## "worst" question based on Score/ViewCount
+  sxdf_q[sxdf_q$y==min(sxdf_q$y),][,c("Score", "ViewCount", "Body", "y")]
+  
+  ## label questions
+  # Ravi et al randomly choose y>0.001 as threshold for quality question? 
+  y_thresh <- round(mean(sxdf_q$y$Score),3)/2 ## CRITICAL STEP
+  sxdf_q$y <- factor(ifelse(sxdf_q$y <= y_thresh, 0, 1), labels=c("bad","good"))
+  cat("With an arbitrarily chosen y threshold of", y_thresh, "there are apparently", sum(sxdf_q$y=="good"), 
+      "good questions, (", round(sum(sxdf_q$y=="good")/nrow(sxdf_q),2)*100, "%)\n\n")
+  
+  
+  
+  #####################################################################
+  ########################### VALIDATION ##############################
+  #####################################################################
+   
+  linguistic_descriptives <- dget("/Users/brad/Dropbox/lse-msc/03-lent/qta-my459/final-assignment/r-code/linguistic_descriptives.R")
+  dataset_stats[[k]] <- data.frame(linguistic_descriptives(sxdf_q))
+  
+  ### END LOOP FOR NOW
+} 
 
-## parse to list from xml, files larger than 45MB are a pain because they take ages when collecting columns
-posts_lis <- xmlToList(xmlParse("Posts.xml"))
-#posts_hist_lis <- xmlToList(xmlParse("PostHistory.xml")) 
-
-## find out names of columns - some rows have extra columns like FavoriteCount and ClosedDate
-names(posts_lis$row)
-
-## select columns to include in dataset
-Id <- NULL; PostTypeId <- NULL; Score <- NULL; ViewCount <- NULL; Body <- NULL
-Title <- NULL; Tags <- NULL; AnswerCount <- NULL; CommentCount <- NULL; FavoriteCount <- NULL;
-
-## choose amount of data to include
-l <- length(posts_lis)
-
-## collect columns
-for (i in 1:l) { # for some reason working with length(posts_lis) crashes R
-  # elongate vectors with consecutive entries
-  # remember: these include both answers and questions
-  Id <- as.integer(c(Id, posts_lis[i]$row['Id']))
-  PostTypeId <- as.integer(c(PostTypeId, posts_lis[i]$row['PostTypeId']))
-  Score <- as.integer(c(Score, posts_lis[i]$row['Score']))
-  ViewCount <- as.integer(c(ViewCount, posts_lis[i]$row['ViewCount']))
-  Body <- as.character(c(Body, posts_lis[i]$row['Body']))
-  Title <- as.character(c(Title, posts_lis[i]$row['Title']))
-  Tags <- as.character(c(Tags, posts_lis[i]$row['Tags']))
-  AnswerCount <- as.character(c(AnswerCount, posts_lis[i]$row['AnswerCount']))
-  CommentCount <- as.character(c(CommentCount, posts_lis[i]$row['CommentCount']))
-  # don't include FavoriteCount because of missing values
-}
-
-for (i in 1:length(Body)) {
-  ## get rid of some html ugliness
-  Body[i] <- gsub('\n|<.*?>'," ", Body[i])
-}
-
-## create dataframe of both questions and answers, PostTypeId = 1 is question, = 2 is answer and convert factor columns
-sxdf <- as_tibble(data.frame(Id=Id, PostTypeId=PostTypeId, Score=Score, ViewCount=ViewCount, Body=Body, 
-                             Title=as.character(Title), Tags=Tags, AnswerCount=as.integer(AnswerCount), 
-                             CommentCount=as.integer(CommentCount)))
-
-## convert to character
-sxdf$Body <- as.character(sxdf$Body)
-sxdf$Title <- as.character(sxdf$Title)
-
-## different question and answer datasets
-sxdf_q <- sxdf[sxdf["PostTypeId"]==1,]
-#sxdf_a <- sxdf[sxdf["PostTypeId"]==2,]
-
-## delete variables not needed
-rm("Id", "PostTypeId", "Score", "ViewCount", "Body", "Title", "Tags", "AnswerCount", "CommentCount", "FavoriteCount", "sxdf")
 
 
 
-#####################################################################
-######################### BINARY CLASSIFIER #########################
-#####################################################################
-
-## plot cumulative view counts
-ggplot(as.data.frame(sxdf_q$ViewCount), aes(sxdf_q$ViewCount)) + 
-  stat_ecdf(geom = "step") + scale_x_continuous(trans='log10') + 
-  labs(x = "ViewCount", y = "Cumulative % of Question Posts")
-
-## find threshold for views
-thresh <- round(quantile(sxdf_q$ViewCount, .40), -1)
-
-## focus on questions above threshold to address possibility of users that can vote not seeing question
-temp <- nrow(sxdf_q)
-sxdf_q <- sxdf_q[sxdf_q$ViewCount > thresh,]
-temp <- temp - nrow(sxdf_q)
-cat("Removed", temp, "questions\n")
-
-## create response variable normalised by views
-sxdf_q$y <- sxdf_q["Score"]/sxdf_q["ViewCount"]
-cat("Average value of y is", round(mean(sxdf_q$y$Score),3), 
-    "and conditioned on positive y it is", round(mean(sxdf_q$y[sxdf_q$y>0]),3), "\n")
-# RAVI: higher y values than SE since less views per post
-
-## "best" question based on Score/ViewCount
-sxdf_q[sxdf_q$Score/sxdf_q$ViewCount==max(sxdf_q$Score/sxdf_q$ViewCount),][,c("Score", "ViewCount", "Body", "y")]
-
-## "worst" question based on Score/ViewCount
-sxdf_q[sxdf_q$Score/sxdf_q$ViewCount==min(sxdf_q$Score/sxdf_q$ViewCount),][,c("Score", "ViewCount", "Body", "y")]
-
-## label questions
-# Ravi et al randomly choose y>0.001 as threshold for quality question? 
-y_thresh <- round(mean(sxdf_q$y$Score),3)/2 ## CRITICAL STEP
-sxdf_q$y <- factor(ifelse(sxdf_q$y <= y_thresh, 0, 1), labels=c("bad","good"))
-cat("There are apparently", sum(sxdf_q$y=="good"), 
-    "good questions, (", round(sum(sxdf_q$y=="good")/nrow(sxdf_q),2)*100, "%)\n")
 
 
-
-#####################################################################
-########################### VALIDATION ##############################
-#####################################################################
-
-linguistic_descriptives <- dget("/Users/brad/Dropbox/lse-msc/03-lent/qta-my459/final-assignment/r-code/linguistic_descriptives.R")
-linguistic_descriptives(sxdf_q)
 
 
 
@@ -235,8 +262,8 @@ target <- sxdf_q$y_bin
 ## VIEW AND ANSWER COUNT MODEL
 
 log_reg_vc <- glm(target[in_train] ~ sxdf_q$ViewCount[in_train] + sxdf_q$AnswerCount[in_train],
-              family="binomial"
-              )
+                  family="binomial"
+)
 
 ## predicting labels for test set
 preds <- predict(log_reg_vc, newdata=as.data.frame(X[-in_train,]), type="response")
@@ -280,17 +307,17 @@ classif_metrics(cm, reverse=F)
 ## global topic
 K <- 1
 global_lda <- LDA(dfm_q, k = K, method = "Gibbs", 
-           control = list(verbose=25L, seed = 1777, burnin = 100, iter = 1000))
+                  control = list(verbose=25L, seed = 1777, burnin = 100, iter = 1000))
 
 if (FALSE) {
-## get terms and explore terms of first topic
-terms <- get_terms(lda, 20)
-terms[,1]
-## get topics and explore documents' primary topic
-head(topics)
-## have a look at random question related to a topic
-terms[,1]
-sample(sxdf_q$Body[topics==1], 1)
+  ## get terms and explore terms of first topic
+  terms <- get_terms(lda, 20)
+  terms[,1]
+  ## get topics and explore documents' primary topic
+  head(topics)
+  ## have a look at random question related to a topic
+  terms[,1]
+  sample(sxdf_q$Body[topics==1], 1)
 }
 
 glob_topic <- get_topics(lda, 1)
@@ -308,7 +335,7 @@ ridge <- cv.glmnet(x=X[in_train,], y=target[in_train],
                    family="binomial", alpha=1, nfolds=10, parallel=TRUE, 
                    type.measure ="class",
                    intercept=TRUE
-                   )
+)
 plot(ridge)
 
 ## predicting labels for test set
