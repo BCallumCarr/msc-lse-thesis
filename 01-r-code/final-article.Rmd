@@ -1,0 +1,547 @@
+---
+title: "Validating Classification Methodologies on StackExchange Fora"
+author: "Candidate Number: 10140"
+date: "3 May 2019"
+bibliography: tex/ref.bib       # Do not edit: Keep this naming convention and location
+# When you want to include more references you will need to update your ref.bib file
+csl: tex/harvard-cite-them-right.csl        # You can update this to suit the style of your referencing
+toc: yes        # Table of contents
+lot: yes        # List of tables
+lof: yes        # List of figures
+numbersections: yes             # Should sections (and thus figures and tables) be numbered?
+fontsize: 12pt
+linestretch: 1.25
+output:
+  pdf_document:
+    keep_tex: TRUE
+    template: tex/tex-default.tex        # Default tex file where you can do some niggly work
+    fig_width: 3.5        # Adjust default figure sizes. This can also be done in the chunks of the text.
+    fig_height: 3.5
+documentclass: "article"
+BottomCFooter: "\\footnotesize \\thepage\\"       # Add a '#' before this line to remove footer.
+header-includes:        # Here you can include with extra packages
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE)
+# Note: Include = false implies code is executed but not printed in pdf
+```
+\renewcommand{\vec}[1]{\mathbf{#1}}
+\newgeometry{left=3.5cm, right=2cm, top=20mm,bottom=4cm,top=2.5cm}
+
+<!-- 3000 words. Justify choice of: Texts, question, methodology. -->
+
+# Abstract
+
+Formulating high-quality questions and receiving answers to these questions is a key part of the learning and information gathering processes. Online social networks and fora have given users unprecendented ability to comment on and question the world, and while much attention has been given to delivering answers (just ask Google), relatively little attention has been given to how we can ask better questions. Producing relevant, legible and well-researched questions, often relating to highly-technical concepts, is especially valuable on online social Q&A systems where expert resources can be scarce when compared to the continuous torrent of questions being asked. One way in which to address this issue is to build a model capable of providing some form of question-quality classification which can be used to nudge questioners to improve their questions before they add demand to an operational system. I plan to build on work already done using StackExchange fora data by validating classification methodology. I find that ........... I improve the distinction between high and low quality questions by diversifying the response variable to be a continous PCA on Score, AnswerCount and Answer sentiment. <!--Ideally this model could be extended to any platform where there is some proxy for community-value of questions, resulting in the improvement of "signal" in questions across disciplines and across user demographics.including MOOCs where information overload (too few course-relevant threads/questions) is particularly-->
+
+
+\newpage
+
+
+
+<!-- INTRODUCTION: expanded version of your abstract, which introduces the question, states the rationale for trying to answer it, briefly describes your corpus, identifies the methods you apply to the texts, and summarizes the findings. -->
+
+# Introduction \label{Intro}
+
+The question to be answered is: Can I improve the response variable coding in Ravi et al.
+
+### Goal
+
+The goal of this analysis is to validate the classification methodology of Ravi et al. We will do this by implementing their classification technique and then summarising certain aspects about the data.
+
+I will then implement my own technique (continuous PCA with a threshold) and run the same tests to see if my classification results in questions that are better distinguished.
+
+I will test this over multiple fora.
+
+Main sections are
+
+
+
+\newpage
+
+<!-- MOTIVATION: Why have you chosen to analyze this topic? Is there a compelling social reason? Does it contribute to scholarship? This can include a “literature review” (but don’t overdo it).-->
+
+# Motivation
+
+Information overload is a thing
+
+# Brief Literature Review \label{Lit}
+
+## A Summary of the Research
+
+
+
+
+
+
+
+\newpage
+
+<!-- CORPUS DESCRIPTION: You are free to choose any corpus you wish, of any size, although you must include a justification for the choice of texts and acknowledge the source. You will need to document any format conversions or pre-processing steps you have applied to the texts prior to analysis. You should also present some basic summary statistics about the texts, prior to analysis.-->
+
+<!-- METHODOLOGY: What techniques will you apply to analyze the texts? Is there a precedent (in previous scholarly literature) for applying such methods to texts similar to yours? Defend why the application of the methods is appropriate.-->
+
+# Data and Methodology
+
+The data consists of various online community question-answering fora from multiple StackExchange websites obtained via a public dump of XML files: http://archive.org/download/stackexchange.
+
+I chose to use the 10 largest datasets of which my computer could handle the analysis.
+
+The datasets are listed below and ended up forming a pretty diverse range of areas/disciplines:
+
+"anime"
+"boardgames"
+"buddhism"
+"fitness"
+"french"
+"gardening"
+"health"
+"law"
+"linguistics"
+"outdoors"
+
+Below is a table of the "best" and "worst" questions in each forum according to Ravi et al's metric:
+
+\underline{Best/Worst Questions from Different Fora According to Ravi Metric}
+
+\begin{table}[!htbp] \centering
+  \caption{}
+  \label{}
+\begin{tabular}{@{\extracolsep{5pt}} cccc}
+\\[-1.8ex]\hline
+\hline \\[-1.8ex]
+Score & ViewCount & Title & y_ravi \\
+\hline \\[-1.8ex]
+blurp & blurp & blurp &  blurp \\
+\hline \\[-1.8ex]
+\end{tabular}
+\end{table}
+
+After reading in the data, some initial regular expression work was needed to clean up HTML text still present from the XML files.
+
+The data has the following columns of interest in this analysis: score, viewcount, body, title, answercount and commentcount.
+
+
+
+It should be noted that not everyone who sees a post on SE fora can vote, since you have to be a member of the online community. As was done in Ravi et al to combat the possibility of users that can vote not seeing question
+
+
+
+\newpage
+
+<!-- RESULTS: Apply the methods, present the findings. Be sure to be explicit about any steps taken.
+              What conclusions on the question can we draw from the results?-->
+
+# Results
+
+\setcounter{figure}{0}
+\renewcommand{\thefigure}{\arabic{figure}}
+
+\begin{figure}
+\caption{\textbf{\footnotesize Cumulative graph for question viewcounts}}
+\label{fig:1}
+```{r echo=FALSE, out.width='30%', fig.align='center'}
+knitr::include_graphics("./results/beer-cumul-viewcount.png")
+```
+\centering
+{\footnotesize Source: Own calculations in Stata using 2004 Grade 6 Intermediate Phase Systemic Evaluation.}
+\end{figure}
+\normalsize
+
+Figure \ref{fig:1} plots all the cumulative viewcount graphs for questions in each fora.
+
+
+\begin{figure}
+\caption{\textbf{\footnotesize PCA Percentages}}
+\label{fig:2}
+```{r echo=FALSE, out.width='40%', fig.align='center'}
+knitr::include_graphics("./results/pca-percs-graph.png")
+```
+\centering
+{\footnotesize Source: Own calculations in Stata using 2004 Grade 6 Intermediate Phase Systemic Evaluation.}
+\end{figure}
+\normalsize
+
+Figure \ref{fig:2} plots the percentage variance explained by the first principle component, which varies from 65% to 40%. This isn't good news for choosing to code the response variable the way we did, since it shows that the first principle component can capture widely different things and potentially noise, thus using it as the response variable might not be a good idea.
+
+
+
+
+\footnotesize
+
+\underline{Anime}
+
+\begin{table}[!htbp] \centering
+  \caption{}
+  \label{}
+\begin{tabular}{@{\extracolsep{5pt}} cccc}
+\\[-1.8ex]\hline
+\hline \\[-1.8ex]
+metric & good & bad & difference \\
+\hline \\[-1.8ex]
+character length & 511.014 & 422.382 &  88.632 \\
+token length & 102.609 &  85.099 &  17.510 \\
+punctuation types &  79.000 &  50.000 &  29.000 \\
+url text &  59.000 &  82.000 & -23.000 \\
+stopwords & 324.000 & 315.000 &   9.000 \\
+Type-to-Token Ratio &   0.732 &   0.754 &  -0.022 \\
+Guiraud's Root TTR &   6.211 &   5.779 &   0.432 \\
+Summer's Index &  &  &  \\
+Flesch-Kincaid &   9.212 &   8.724 &   0.488 \\
+Gunning's Fog Index &  12.410 &  11.948 &   0.462 \\
+sentiment &   0.195 &   0.191 &   0.005 \\
+moral values &   0.147 &   0.118 &   0.029 \\
+euclidean distance &  &  &   0.319 \\
+cosine similarity &  &  &   0.037 \\
+jaccard similarity &  &  &   0.020 \\
+\hline \\[-1.8ex]
+\end{tabular}
+\end{table}
+
+
+\underline{Boardgames}
+
+\begin{table}[!htbp] \centering
+  \caption{}
+  \label{}
+\begin{tabular}{@{\extracolsep{5pt}} cccc}
+\\[-1.8ex]\hline
+\hline \\[-1.8ex]
+metric & good & bad & difference \\
+\hline \\[-1.8ex]
+character length & 612.941 & 555.190 &  57.751 \\
+token length & 125.548 & 113.626 &  11.923 \\
+punctuation types &  53.000 &  47.000 &   6.000 \\
+url text &  74.000 &  97.000 & -23.000 \\
+stopwords & 339.000 & 326.000 &  13.000 \\
+Type-to-Token Ratio &   0.686 &   0.699 &  -0.013 \\
+Guiraud's Root TTR &   6.269 &   6.053 &   0.216 \\
+Summer's Index &  &  &  \\
+Flesch-Kincaid &   9.145 &   8.832 &   0.313 \\
+Gunning's Fog Index &  12.146 &  11.777 &   0.369 \\
+sentiment &   0.100 &   0.075 &   0.025 \\
+moral values &   0.253 &   0.219 &   0.033 \\
+euclidean distance &  &  &   0.305 \\
+cosine similarity &  &  &   0.071 \\
+jaccard similarity &  &  &   0.033 \\
+\hline \\[-1.8ex]
+\end{tabular}
+\end{table}
+
+
+\underline{Buddhism}
+
+\begin{table}[!htbp] \centering
+  \caption{}
+  \label{}
+\begin{tabular}{@{\extracolsep{5pt}} cccc}
+\\[-1.8ex]\hline
+\hline \\[-1.8ex]
+metric & good & bad & difference \\
+\hline \\[-1.8ex]
+character length & 741.407 & 611.021 & 130.386 \\
+token length & 144.963 & 119.443 &  25.520 \\
+punctuation types &  45.000 &  31.000 &  14.000 \\
+url text & 139.000 & 115.000 &  24.000 \\
+stopwords & 324.000 & 299.000 &  25.000 \\
+Type-to-Token Ratio &   0.697 &   0.719 &  -0.021 \\
+Guiraud's Root TTR &   6.576 &   6.233 &   0.343 \\
+Summer's Index &  &  &  \\
+Flesch-Kincaid &  10.146 &   9.561 &   0.585 \\
+Gunning's Fog Index &  13.362 &  12.654 &   0.708 \\
+sentiment &   0.333 &   0.347 &  -0.014 \\
+moral values &   0.488 &   0.542 &  -0.054 \\
+euclidean distance &  &  &   0.299 \\
+cosine similarity &  &  &   0.052 \\
+jaccard similarity &  &  &   0.026 \\
+\hline \\[-1.8ex]
+\end{tabular}
+\end{table}
+
+
+\underline{Gardening}
+
+\begin{table}[!htbp] \centering
+  \caption{}
+  \label{}
+\begin{tabular}{@{\extracolsep{5pt}} cccc}
+\\[-1.8ex]\hline
+\hline \\[-1.8ex]
+metric & good & bad & difference \\
+\hline \\[-1.8ex]
+character length & 558.492 & 586.557 & -28.065 \\
+token length & 114.989 & 121.179 &  -6.190 \\
+punctuation types &  47.000 &  51.000 &  -4.000 \\
+url text & 181.000 & 155.000 &  26.000 \\
+stopwords & 320.000 & 312.000 &   8.000 \\
+Type-to-Token Ratio &  &   0.729 &  \\
+Guiraud's Root TTR &  &   6.676 &  \\
+Summer's Index &  &  &  \\
+Flesch-Kincaid &  &   6.957 &  \\
+Gunning's Fog Index &  &   9.820 &  \\
+sentiment &   0.185 &   0.134 &   0.052 \\
+moral values &   0.179 &   0.145 &   0.035 \\
+euclidean distance &  &  &   0.283 \\
+cosine similarity &  &  &  \\
+jaccard similarity &  &  &   0.032 \\
+\hline \\[-1.8ex]
+\end{tabular}
+\end{table}
+
+
+\underline{Law}
+
+\begin{table}[!htbp] \centering
+  \caption{}
+  \label{}
+\begin{tabular}{@{\extracolsep{5pt}} cccc}
+\\[-1.8ex]\hline
+\hline \\[-1.8ex]
+metric & good & bad & difference \\
+\hline \\[-1.8ex]
+character length & 917.545 & 839.528 & 78.017 \\
+token length & 178.824 & 164.598 & 14.225 \\
+punctuation types &  61.000 &  58.000 &  3.000 \\
+url text & 495.000 & 487.000 &  8.000 \\
+stopwords & 375.000 & 370.000 &  5.000 \\
+Type-to-Token Ratio &   0.655 &   0.669 & -0.015 \\
+Guiraud's Root TTR &   7.167 &   6.896 &  0.270 \\
+Summer's Index &    -Inf &    -Inf &  \\
+Flesch-Kincaid &  10.943 &  10.638 &  0.304 \\
+Gunning's Fog Index &  14.246 &  13.974 &  0.271 \\
+sentiment &   0.223 &   0.191 &  0.032 \\
+moral values &   0.501 &   0.429 &  0.072 \\
+euclidean distance &  &  &  0.261 \\
+cosine similarity &  &  &  0.045 \\
+jaccard similarity &  &  &  0.026 \\
+\hline \\[-1.8ex]
+\end{tabular}
+\end{table}
+
+
+\underline{French}
+
+\begin{table}[!htbp] \centering
+  \caption{}
+  \label{}
+\begin{tabular}{@{\extracolsep{5pt}} cccc}
+\\[-1.8ex]\hline
+\hline \\[-1.8ex]
+metric & good & bad & difference \\
+\hline \\[-1.8ex]
+n & 2889.000 & 2088.000 & 801.000 \\
+n \% &    0.580 &    0.420 &   0.161 \\
+character length &  581.210 &  465.401 & 115.809 \\
+token length &  114.373 &   92.736 &  21.638 \\
+punctuation types &   76.000 &   63.000 &  13.000 \\
+url text &  156.000 &   72.000 &  84.000 \\
+stopwords &  310.000 &  277.000 &  33.000 \\
+Type-to-Token Ratio &    0.743 &    0.759 &  -0.016 \\
+Guiraud's Root TTR &    6.334 &    5.835 &   0.500 \\
+Summer's Index &  &  &  \\
+Flesch-Kincaid &    9.465 &    8.675 &   0.791 \\
+Gunning's Fog Index &   12.383 &   11.593 &   0.790 \\
+sentiment &    0.119 &    0.162 &  -0.043 \\
+moral values &    0.130 &    0.116 &   0.014 \\
+euclidean distance &  &  &   0.278 \\
+cosine similarity &  &  &   0.098 \\
+jaccard similarity &  &  &   0.039 \\
+\hline \\[-1.8ex]
+\end{tabular}
+\end{table}
+
+\underline{Linguistics}
+
+\begin{table}[!htbp] \centering
+  \caption{}
+  \label{}
+\begin{tabular}{@{\extracolsep{5pt}} cccc}
+\\[-1.8ex]\hline
+\hline \\[-1.8ex]
+metric & good & bad & difference \\
+\hline \\[-1.8ex]
+n & 2411.000 & 1678.000 & 733.000 \\
+n \% &    0.590 &    0.410 &   0.179 \\
+character length &  819.689 &  701.277 & 118.413 \\
+token length &  163.964 &  138.691 &  25.273 \\
+punctuation types &  133.000 &  106.000 &  27.000 \\
+url text &  289.000 &  233.000 &  56.000 \\
+stopwords &  319.000 &  323.000 &  -4.000 \\
+Type-to-Token Ratio &    0.685 &    0.705 &  -0.020 \\
+Guiraud's Root TTR &    6.915 &    6.432 &   0.483 \\
+Summer's Index &  &  &  \\
+Flesch-Kincaid &   11.326 &   10.416 &   0.909 \\
+Gunning's Fog Index &   14.663 &   13.719 &   0.945 \\
+sentiment &    0.328 &    0.329 &  -0.001 \\
+moral values &    0.359 &    0.341 &   0.018 \\
+euclidean distance &  &  &   0.279 \\
+cosine similarity &  &  &   0.064 \\
+jaccard similarity &  &  &   0.029 \\
+\hline \\[-1.8ex]
+\end{tabular}
+\end{table}
+
+
+
+\underline{Fitness}
+
+\begin{table}[!htbp] \centering
+  \caption{}
+  \label{}
+\begin{tabular}{@{\extracolsep{5pt}} cccc}
+\\[-1.8ex]\hline
+\hline \\[-1.8ex]
+metric & good & bad & difference \\
+\hline \\[-1.8ex]
+character length & 742.342 & 691.915 & 50.427 \\
+token length & 152.781 & 142.923 &  9.858 \\
+punctuation types &  45.000 &  40.000 &  5.000 \\
+url text & 200.000 & 180.000 & 20.000 \\
+stopwords & 323.000 & 319.000 &  4.000 \\
+Type-to-Token Ratio &   0.698 &   0.700 & -0.002 \\
+Guiraud's Root TTR &   7.081 &   6.899 &  0.182 \\
+Summer's Index &   0.880 &  &  \\
+Flesch-Kincaid &   8.728 &   8.414 &  0.314 \\
+Gunning's Fog Index &  11.545 &  11.161 &  0.384 \\
+sentiment &   0.123 &   0.107 &  0.015 \\
+moral values &   0.397 &   0.343 &  0.054 \\
+euclidean distance &  &  &  0.259 \\
+cosine similarity &  &  &  0.073 \\
+jaccard similarity &  &  &  0.035 \\
+\hline \\[-1.8ex]
+\end{tabular}
+\end{table}
+
+
+
+\underline{Interpersonal}
+
+\begin{table}[!htbp] \centering
+  \caption{}
+  \label{}
+\begin{tabular}{@{\extracolsep{5pt}} cccc}
+\\[-1.8ex]\hline
+\hline \\[-1.8ex]
+metric & good & bad & difference \\
+\hline \\[-1.8ex]
+character length & 1808.046 & 1978.186 & -170.140 \\
+token length &  373.354 &  411.580 &  -38.226 \\
+punctuation types &   35.000 &   30.000 &    5.000 \\
+url text &   23.000 &    0.000 &   23.000 \\
+stopwords &  341.000 &  309.000 &   32.000 \\
+Type-to-Token Ratio &    0.553 &    0.528 &    0.025 \\
+Guiraud's Root TTR &    9.071 &    9.130 &   -0.059 \\
+Summer's Index &    0.873 &    0.868 &    0.005 \\
+Flesch-Kincaid &    9.322 &    9.045 &    0.277 \\
+Gunning's Fog Index &   12.148 &   11.824 &    0.323 \\
+sentiment &    0.218 &    0.241 &   -0.023 \\
+moral values &    0.524 &    0.539 &   -0.014 \\
+euclidean distance &  &  &    0.173 \\
+cosine similarity &  &  &    0.140 \\
+jaccard similarity &  &  &    0.075 \\
+\hline \\[-1.8ex]
+\end{tabular}
+\end{table}
+
+
+\underline{Outdoors}
+
+\begin{table}[!htbp] \centering
+  \caption{}
+  \label{}
+\begin{tabular}{@{\extracolsep{5pt}} cccc}
+\\[-1.8ex]\hline
+\hline \\[-1.8ex]
+metric & good & bad & difference \\
+\hline \\[-1.8ex]
+character length & 624.160 & 599.991 &  24.169 \\
+token length & 126.147 & 121.792 &   4.355 \\
+punctuation types &  44.000 &  41.000 &   3.000 \\
+url text &  61.000 &  85.000 & -24.000 \\
+stopwords & 312.000 & 290.000 &  22.000 \\
+Type-to-Token Ratio &   0.724 &   0.728 &  -0.004 \\
+Guiraud's Root TTR &   6.826 &   6.678 &   0.148 \\
+Summer's Index &  &   0.881 &  \\
+Flesch-Kincaid &   8.631 &   8.193 &   0.439 \\
+Gunning's Fog Index &  11.440 &  10.980 &   0.461 \\
+sentiment &   0.195 &   0.165 &   0.030 \\
+moral values &   0.341 &   0.307 &   0.034 \\
+euclidean distance &  &  &   0.279 \\
+cosine similarity &  &  &   0.043 \\
+jaccard similarity &  &  &   0.023 \\
+\hline \\[-1.8ex]
+\end{tabular}
+\end{table}
+
+\normalsize
+
+
+
+
+
+
+<!-- CONCLUSION: Conclusions that can be drawn from your work, possible extensions and further work -->
+
+\newpage
+
+# Limitations and Further Research \label{Recom}
+
+### Limitations
+
+Questions that have been edited present a problem - how?
+
+People viewing question that can't vote is addressed by having a ViewCount threshold
+
+The key assumption in this exploratory analysis is that high and low quality answers differ across the aspects investigated, and the aim was to find a classification technique that better distinguished these aspects in the data.
+
+Consecutive views by same person being counted as separate shouldn't be too much of an issue
+
+https://meta.stackexchange.com/questions/36728/how-are-the-number-of-views-in-a-question-calculated
+
+
+
+### Recommendations for Further Research
+
+As previously discussed, I could incoporate the sentiment of answers into the PCA which I think will yield more fruitful results, but otherwise I will just use Ravi's/my new method when building the model to classify quality of questions, which is the next step.
+
+\newpage
+
+# Concluding Remarks \label{Concl}
+
+
+
+
+
+
+
+<!-- BIBLIOGRAPHY -->
+
+\newpage
+
+# References
+
+
+<!-- APPENDICES: Not encouraged
+
+\newpage
+
+# Appendix {.unnumbered}
+
+\setcounter{table}{0}
+\renewcommand{\thetable}{A\arabic{table}}
+
+A table in the Appendix:
+
+\begin{longtable}[htbp] {@{} l r r r r r @{}} \caption{
+\textbf{Summary statistics of model variables}} \label{tab:Desc}  \\ \hline\hline
+                \textbf{Variable } & \textbf{Mean} & \textbf{S.D.} & \textbf{Min} & \textbf{Max} & \textbf{N}\\
+\hline
+\bf{\emph{Educational Outcomes}} & & & & \\
+   Maths Score (\%)  &   27.58797 &   17.82077 &          0 &        100 &     102048 \\
+   Science Score (\%) &   41.04531 &   18.54542 &          0 &   95.83334 &     102045 \\
+   English Score (\%) &   38.49276 &    24.3848 &          0 &        100 &     102048 \\
+\hline \hline
+\multicolumn{5}{@{}l}{Source: Own calculations in Stata using 2004 Grade 6 Intermediate Phase Systemic Evaluation.}
+\end{longtable}
+
+ -->

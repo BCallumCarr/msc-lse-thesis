@@ -1,140 +1,238 @@
 ### Brad Carruthers ###
 
+## save file
+rstudioapi::documentSave(rstudioapi::getActiveDocumentContext()$id)
+
 #####################################################################
 ############################# LOAD DATA #############################
 #####################################################################
 
 ## choose datasets
 datasets <- c(
-  #"anime",
-  #"boardgames",
-  #"buddhism",
-  #"emacs",
-  #"law",
-  #"networkengineering",
-  #"quant",
-  #"rus",
-  "beer",
-  "opensource"
+  "anime", #3209 #57min
+  "boardgames", #3527 #48min
+  "buddhism", #2226 #16min
+  "fitness", #2504 #33min
+  "french", #2889
+  "gardening", #3863
+  "health", #1866
+  "law", #3649
+  "linguistics", #2411
+  "outdoors" #1885
+  # TOO BIG:
+  #"emacs" - 5584, "quant" - #4248, "networkengineering" - 3753
+  # TOO SMALL:
+  #"vegetarianism", #220
+  #"beer", #320,
+  #"opensource" #806
 )
 
 ## load packages
-packages = c("quanteda", "XML", "tidyr", "dplyr", "topicmodels", "ggplot2", "caret", "quanteda.dictionaries", "stargazer")
+packages = c("quanteda", "XML", "tidyr", "dplyr", "topicmodels", "ggplot2", "caret", "quanteda.dictionaries", "stargazer", "scales")
 lapply(packages, require, character.only = TRUE)
 
 ## set random seed
 set.seed(1777)
 
 ### LOOP THROUGH ALL DATASETS
-dataset_stats <- list()
+dataset_stats <- list() # to store results from linguistic_descriptives
+pca_percs <- list() # to store first pcas to plot later
+best_worst_qs <- list() # to store example questions
+viewcount_list <- list() # to store example questions
 for (k in 1:length(datasets)) {
-  
+
+  ## garbage collection and timing
+  gc()
+  start_time <- Sys.time()
+
   ## point to directory with data
   cat("\n------------------\n", datasets[k], "\n------------------\n")
   dir <- paste("/Users/brad/Dropbox/lse-msc/03-lent/qta-my459/final-assignment/data/", datasets[k], ".stackexchange.com/Posts.xml",
                sep = "")
-  
+
   ## parse to list from xml, files larger than 45MB are a pain because they take ages when collecting columns
   posts_lis <- xmlToList(xmlParse(dir))
-  
+
   ## find out names of columns - some rows have extra columns like FavoriteCount and ClosedDate
   names(posts_lis$row)
-  
+
   ## select columns to include in dataset
   Id <- NULL; PostTypeId <- NULL; Score <- NULL; ViewCount <- NULL; Body <- NULL
   Title <- NULL; Tags <- NULL; AnswerCount <- NULL; CommentCount <- NULL; FavoriteCount <- NULL;
-  
+
   ## choose amount of data to include
   l <- length(posts_lis)
-  
+
   ## collect columns
-  for (i in 1:l) { # for some reason working with length(posts_lis) crashes R
+  for (i in 1:l) { # for some reason working with length(posts_lis) here crashes R
     # elongate vectors with consecutive entries
     # remember: these include both answers and questions
-    Id <- as.integer(c(Id, posts_lis[i]$row['Id']))
+    #Id <- as.integer(c(Id, posts_lis[i]$row['Id']))
     PostTypeId <- as.integer(c(PostTypeId, posts_lis[i]$row['PostTypeId']))
     Score <- as.integer(c(Score, posts_lis[i]$row['Score']))
     ViewCount <- as.integer(c(ViewCount, posts_lis[i]$row['ViewCount']))
     Body <- as.character(c(Body, posts_lis[i]$row['Body']))
     Title <- as.character(c(Title, posts_lis[i]$row['Title']))
-    Tags <- as.character(c(Tags, posts_lis[i]$row['Tags']))
+    #Tags <- as.character(c(Tags, posts_lis[i]$row['Tags']))
     AnswerCount <- as.character(c(AnswerCount, posts_lis[i]$row['AnswerCount']))
     CommentCount <- as.character(c(CommentCount, posts_lis[i]$row['CommentCount']))
     # don't include FavoriteCount because of missing values
   }
-  
+
+  ## reading in timing
+  cat("So far after reading the data in we're at", round(Sys.time()-start_time), "minutes\n")
+
   for (i in 1:length(Body)) {
     ## get rid of some html ugliness
     Body[i] <- gsub('\n|<.*?>'," ", Body[i])
   }
-  
+
   ## create dataframe of both questions and answers, PostTypeId = 1 is question, = 2 is answer and convert factor columns
-  sxdf <- as_tibble(data.frame(Id=Id, PostTypeId=PostTypeId, Score=Score, ViewCount=ViewCount, Body=Body, 
-                               Title=as.character(Title), Tags=Tags, AnswerCount=as.integer(AnswerCount), 
-                               CommentCount=as.integer(CommentCount)))
-  
+  sxdf <- as_tibble(data.frame(#Id=Id,
+    PostTypeId=PostTypeId,
+    Score=Score,
+    ViewCount=ViewCount,
+    Body=Body,
+    Title=as.character(Title),
+    #Tags=Tags,
+    AnswerCount=as.integer(AnswerCount),
+    CommentCount=as.integer(CommentCount)))
+
   ## convert to character
   sxdf$Body <- as.character(sxdf$Body)
   sxdf$Title <- as.character(sxdf$Title)
-  
+
   ## different question and answer datasets
   sxdf_q <- sxdf[sxdf["PostTypeId"]==1,]
   #sxdf_a <- sxdf[sxdf["PostTypeId"]==2,]
   cat("This forum has", nrow(sxdf_q), "questions\n")
-  
+
   ## delete variables not needed
-  rm("Id", "PostTypeId", "Score", "ViewCount", "Body", "Title", "Tags", "AnswerCount", "CommentCount", "FavoriteCount", "sxdf")
-  
-  
-  
+  rm("Id", "PostTypeId", "Score", "ViewCount", "Body", "Title", "Tags",
+     "AnswerCount", "CommentCount", "FavoriteCount", "sxdf", "posts_lis")
+
+  ## garbage collection
+  gc()
+
   #####################################################################
   ######################### BINARY CLASSIFIER #########################
   #####################################################################
-  
-  ## plot cumulative view counts
-  ggplot(as.data.frame(sxdf_q$ViewCount), aes(sxdf_q$ViewCount)) + 
-    stat_ecdf(geom = "step") + scale_x_continuous(trans='log10') + 
-    labs(x = "ViewCount", y = "Cumulative % of Question Posts")
-  
+
   ## find threshold for views
   thresh <- round(quantile(sxdf_q$ViewCount, .40), -1)
-  
+
   ## focus on questions above threshold to address possibility of users that can vote not seeing question
   temp <- nrow(sxdf_q)
   sxdf_q <- sxdf_q[sxdf_q$ViewCount > thresh,]
   temp <- temp - nrow(sxdf_q)
-  cat("Removed", temp, "questions above threshold of", thresh, "views\n")
-  
+  cat("Removed", temp, "questions below chosen threshold of", thresh, "views\n")
+
+  ##### RAVI ET AL #####
+
   ## create response variable normalised by views
-  sxdf_q$y <- sxdf_q["Score"]/sxdf_q["ViewCount"]
-  cat("The average value of y is", round(mean(sxdf_q$y$Score),3), '\n')
-  cat("Conditioned on positive y the average is", round(mean(sxdf_q$y[sxdf_q$y>0]),3), "\n")
-  
-  ## MUST INCORPORATE INTO FUNCTION
-  ## "best" question based on Score/ViewCount
-  sxdf_q[sxdf_q$y==max(sxdf_q$y),][,c("Score", "ViewCount", "Body", "y")]
-  
-  ## "worst" question based on Score/ViewCount
-  sxdf_q[sxdf_q$y==min(sxdf_q$y),][,c("Score", "ViewCount", "Body", "y")]
-  
+  sxdf_q$y_ravi <- sxdf_q["Score"]/sxdf_q["ViewCount"]
+  cat("\nThe average value of y_ravi is", round(mean(sxdf_q$y_ravi$Score),3), '\n')
+  cat("Conditioned on positive y_ravi the average is", round(mean(sxdf_q$y_ravi[sxdf_q$y_ravi>0]),3), "\n")
+
+  ##### CARRUTHERS #####
+
+  ## create response variable using pca on scaled factors:
+  # normed answer numbers, normed score, normed answer scores, can't do sentiment of answers right now
+  # upvotes are indication that people want to see answer, not of question quality or likelihood
+  y1 <- sxdf_q["Score"]/sxdf_q["ViewCount"] # proxy for popularity of question
+  y2 <- sxdf_q["AnswerCount"]/sxdf_q["ViewCount"] # proxy for educational engagement of question
+  y3 <- sxdf_q["CommentCount"]/sxdf_q["ViewCount"] # proxy for recreational engagement of question
+
+  ## compute pca
+  y_pca <- prcomp(data.frame(y1, y2, y3),
+                  center = TRUE,
+                  scale. = TRUE)
+
+  ## pca summaries and assign
+  pca_nb <- summary(y_pca)$importance[2,1]*100
+  cat("\nFirst principal component accounts for", pca_nb, "% of variance\n")
+  sxdf_q$y_carr <- y_pca$x[,1]
+
+  ## control for pca being in opposite direction
+  if (sxdf_q[sxdf_q$y_carr==min(sxdf_q$y_carr),]$Score > sxdf_q[sxdf_q$y_carr==max(sxdf_q$y_carr),]$Score) {
+    sxdf_q$y_carr <- sxdf_q$y_carr*-1
+  }
+
+  ## save first pca for plotting later
+  pca_percs[[datasets[k]]] <- pca_nb
+
+  ## save viewcounts for plotting later
+  pca_percs[[datasets[k]]] <- pca_nb
+  viewcount_list[[datasets[k]]] <-  sxdf_q$ViewCount
+
+  ########################################
+
+  ## title of "best" and "worst" question based on Score/ViewCount
+  best_worst_qs[[datasets[k]]] <- rbind(
+  sxdf_q[sxdf_q$y_ravi==max(sxdf_q$y_ravi),][,c("Score", "ViewCount", "Title", "y_ravi")],
+  sxdf_q[sxdf_q$y_ravi==min(sxdf_q$y_ravi),][,c("Score", "ViewCount", "Title", "y_ravi")])
+
+  ## "best" question based on Carruthers
+  #sxdf_q[sxdf_q$y_carr==max(sxdf_q$y_carr),][,c("Score", "ViewCount", "Body", "y_carr")]
+
+  ## "worst" question based on Carruthers
+  #sxdf_q[sxdf_q$y_carr==min(sxdf_q$y_carr),][,c("Score", "ViewCount", "Body", "y_carr")]
+
   ## label questions
-  # Ravi et al randomly choose y>0.001 as threshold for quality question? 
-  y_thresh <- round(mean(sxdf_q$y$Score),3)/2 ## CRITICAL STEP
-  sxdf_q$y <- factor(ifelse(sxdf_q$y <= y_thresh, 0, 1), labels=c("bad","good"))
-  cat("With an arbitrarily chosen y threshold of", y_thresh, "there are apparently", sum(sxdf_q$y=="good"), 
-      "good questions, (", round(sum(sxdf_q$y=="good")/nrow(sxdf_q),2)*100, "%)\n\n")
-  
-  
-  
+  # Ravi et al randomly choose y>0.001 as threshold for quality question?
+
+  ##### RAVI ET AL #####
+
+  y_ravi_thresh <- round(mean(sxdf_q$y_ravi$Score),3)/2 ## CRITICAL STEP
+  sxdf_q$y_ravi <- factor(ifelse(sxdf_q$y_ravi <= y_ravi_thresh, 0, 1), labels=c("bad","good"))
+  cat("\nWith an arbitrarily chosen y_ravi threshold of", y_ravi_thresh, "there are apparently", sum(sxdf_q$y_ravi=="good"),
+      "good questions, (", round(sum(sxdf_q$y_ravi=="good")/nrow(sxdf_q),2)*100, "%)\n")
+
+  ##### CARRUTHERS #####
+
+  y_carr_thresh <- quantile(sxdf_q$y_carr, 1-sum(sxdf_q$y_ravi=="good")/nrow(sxdf_q)) ## have the same no. good questions as Ravi
+  sxdf_q$y_carr <- factor(ifelse(sxdf_q$y_carr <= y_carr_thresh, 0, 1), labels=c("bad","good"))
+  cat("With an arbitrarily chosen y_carr threshold of", y_carr_thresh, "there are apparently", sum(sxdf_q$y_carr=="good"),
+      "good questions, (", round(sum(sxdf_q$y_carr=="good")/nrow(sxdf_q),2)*100, "%)\n\n")
+
+
+
   #####################################################################
   ########################### VALIDATION ##############################
   #####################################################################
-   
+
   linguistic_descriptives <- dget("/Users/brad/Dropbox/lse-msc/03-lent/qta-my459/final-assignment/r-code/linguistic_descriptives.R")
-  dataset_stats[[k]] <- data.frame(linguistic_descriptives(sxdf_q))
-  
+  dataset_stats[[datasets[k]]] <- data.frame(linguistic_descriptives(sxdf_q, target=sxdf_q$y_ravi, new_target=sxdf_q$y_carr))
+
+  ## end timing
+  cat("\nFinally this took", round(Sys.time()-start_time), "minutes overall\n")
+
+  ## delete variables not needed
+  rm(list=setdiff(ls(), c('pca_percs', 'dataset_stats', 'best_worst_qs')))
+
   ### END LOOP FOR NOW
-} 
+}
+
+## plot and save cumulative view counts
+p <- ggplot(as.data.frame(unlist(sxdf_q$ViewCount)), aes(unlist(sxdf_q$ViewCount))) + # gotta do groups here brah, C-Topic-Models
+  stat_ecdf(geom = "step") + scale_x_continuous(trans='log10', labels = comma) +
+  labs(x = "ViewCount", y = "Cumulative % of Question Posts")
+png('cumul-viewcount.png', units="in", width=5, height=5, res=300)
+print(p)
+dev.off()
+
+## plot and save first principal components across datasets
+df <- data.frame(forum=names(unlist(pca_percs)), pca_percs=unlist(pca_percs))
+p <- ggplot(df, aes(x=reorder(df$forum, -df$pca_percs), y=df$pca_percs)) + geom_bar(stat='identity') +
+  labs(x = 'Fora', y = 'Percentage Variance Explained by First PC')
+png('pca-percs-graph.png', units='in', width=5, height=5, res=300)
+print(p)
+dev.off()
+
+stargazer(as.matrix(dataset_stats['vegetarianism']))
+stargazer(as.matrix(best_worst_qs['vegetarianism']))
+
+
 
 
 
@@ -166,16 +264,16 @@ head(textstat_keyness(dfm(sxdf_q[sxdf_q$y=='bad',]$Title)))
 #corp_q <- corpus(sxdf_q$Body)
 #corp_q_shuff <- corpus_sample(corp_q, size = nrow(sxdf_q))
 #dfm_rem <- c(stopwords("english"), "amp", "don", "#x200b", "b", "m", "r", "s", "t", "http", "https", "1", "2", "3", "4")
-dfm_q <- dfm(sxdf_q$Body, 
-             #remove_url=TRUE, 
-             remove_punct = TRUE, 
-             remove_numbers=TRUE, 
-             remove=stopwords("english"), 
+dfm_q <- dfm(sxdf_q$Body,
+             #remove_url=TRUE,
+             remove_punct = TRUE,
+             remove_numbers=TRUE,
+             remove=stopwords("english"),
              verbose=TRUE)
 
 ## eda lda model
 K <- 30
-eda_lda <- LDA(dfm_q, k = K, method = "Gibbs", 
+eda_lda <- LDA(dfm_q, k = K, method = "Gibbs",
                control = list(verbose=25L, seed = 1777, burnin = 100, iter = 1000))
 
 ## have a look at the topics
@@ -233,11 +331,11 @@ corp_q <- corpus(sxdf_q$Body)
 corp_q_shuff <- corpus_sample(corp_q, size = 1961)
 
 ## create dfm with tri-grams, removing urls, punctuation and stopwords
-dfm_q <- dfm(corp_q_shuff, 
-             #remove_url=TRUE, 
-             ngrams = c(2, 3), 
-             remove_punct = TRUE, 
-             remove=stopwords("english"), 
+dfm_q <- dfm(corp_q_shuff,
+             #remove_url=TRUE,
+             ngrams = c(2, 3),
+             remove_punct = TRUE,
+             remove=stopwords("english"),
              verbose=TRUE)
 
 dfm_q <- dfm_trim(dfm_q, min_termfreq = 20, verbose=TRUE)
@@ -289,7 +387,7 @@ classif_metrics <- function(mytable, verbose=TRUE, reverse=FALSE) {
   if (verbose) {
     print(mytable)
     cat("\n accuracy =", round(accuracy, 2),
-        "\n precision =", round(precision, 2), 
+        "\n precision =", round(precision, 2),
         "\n recall =", round(recall, 2),
         "\n F1 Score =", round(f1_score, 2), "\n")
   }
@@ -306,7 +404,7 @@ classif_metrics(cm, reverse=F)
 
 ## global topic
 K <- 1
-global_lda <- LDA(dfm_q, k = K, method = "Gibbs", 
+global_lda <- LDA(dfm_q, k = K, method = "Gibbs",
                   control = list(verbose=25L, seed = 1777, burnin = 100, iter = 1000))
 
 if (FALSE) {
@@ -331,8 +429,8 @@ sxdf_q$pred_glob_topic <- glob_topic
 X <- colbind(dfm_q, topics)
 
 ## cross validation
-ridge <- cv.glmnet(x=X[in_train,], y=target[in_train], 
-                   family="binomial", alpha=1, nfolds=10, parallel=TRUE, 
+ridge <- cv.glmnet(x=X[in_train,], y=target[in_train],
+                   family="binomial", alpha=1, nfolds=10, parallel=TRUE,
                    type.measure ="class",
                    intercept=TRUE
 )
@@ -346,5 +444,3 @@ cm <- table(preds, target[-in_train])
 
 ## metrics for positive category
 classif_metrics(cm, reverse=F)
-
-
