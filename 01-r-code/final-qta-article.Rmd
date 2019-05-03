@@ -29,7 +29,7 @@ knitr::opts_chunk$set(echo = FALSE, message = FALSE)
 \newgeometry{left=2cm, right=2cm, top=2.5cm, bottom=4cm}
 
 
-# Abstract
+\section*{Abstract}
 
 The world wide web and the technologies that have accompanied it have given us the exceptional ability to comment on, engage with and question the world. While much attention has been given to identifying high-quality answers online, less consideration has been afforded to how we can improve our questions, which can be particularly beneficial for online question-answering communities where subject matter is often technical and expert resources are scarce.
 
@@ -49,7 +49,7 @@ The advent of the internet and the interpersonal communication technologies that
 
 Online social question-answer (Q&A) fora present environments where community engagement (up-votes, answers, comments) and community guidelines should mitigate many of the issues experienced by other more provocative online platforms, yet these communities are not without issues of their own. Certain fora, such as popular Massive Online Open Courses (MOOCs), suffer from "information overload" where the degree of off-topic activity and discussion makes it difficult for answerers to find and engage with questions they *can* answer, let alone review all questions in the community.
 
-Scarcity of expert resources seems to be a persistent problem in social Q&A systems, and thus the rationale for this research is to eventually tackle question-formulation before they enter a community and place demand on expert resources. One approach to **do this** would be to build a classification model that can predict positive community engagement with questions, and provide this information to questioners so that they can be nudged into formulating a question that will better received by a community (improving the "signal" of their question).
+Scarcity of expert resources seems to be a persistent problem in social Q&A systems, and thus the rationale for this research is to eventually tackle question-formulation before they enter a community and place demand on expert resources. One approach to achieve this would be to build a classification model that can predict positive community engagement with questions, and provide this information to questioners so that they can be nudged into formulating a question that will better received by a community (improving the "signal" of their question).
 
 The broad research question is therefore the following:
 
@@ -59,12 +59,10 @@ The broad research question is therefore the following:
 
 Here, positive community engagement is defined as constructive, amicable interactions with user questions through answers, comments, votes, edits and so on. One assumption made is that questions are heterogeneous in that they have varying levels of "quality" which evoke either positive and negative community reaction.
 
-The research presented here is but an initial step in the ultimate goal of classifying user questions and serves to build on methodologies and approaches already taken to measure question quality/community engagement. In this paper I analyse a diverse range of questions in fora from the family of Q&A communities, StackExchange. I use a metric for community engagement to label questions as "good" and "bad" (receiving positive and negative community engagement respectively) and find **more optimal** thresholds for this labeling by calculating similarity metrics and linguistic differences across good/bad samples.
+The research presented here is but an initial step in the ultimate goal of classifying user questions and serves to build on methodologies and approaches already taken to measure question quality/community engagement. In this paper I analyse a diverse range of questions in fora from the family of Q&A communities, StackExchange. I use a metric for community engagement to label questions as "good" and "bad" (receiving positive and negative community engagement respectively) and find more optimal thresholds for this labeling by calculating similarity metrics and linguistic differences across good/bad samples.
 
-I now move onto a brief discussion of previous work in this field. This is followed by descriptions of the datasets used,  pre-processing steps taken as well as exploratory analysis. I then discuss the methodology for measuring community engagement with a **specifically defined variable**, I present and discuss the results and lastly I make some concluding remarks.
+I now move onto a brief discussion of previous work in this field. This is followed by descriptions of the datasets used,  pre-processing steps taken as well as exploratory analysis. I then discuss the methodology for measuring community engagement with a specifically defined variable, I present and discuss the results and lastly I make some concluding remarks.
 
-
-\newpage
 
 <!-- MOTIVATION: Why this topic? Compelling social reason? Does it contribute to scholarship? This can include a “literature review” (but don’t overdo it).-->
 
@@ -80,9 +78,7 @@ Recent work [@Agichtein2008; @Bian2009; @Li2012] attempted to model question qua
 
 One paper that made strides in classifying and predicting what they assume to be question quality is @Ravi2014. Using latent topics extracted from Latent Dirichlet Allocation models on question content, they predict "question quality" with accuracy levels of 72% for the computer coding StackExchange community, StackOverflow. 
 
-\newpage
-
-@Ravi2014 decide on using a question's `Score` as an indicator of question quality. I question this assumption and put forth the notion that a question’s `Score` better characterises community engagement, since I believe it is difficult to define "quality" subjectively owing to communities valuing different facets of questions (i.e. closed-end for natural sciences or discussion-promoting in the social sciences). Henceforth I refer to the `Score` variable as capturing community engagement as opposed to the narrower definition of question quality. This brings me to the aim of this paper, which is to critique and build on how @Ravi2014 label questions according to their chosen response variable.
+@Ravi2014 decide on using a question's `Score` as an indicator of question quality. I question this assumption and put forth the notion that a question’s `Score` better characterises community engagement, since I believe it is difficult to define "quality" subjectively owing to communities valuing different facets of questions (i.e. closed-end for natural sciences or discussion-promoting in the social sciences). I thus characterise it as such and also use it as a response variable. This brings me to the aim of this paper, which is to critique and build on how to use the `Score` variable to label questions as attracting positive or negative community engagement.
 
 
 
@@ -98,7 +94,7 @@ One paper that made strides in classifying and predicting what they assume to be
 
 The data I use for this analysis are question-content text from the family of online Q&A communities, [StackExchange](https://stackexchange.com/sites#traffic). There are more than 170 diverse StackExchange fora ranging from science-fiction world building to bicycles to quantum computing, with all the data publicly available in compressed XML files at [archive.org](http://archive.org/download/stackexchange).
 
-I chose to use the 10 largest datasets that my local machine could handle, details of which are displayed below in table \ref{tab:fora}:
+I chose to use the 8 largest datasets that my local machine could handle, details of which are displayed below in table \ref{tab:fora}.
 
 \renewcommand{\thetable}{\arabic{table}}
 \footnotesize
@@ -109,10 +105,10 @@ I chose to use the 10 largest datasets that my local machine could handle, detai
 Forum & Questions & Answers & Description \\ 
 \hline
 Buddhism & 5.7k & 19k & Discussions on Buddhist philosophy, teaching and practice \\
-Economics & 7.7k & 9.9k & For those studying, teaching, research and applying economics/econometrics \\
+Economics & 7.7k & 9.9k & For those studying, teaching, researching and applying economics/econometrics \\
 Fitness & 8.2k & 16k & Q\&A for athletes, trainers and physical fitness professionals \\ 
 Health & 5.6k & 4.5k & For professionals in the medical and allied health fields \\ 
-Interpersonal & 3.1k & 13k & Q\&A for anyone wanted to improve their interpersonal skills \\ 
+Interpersonal & 3.1k & 13k & Q\&A for anyone wanting to improve their interpersonal skills \\ 
 Linguistics & 7k & 11k & Community for professional linguists and those interested in linguistic research \\
 Outdoors & 4.9k & 12k & A forum for nature-enthusiasts \\ 
 Spanish & 6.4k & 14k & Q\&A for Spanish language linguists, teachers, students and enthusiasts  \\
@@ -122,7 +118,7 @@ Spanish & 6.4k & 14k & Q\&A for Spanish language linguists, teachers, students a
 \normalsize
 
 
-For each forum, the following data is available per post in the `Posts.xml` file:
+For each forum, the following data is available per post in a `Posts.xml` file:
 
 \setstretch{0.65}
 
@@ -167,7 +163,7 @@ For each forum, the following data is available per post in the `Posts.xml` file
 This analysis will only use the `PostTypeId`, `Score`, `ViewCount` and `Body` variables.
 
 
-## Noteworthy elements
+## Noteworthy elements \label{noteworthy}
 
 It is worth discussing the functioning of StackExchange sites in general to more thoroughly understand the data. Questions across fora are publicly available viewable by anyone on the internet, but posting a question on forum requires email registration with the forum. After registering, users start with 1 reputation\footnote{https://meta.stackexchange.com/questions/7237/how-does-reputation-work}. The reputation levels that are key to this analysis are: 
 
@@ -183,15 +179,15 @@ It is worth discussing the functioning of StackExchange sites in general to more
 
 \setstretch{1.25}
 
-**This presents a number of methodological issues.** The first is that owing to all questions being open to the public, many people may view questions without the ability to vote, **still contributing to the `ViewCount`**. Additionally, the asymmetries for privileges of up-voting and down-voting lead to a `Score` variable that is highly negatively skewed, making it appear that there are more "good" questions versus "bad" ones. Lastly, a major confounding factor is the editing of questions, not only by original posters, but also by anyone with 2000 reputation. This complicates much of the engagement between question-askers and communities because no data is available on the timing of answers, comments, votes, views etc. in relation to question edits.
+A number of methodological issues arise from how the sites operate. Firstly, owing to all questions being open to the public, many people may view questions without the ability to vote and thus still contribute to the `ViewCount` variable. Additionally, the asymmetries for privileges of up-voting and down-voting lead to a `Score` variable that is highly negatively skewed, making it appear that there are more "good" questions versus "bad" ones. Lastly, a major confounding factor is the editing of questions, not only by original posters, but also by anyone with 2000 reputation. This complicates much of the engagement between question-askers and communities because no data is available on the timing of answers, comments, votes, views etc. in relation to question edits.
 
 
 
 ## Preprocessing and Exploratory Analysis
 
-The entire analysis of the data was done with [`R`](https://cran.r-project.org), of which a link to the full code can be found [here](https://github.com/BCallumCarr/msc-lse-thesis/tree/master/01-r-code). After downloading and decompressing the data on the 10 selected forums, I used the `R` functions `xmlParse` and `xmlToList` from the `XML` package to parse and load the data into an `R` tibble from the `tidyverse` `R` package. Some regular expression work needed to clean up the HTML text in the question `Body`. The `PostTypeId` variable was used to separate out the question and answer posts, and **then** the descriptive graphs in figure \ref{fig:desc} were created using `ggplot2`.
+The entire analysis of the data was done with the statistical software package [`R`](https://cran.r-project.org) and a link to the full code used in the analysis can be found [here](https://github.com/BCallumCarr/msc-lse-thesis/tree/master/01-r-code). After downloading and decompressing the data on the 8 selected forums, I used the `R` functions `xmlParse` and `xmlToList` from the `XML` package to parse and load the data into an `R` tibble from the `tidyverse` `R` package. Some regular expression work was needed to clean up the HTML text in questions from the `Body` variable. The `PostTypeId` variable was then used to separate out the question and answer posts, and finally the descriptive bar graphs in figure \ref{fig:desc} were created using `ggplot2`.
 
-We see that average `Score` and `ViewCount` per question vary substantially across fora. Questions on the Interpersonal and Outdoors fora have average `Scores` of approximately 17 and 11 respectively, compared to around 3 or 4 which appears to be the average for the other fora. Interpersonal also has a significantly higher average `ViewCount` at approximately 4400 views per question, followed by Fitness, Outdoors and Spanish which all have an average around 3000.
+In figure \ref{fig:desc}, we see that average `Score` and `ViewCount` per question vary substantially across fora. Questions on the Interpersonal and Outdoors fora have average `Scores` of approximately 17 and 11 respectively, compared to around 3 or 4 for the other fora. Interpersonal also has a significantly higher average `ViewCount` at approximately 4400 views per question followed by Fitness, Outdoors and Spanish which all have an average of around 3000.
 
 \renewcommand{\thefigure}{\arabic{figure}}
 
@@ -223,9 +219,9 @@ knitr::include_graphics("./results/cumul-viewcount.png")
 \end{figure}
 \normalsize
 
-Figure \ref{fig:cumul} plots cumulative percentages of questions as a function of `ViewCount` in each fora. There are two aspects of the graph that noteworthy - the order of the curves from left to right and the fact that they maintain this order - i.e. they are roughly parallel. The further right a curve is indicative of high `ViewCounts` per post overall and should we see that the order mirrors the average `ViewCount` descriptive bar graph in figure \ref{fig:desc}. 
+Figure \ref{fig:cumul} plots cumulative percentages of questions as a function of `ViewCount` in each fora. There are two aspects of the graph that are noteworthy - the order of the curves from left to right, and the fact that they maintain this order (i.e. they are roughly parallel). The further right a curve is is indicative of high `ViewCounts` per post overall, and we see that this does mirror the averages calculated in the `ViewCount` descriptive bar graph in figure \ref{fig:desc}. 
 
-On the other hand, a crossing of curves would indicate that there are certain `ViewCount` thresholds where a forum becomes more popular (experiences more viewing traffic) than the other. **Overall, it appears as though the ViewCount distributions across fora are relatively homogenous.**
+A crossing of curves in figure \ref{fig:cumul} would indicate that there are certain `ViewCount` thresholds where a forum becomes more popular (experiences more viewing traffic) than another. Since there is very little crossing of curves over all fora, if at all, it appears as though the distribution of `ViewCount` across fora is fairly homogeneous and has relatively constant variance.
 
 
 
@@ -233,19 +229,23 @@ On the other hand, a crossing of curves would indicate that there are certain `V
 
 ## The `Score` Variable
 
-Now that we have parsed corpora corresponding to question content for the fora, we move onto defining the metric measuring community engagement. **As discussed, we choose the same metric as @Ravi2014, and run through similarly methodology.** One point of departure however, is that @Ravi2014 choose to eliminate questions below a certain `ViewCount` threshold to control for the possibility that sufficient users qualified to vote not seeing these questions. 
+Now that I have parsed question content for the fora in the `Body` variable, I move onto defining a metric that measures community engagement. As previously mentioned, I choose the same metric used in @Ravi2014, a question's `Score` to measure what I consider community engagement for questions. A point of departure here however, is that @Ravi2014 choose to eliminate questions below a certain `ViewCount` threshold to control for the possibility that sufficient users qualified\footnote{See section 4.2 for a discussion on registered user privileges} to vote do not see these questions. 
 
-I feel that while it may partly be random chance that these questions do not receive views from qualified users, there may also be inherent qualities and aspects of these questions that explain this occurrence, and thus should be incorporated into the final prediction model since this is precisely a case of a lack of community engagement. I therefore do not discard any questions from the fora.
+I feel that while it may partly be random chance that these questions do not receive views from qualified users, there may also be inherent qualities and aspects of these questions that explain this occurrence, and thus they should be incorporated into the final prediction model since this is precisely a case of a lack of community engagement. I therefore do not discard any questions from the fora.
 
-A pertinent finding from @Ravi2014 is that questions with higher `ViewCounts` are more likely to receive higher `Scores`. They consequently normalise `Score` by `ViewCount` to mitigate the possibility of conflating popularity with what they assume is question quality. I replicate this step in their methodology, and table \ref{tab:bestworst} displays the titles of a selection of "best" and "worst" questions across fora according to the metric `Score`/`ViewCount`:
+A pertinent finding from @Ravi2014 is that questions with higher `ViewCounts` are more likely to receive higher `Scores`. They consequently normalise `Score` by `ViewCount` to mitigate the possibility of conflating popularity with what they assume is question quality. I replicate this step in their methodology, and table \ref{tab:bestworst} displays the titles of a selection of "best" and "worst" questions across fora according to the final response variable `Score`/`ViewCount` (the best questions have positive `Scores` whereas the worst have negative `Scores`).
+
+Table \ref{tab:bestworst} appears to show that questions that are considered the "best" tend to be honest and discussion-promoting, whereas the "worst" questions are often sarcastic and probably not genuinely looking for an answer - the questions from the Economics and Fitness fora illustrate this. Social norms also appear to play a strong part, since the "worst" question on the Interpersonal forum eludes to children being unvaccinated, which I assume would upset many individuals on the forum and lead to lowest `Score` per `ViewCount` for that forum.
+
+\newpage
 
 \setcounter{table}{1}
 \footnotesize
 
-\begin{longtable} {@{} cccp{9cm} @{}}
-\caption{\textbf{Best/Worst Fora Questions According to \texttt{Score}/\texttt{ViewCount}}}
+\begin{longtable} {@{} cccp{11cm} @{}}
+\caption{\textbf{Best and Worst Fora Questions According to Score/ViewCount}}
 \label{tab:bestworst}\\ \hline \hline
-Forum & \texttt{Score} & \texttt{ViewCount} & \texttt{Title} \\ 
+\textbf{Forum} & \textbf{Score} & \textbf{ViewCount} & \textbf{Title} \\ 
 \hline
 Buddhism & 13 & 176 & What are the texts that contain words which can be attributed directly to the Buddha? \\
 \hline
@@ -265,16 +265,16 @@ Spanish & 20 & 330 & Is the use of @ instead of 'a' or 'o' in order to refer to 
 \begin{center} Source: Own calculations in R.\end{center}
 \normalsize
 
-It appears that questions asking honest and discussion-promoting questions are among the best, whereas the worst often include sarcasm and were not genuinely looking for an answer (see the questions from the Economics and Fitness fora respectively). Social norms also appear to play a strong part, since the "worst" question on the Interpersonal forum eludes to their kids being unvaccinated, which I assume upsets many individuals on the forum, leading to the low `Score` value per `ViewCount`.
+
 
 
 ## Final Binary Response Variable
 
-For the purpose of predicting in the classification model, @Ravi2014 decide on a binary response i.e. labeling questions as just "good" and "bad"\footnote{For clarity, when referring to good and bad questions in this research, I refer to questions being able to attract positive and negative community engagement, unlike the narrower definition of just question quality}. This clearly ignores the fact that community engagement lies on a spectrum rather than is binary, but it simplifies the prediction step and thus we **emulate** this and leave it up to further research to predict on a range of community engagement.
+For the purpose of predicting in the classification model, @Ravi2014 decide on a binary response i.e. labeling questions as only "good" versus "bad"\footnote{For clarity, when referring to good and bad questions in this research, I refer to questions being able to attract positive and negative community engagement}. This clearly ignores the fact that community engagement lies on a spectrum, but it simplifies the prediction step and thus I emulate this and leave it up to further research to predict on a range of community engagement.
 
-The crucial issue for the research here is that @Ravi2014 decide on a decision boundary of 0.001 for the `Score`/`ViewCount` response variable, above which they define good questions, and below bad questions. Other than stating that their reason for this is so that they are "confident that this reflects the good quality of [a question], rather than an incidental click on the up vote", the full motivation behind why this specific bound was chosen over others appears to be lacking.
+The crucial issue at this stage is that @Ravi2014 decide on a decision boundary of 0.001 for the `Score`/`ViewCount` response variable, above which they define good questions, and below bad questions. Other than stating that their reason for this is so that they are "confident that this reflects the good quality of [a question], rather than an incidental click on the up vote", the full motivation behind why this specific bound was chosen over others appears to be lacking.
 
-This is not a trivial decision, since in selecting a bound one makes a strong assumption on what the ratio of good and bad questions is on a given forum. This is exacerbated by the fact that the response is binary, since questions that are on the margin and are barely labeled "good" will be treated the same as the "best" questions in the final prediction model. It is at this key step of defining the margin that I aim to shed light on - **the results that follow indicate more robust choices for this boundary.**
+This is not a trivial decision, since in selecting a bound one makes a strong assumption on what the ratio of good and bad questions is for a given community. This is exacerbated by the fact that the response is now binary, since questions that are on the margin and are barely labeled "good" will be treated the same as the "best" questions in the final prediction model. It is at this key step that I perform validation checks to shed light on what the optimal choice is.
 
 
 
@@ -285,13 +285,15 @@ This is not a trivial decision, since in selecting a bound one makes a strong as
 <!-- RESULTS: Apply the methods, present the findings. Be sure to be explicit about any steps taken.
               What conclusions on the question can we draw from the results?-->
 
-The boundary of 0.001 for the `Score`/`ViewCount` variable used in @Ravi2014 appears to be half of the mean for the variable - my investigations found that this results in approximately 60% of questions being labeled as "good" in the data, therefore I use this as the baseline comparison among other thresholds\footnote{Again in the interest of clarity, when I refer to threshold I am referring to the percentage of questions labeled good} in these results. I compare the splitting of good/bad questions on a threshold using Cosine and Jaccard similarity\footnote{Euclidean distance was not included owing to it capturing essentially the same information as Cosine similarity} with the assumption being that good and bad questions will differ across these metrics owing to differences in their feature use. For each threshold tested, dfms were constructed (weighted, stemmed, with no stopwords or punctuation) on both samples of good- and bad-labeled questions to calculate the similarity statistics. 
+The boundary of 0.001 for the `Score`/`ViewCount` variable used in @Ravi2014 appears to be half of the mean for the variable - my investigations found that this results in approximately 60% of questions being labeled as "good" in the data, therefore I use this as the baseline comparison among other thresholds\footnote{Again in the interest of clarity, when I refer to threshold I am referring to the percentage of questions labeled "good"} in these results. 
 
-For thresholds between 0% and 50% I compare symmetric samples i.e., for a threshold of 10% corresponding to the 10% "best" questions (a high decision boundary for the `Score`/`ViewCount` variable) I compare the "worst" 10% of questions. In this way, questions symmetrically around the 50% mark are ignored until we reach the 50% threshold where all questions would be compared. Past the 50% mark I compare all questions labeled good with all questions labeled bad.
+I compare the splitting of good/bad questions on a threshold using Cosine and Jaccard similarity\footnote{Euclidean distance was not included owing to it capturing essentially the same information as Cosine similarity} with the assumption being that good and bad questions will differ across these metrics owing to differences in their feature use. For each threshold tested, document feature matrices were constructed (weighted, stemmed, with no stopwords or punctuation) on both samples of good- and bad-labeled questions to calculate the similarity statistics using the `textstat_simil` function from the `quanteda` package.
+
+For thresholds between 0% and 50% I compare symmetric samples - i.e. for a threshold of 10% corresponding to the 10% "best" questions (a high decision boundary for the `Score`/`ViewCount` variable) I compare the "worst" 10% of questions. In this way, questions symmetrically around the 50% mark are ignored until the 50% threshold is reached. Past the 50% mark I compare all questions labeled good with all questions labeled bad, i.e. a threshold of 60% would be compared the other 40% questions labeled bad.
 
 Figure \ref{fig:simil} plots how the two similarity metrics vary over the different thresholds. Low values for these graphs indicate low similarity and thus higher distinction between good/bad samples, and the black vertical line is the 60% baseline comparison. The curves across both graphs are roughly inverted-U-shaped and similar to one another, indicating the disparity between the very "best" and "worst" questions on the far left, and on the far right showing that the very "worst" questions differ substantially from the rest of the corpus.
 
-In both graphs on the far left we see significant oscillation of the curves - this is most likely a result of subsets of the data being compared rather than the full corpus. The low similarities of around 0.85-0.925 for the Economics, Fitness and Linguistics fora in the Cosine similarity plot is expected, since we are comparing the very best and worst questions. What is interesting is that not all of the curves in the Cosine similarity graph depict this behaviour, with some fora like Outdoors almost having a negative slope for the entire range of thresholds.
+In both graphs on the far left we see significant oscillation of the curves - this is most likely a result of subsets of the data being compared rather than the full corpus. The low similarities of around 0.85-0.925 for the Economics, Fitness and Linguistics fora in the Cosine similarity plot are expected, since the very best and worst questions are being compared here. What is interesting is that not all of the curves in the Cosine similarity graph depict this expected behaviour, with some fora like Outdoors almost having a negative slope for the entire range of thresholds.
 
 
 \setcounter{figure}{2}
@@ -311,7 +313,7 @@ knitr::include_graphics("./results/threshold-jac.png")
 
 Most interestingly, all curves across both graphs appear to converge towards each other and in shape from a 30% threshold onward. The fact that some curves even plateau and reach local minima after tapering off on the far right indicates not only that higher thresholds (> 50%) lead to more distinct good/bad samples (which wasn't unexpected), but that an optimal threshold could be achieved where the samples are distinct and there is still a substantial number of bad-labeled questions. 
 
-Keeping in mind that the threshold decision necessitates an assumption of what the ratio of bad and good questions are in fora, I finally perform difference-of-means tests across other linguistics features for the Economics and Interpersonal fora with thresholds of 75% and 80% respectively. Once again, the main assumption here is that good and bad questions differ across the features measured. The results are displayed in tables \ref{tab:pers_stat} and \ref{tab:ecos_stat}, with statistical significance for differences displayed for character length up to moral values\footnote{The Wilcoxon Rank Sum Test was used because it is non-parametric and thus does not assume a statistical distribution for the data}. \newline
+Keeping in mind that the threshold decision necessitates an assumption of what the ratio of bad and good questions are in fora, I finally perform difference-of-means tests across other linguistics features for the Interpersonal and Economics\footnote{The results of only two fora are presented for the sake of brevity} fora with thresholds of 80% and 75% respectively. Once again, the main assumption here is that good and bad questions differ across the features measured. The results are displayed in tables \ref{tab:pers_stat} and \ref{tab:ecos_stat}, with statistical significance for differences displayed for character length up to moral values\footnote{The Wilcoxon Rank Sum Test is used owing to it being non-parametric and thus not assuming a distributional form for the data}. \newline
 
 
 \setcounter{table}{2}
@@ -344,7 +346,9 @@ Moral Values &    0.55 &    0.51 & 0.04\textasteriskcentered  &    0.54 &    0.5
 \end{longtable}
 \normalsize
 
-There are a number of noteworthy results from table \ref{tab:pers_stat} for the Interpersonal forum. The first is that the new threshold has resulted in starker differences for some linguistic features, but not for others. This hints that our assumption of distinctions necessarily existing across all features between samples is incorrect. Secondly, the split for the new threshold results in a good-sample that uses far greater selections of URL-text, stopwords and punctuation. This implies that the new threshold is separating out questions that are more linguistically complex and potentially show more prior research (by linking URLs). This is confirmed by the improved difference of lexical complexity for the Guiraud’s Root TTR and Yule’s K statistics, now also statistically significant. Lastly, the new threshold has diminished the difference in character/word lengths and appeal-to-moral-values of good/bad questions whereas the results for readability (Flesch-Kincaid and Gunning's Fog Index) and sentiment are essentially the same.
+There are a number of noteworthy results from table \ref{tab:pers_stat} for the Interpersonal forum. The first is that the new threshold has resulted in starker differences for some linguistic features, but not for others. This hints that our assumption of distinctions necessarily existing across all features between samples may be incorrect. 
+
+Secondly, the split for the new threshold results in a good-sample that uses far greater selections of URL-text, stopwords and punctuation. This implies that the new threshold is separating out questions that are more linguistically complex and potentially show more prior research (by linking URLs in the question `Body`). This is confirmed by the larger differences of lexical complexity (Guiraud's Root TTR and Yule's K) for the new threshold, now also both statistically significant at the 0.001 level. Lastly, the difference in character/word lengths and appeal-to-moral-values of good/bad questions has diminished for the new threshold, whereas the results for readability (Flesch-Kincaid and Gunning's Fog Index) and sentiment are essentially the same for both thresholds.
 
 
 \footnotesize
@@ -377,7 +381,7 @@ Moral Values &    0.48 &    0.44 & 0.04\textasteriskcentered \textasteriskcenter
 
 \newpage
 
-For the results of the Economics forum in table \ref{tab:ecos_stat} there are in fact greater differences across all metrics, with approximately the same statistical significance results. This is substantial evidence that a threshold of 75% results in higher discernment between good and bad question samples while still maintaining at least a quarter of questions labeled as bad. Overall, the results above indicate that unique and optimal thresholds can be investigated and implemented across all fora, to provide more robust binary samples for prediction and classification.
+For the results of the Economics forum in table \ref{tab:ecos_stat}, there are in fact greater differences across all metrics with approximately the same statistical significance results. This is substantial evidence that a threshold of 75% results in higher discernment between good and bad question samples, while still maintaining at least a quarter of questions labeled as bad. Overall, the results above indicate that unique and optimal thresholds can be investigated and implemented across all fora, providing more robust binary samples for prediction and classification of community engagement.
 
 <!--
 "One consequence of this is that lexical diversity is better used for comparing texts of equal length.[3] Newer measures of lexical diversity attempt to account for sensitivity to text length"
