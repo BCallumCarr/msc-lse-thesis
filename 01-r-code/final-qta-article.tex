@@ -190,6 +190,7 @@ negative community engagement, improving upon work done in this area.
 
 \newpage
 
+
 \renewcommand{\contentsname}{Contents}
 \hypersetup{linkcolor=black}
 \tableofcontents
@@ -208,6 +209,7 @@ negative community engagement, improving upon work done in this area.
 
 \newgeometry{left=2cm, right=2cm, top=2.5cm, bottom=4cm}
 
+
 \section{\texorpdfstring{Introduction
 \label{Intro}}{Introduction }}\label{introduction}
 
@@ -216,7 +218,7 @@ technologies that have evolved from it have given us an unprecedented
 level of connection and potential interaction with the world. Every day,
 billions of individuals engage online not only with people they know,
 but with complete strangers from across the globe. A considerable
-challenge with there online interactions is widespread incivility, with
+challenge with these online interactions is widespread incivility, with
 substantial work being devoted to understanding and addressing this
 (Gervais, 2015; Berry and Taylor, 2017).
 
@@ -230,14 +232,16 @@ of off-topic activity and discussion makes it difficult for answerers to
 find and engage with questions they \emph{can} answer, let alone review
 all questions in the community.
 
-Scarcity of expert resources seems to be a persistent problem in social
-Q\&A systems, and thus the rationale for this research is to eventually
-tackle question-formulation before they enter a community and place
-demand on expert resources. One approach to achieve this would be to
-build a classification model that can predict positive community
-engagement with questions, and provide this information to questioners
-so that they can be nudged into formulating a question that will better
-received by a community (improving the "signal'' of their question).
+Scarcity of expert resources is also a persistent problem in social Q\&A
+systems, and thus the motivation for this research is to address
+precisely this imbalance by tackling question-formulation before
+questions place demand on expert resources. I plan to achieve this by
+eventually building a classification model that predicts positive
+community engagement with questions and provides this information to
+questioners so that they can be nudged into improving the ``signal'' of
+their questions. Since questions are the entry-point of every online
+Q\&A community engagement, it is hoped that this will improve the
+overall functioning and development these communities.
 
 The broad research question is therefore the following:
 
@@ -247,19 +251,22 @@ The broad research question is therefore the following:
 
 Here, positive community engagement is defined as constructive, amicable
 interactions with user questions through answers, comments, votes, edits
-and so on. One assumption made is that questions are heterogeneous in
-that they have varying levels of ``quality'' which evoke either positive
-and negative community reaction.
+and so on. One assumption that is made is that questions are
+heterogeneous, i.e.~they have varying levels of ``quality'' which evoke
+either positive and negative community reaction.
 
-The research presented here is but an initial step in the ultimate goal
-of classifying user questions and serves to build on methodologies and
-approaches already taken to measure question quality/community
-engagement. In this paper I analyse a diverse range of questions in fora
-from the family of Q\&A communities, StackExchange. I use a metric for
-community engagement to label questions as ``good'' and ``bad''
-(receiving positive and negative community engagement respectively) and
-find more optimal thresholds for this labeling by calculating similarity
-metrics and linguistic differences across good/bad samples.
+\newpage
+
+The research presented in this paper is but an initial step in the
+ultimate goal of classifying user questions and serves to build on
+methodologies and approaches already taken to measure question
+quality/community engagement. In it, I analyse a diverse range of
+questions in fora from the family of Q\&A communities, StackExchange. I
+use a metric for community engagement to label questions as ``good'' and
+``bad'' (receiving positive and negative community engagement
+respectively) and find more optimal thresholds for this labeling by
+calculating similarity metrics and linguistic differences across
+good/bad samples.
 
 I now move onto a brief discussion of previous work in this field. This
 is followed by descriptions of the datasets used, pre-processing steps
@@ -831,8 +838,8 @@ The discussion and results of this paper demonstrate that the decision
 on where to label good and bad questions for online question-answer
 communities using the \texttt{Score}/\texttt{ViewCount} variable, or any
 response variable for that matter, should not be taken lightly. By
-analysing the distinguishing linguistic factors of various thresholds of
-good-labeled questions, I was able to establish that more optimal
+analysing the distinguishing linguistic factors for various thresholds
+of good-labeled questions, I was able to establish that more optimal
 decision boundaries can be obtained for this variable in the interest of
 more robustly capturing and predicting positive community engagement.
 
@@ -843,9 +850,9 @@ more optimal values. Further work could also attempt to capture and
 predict on a range of community engagement rather than the discrete
 binary response defined in this paper.
 
-One area of further research that I plan to pursue is to take these
-results and implement them in a binary classification model of my own,
-with the aim of predicting questions that elicit positive community
+As discussed, I plan to pursue further research myself by taking these
+results and implementing them on my own binary classification model with
+the aim of predicting questions that elicit positive community
 engagement. In this way, I hope to assist online Q\&A fora users in
 improving their questions, and consequently improve the prosperity of
 online Q\&A communities as a whole.
