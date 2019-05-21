@@ -1,7 +1,7 @@
-# Install unzipper, loop to download datasets and unzip
-
+## install unzipper
 sudo apt-get install --yes p7zip-full
 
+## create folder and datasets array
 mkdir datasets && cd datasets
 
 declare -a arr=(
@@ -20,6 +20,7 @@ declare -a arr=(
 "woodworking.stackexchange.com"
 )
 
+## loop downloading, unzipping and extracting all XML data
 for i in "${arr[@]}"
 do
    mkdir "$i" && cd "$i"
@@ -33,5 +34,4 @@ done
 cd
 
 ## DON'T FORGET TO copy datasets folder over to bucket!!
-
 #gsutil cp -r datasets gs://bucket-brad/datasets

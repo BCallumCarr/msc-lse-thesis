@@ -1,8 +1,10 @@
 *.DS_Store
 *.dropbox
 articles
+data-ideas
+extra
 info
-msc-research-proposal
+msc-research-proposals
 test-data
 .history
 .Rapp.history
