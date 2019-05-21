@@ -1,0 +1,18 @@
+---
+title: "Modelling question quality across multiple disciplines"
+author: "Brad Carruthers"
+date: "26/02/2019"
+fontsize: 12pt
+linestretch: 1.5  
+output: pdf_document
+documentclass: "article"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE)
+```
+
+# Abstract
+
+Formulating high-quality questions and receiving answers to these questions is a key part of the learning and information gathering processes. Online social networks and fora have given users unprecendented ability to comment on and question the world, and while much attention has been given to delivering answers (just ask Google), relatively little attention has been given to how we can ask better questions. Producing relevant, legible and well-researched questions, often relating to highly-technical concepts, is especially valuable on online social Q&A systems where expert resources can be scarce. My goal is to develop a multi-disciplinary question-quality model with the aim of nudging questioners to improve their questions before they add demand to an operational system. Ideally this model could be extended to any platform where there is some proxy for community-value of questions, resulting in the improvement of "signal" in questions across disciplines and across user demographics. <!--including MOOCs where information overload (too few course-relevant threads/questions) is particularly-->
+
