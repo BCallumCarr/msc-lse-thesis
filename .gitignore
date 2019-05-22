@@ -1,3 +1,7 @@
+Icon?
+*.ipynb_checkpoints
+*.json
+*.csv
 *.DS_Store
 *.dropbox
 articles
