@@ -203,7 +203,7 @@ for (k in 1:length(datasets)) {
   cat("\nThe average value of y_ravi is", round(mean(sxdf_q$y_ravi$Score),5), "\n")
   cat("Conditioned on positive y_ravi the average is", round(mean(sxdf_q$y_ravi[sxdf_q$y_ravi>0]),5), "\n")
   
-  ## title of "best" and "worst" question based on Score/ViewCount
+  ## content of "best" and "worst" questions based on Score/ViewCount
   best_worst_qs[[datasets[k]]][["ravi"]] <- rbind(
     sxdf_q[sxdf_q$y_ravi==max(sxdf_q$y_ravi),][,c("Score", "ViewCount", "Title", "y_ravi")],
     sxdf_q[sxdf_q$y_ravi==min(sxdf_q$y_ravi),][,c("Score", "ViewCount", "Title", "y_ravi")])
