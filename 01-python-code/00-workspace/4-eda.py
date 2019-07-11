@@ -12,6 +12,7 @@ for i in data_array:
         rdd.flatMap(lambda x: x).max()).collect())
 
 import seaborn as sns
+import matplotlib.pyplot as plt
     
 ## bar plot of post counts in descending order
 

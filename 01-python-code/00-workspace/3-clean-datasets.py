@@ -17,6 +17,7 @@ for i in data_array:
     for j in ['viewcount', 'score']:
         datasets[i] = datasets[i].withColumn(j, datasets[i][j].cast("long"))
 
+import re
 from pyspark.sql.types import *
 from pyspark.sql.functions import udf
 

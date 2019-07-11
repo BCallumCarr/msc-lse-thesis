@@ -21,5 +21,12 @@ for i in data_array:
 
 import pickle
 
+## pickle best/worst results
+
 with open('best_worst_qs.pickle', 'wb') as handle:
     pickle.dump(best_worst_qs, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+## export clean data with target
+for i in data_array:
+
+    datasets[i].write.parquet(f'clean-data/{i}.parquet')
