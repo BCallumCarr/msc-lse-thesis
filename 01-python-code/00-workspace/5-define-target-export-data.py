@@ -2,8 +2,8 @@
 
 for i in data_array:
     datasets[i] = datasets[i].withColumn('y_ravi', datasets[i]['score']/datasets[i]['viewcount'])
-    print("\nThe average value of " +'\033[1m'+ i +'\033[0m'+ " y_ravi is " + 
-          str(round(datasets[i].select("y_ravi").rdd.flatMap(lambda x: x).mean(),7)) + "\n")
+    round_mean = round(datasets[i].select("y_ravi").rdd.flatMap(lambda x: x).mean(),7)
+    print(f"The average value of \033[94m{i}\033[0m y_ravi is {round_mean}")
 
 ## content of "best" and "worst" questions based on Score/ViewCount
 
