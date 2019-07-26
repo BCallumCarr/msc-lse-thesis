@@ -1,4 +1,0 @@
-pandas
-scikit-learn
-mlxtend
-category_encoders
