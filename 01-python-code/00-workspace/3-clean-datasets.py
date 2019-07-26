@@ -19,10 +19,10 @@ for i in data_array:
         datasets[i] = datasets[i].withColumn(j, datasets[i][j].cast("long"))
 
 ## fixing stackoverflow date column
-
-from pyspark.sql.functions import substring, length, col, expr
-
-datasets['stackoverflow'] = datasets['stackoverflow'].withColumn("creation_date",expr("substring(creation_date, 1, length(creation_date)-4)"))
+if ('stackoverflow' in data_array):
+        from pyspark.sql.functions import substring, length, col, expr
+        
+        datasets['stackoverflow'] = datasets['stackoverflow'].withColumn("creation_date",expr("substring(creation_date, 1, length(creation_date)-4)"))
 
 ## changing date column to timestamp
 
@@ -31,7 +31,9 @@ from pyspark.sql.functions import to_timestamp
 for i in data_array:
         datasets[i] = datasets[i].withColumn('clean_date', to_timestamp(datasets[i].creation_date).alias('dt'))
 
-## sorting entries according to date column: MIGHT NOT NEED TO DO THIS
+## in case you wanted to sort entries according to date column
+
+from pyspark.sql.functions import col
 
 '''for i in data_array:
         datasets[i] = datasets[i].sort(col('clean_date')'''

@@ -1,7 +1,11 @@
+import sys
 import pandas as pd
 import xml.etree.ElementTree as ET
 
-root = ET.parse('../initial-data/superuser.stackexchange.com/Posts.xml').getroot() #create an ElementTree object
+uput = sys.argv[1]
+print(uput)
+
+root = ET.parse(f'../initial-data/{uput}.stackexchange.com/Posts.xml').getroot() #create an ElementTree object
 
 ## function to extract row tag attributes
 def iter_rows(_root):
@@ -20,4 +24,4 @@ df['PostTypeId']=pd.to_numeric(df['PostTypeId'])
 df = df[df['PostTypeId']==1][['Body', 'Title', 'ViewCount', 'Score', 'CreationDate']]
 
 ## write to parquet
-df.to_parquet("../initial-data/superuser.stackexchange.com/file-01.parquet") # uses pyarrow, which fixes a spark java error
+df.to_parquet(f'../initial-data/{uput}.stackexchange.com/file-01.parquet') # uses pyarrow, which fixes a spark java error
