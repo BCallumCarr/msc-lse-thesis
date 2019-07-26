@@ -1,0 +1,405 @@
+---
+title: "Research Proposal: Predicting Community Engagement with Questions Across Online Question-Answer Fora"
+author: "Candidate Number: 10140, Seminar Group 6, Word Count: 3990 words"
+date: "29 April 2019"
+bibliography: tex/ref.bib
+csl: tex/harvard-cite-them-right.csl 
+toc: yes        
+lot: no        
+lof: no        
+numbersections: yes
+fontsize: 12pt
+linestretch: 1.25  
+output:
+  pdf_document:
+    keep_tex: TRUE
+    template: tex/tex-default.tex        
+    fig_width: 3.5        
+    fig_height: 3.5
+documentclass: "article"
+BottomCFooter: "\\footnotesize \\thepage\\"    
+---
+
+# Introduction
+
+Formulating high-quality questions and obtaining answers to these questions is not only a key part of the learning and information gathering processes, but to scientific and human progress. Online social networks and fora have given users unprecedented ability to comment on and question the world, and while attention has been devoted to finding the right answers (just ask Google), relatively little attention has been given to how we can ask better questions. Producing relevant, legible and well-researched questions concerning technical concepts is especially valuable in online social question-answer communities where expert resources are often scarce.
+
+One way to improve the functioning of these communities would be to provide an indication to users of how "well" their questions will be received by a community, potentially nudging questioners to improve aspects of their question before they add demand to a question-answering system. The goal of this analysis therefore is to scrutinise work aimed at questions in question-answering communities, and build on this by constructing and validating a selection of community engagement metrics and consequent models. Unlike most previous research, I will extend my analysis to a large range of diverse communities for further robust validation. <!--Ideally this model could be extended to any platform where there is some proxy for 
+
+Questions form the basis of the scientific endeavour, and asking educated, well-researched and well thought-out questions is what leads to progress as the human race. @Ravi2014 analysed community question-answering data from stackoverflow.com questions in an attempt to predict question quality. Their model eventually achieved accuracy scores of up to 72%, but my plan is to look more closely into if they are actually predicting question quality, or something else. I think this is a fascinating 
+
+<!--
+The Fourth Industrial Revolution is coming and people need help. People need help traversing an internet with less bigotry, trolling and negative content. People need help interacting with the internet and tech. this and that. Information overload and improving the quality of dicussions in the public square appear to be major issues worth having a look at. My aim is to assist online users by nudging them into asking bettwe questions when interacting with various communities, i.e. Q&A fora like Quora, Yahoo! Answers, StackExchange, MOOCs etc.-->
+
+
+
+\newpage
+
+# Research Question
+
+Put explicitly, the goal of this research is to answer the following question:
+
+\begin{center}
+\emph{To what extent can community engagement of question-answering communities in response to heterogeneous questions be captured by various metrics and accurately predicted?}
+\end{center}
+
+Here, my conceptualisation of community engagement is a community interacting with user questions through answering, voting, commenting, favouriting, editing, closing down etc. I define positive engagement as constructive, amiable activity across these interactions. Questions are also heterogeneous in the sense that their construction and different levels of "quality" evoke varying levels of positive and negative community interaction.
+
+The research question above necessitates two tasks: Capturing, and then predicting community engagement. The first task can be addressed by considering a number of response variables that relate to, or are proxies for community engagement. The second task involves using these response variables in a predictive classification model to ascertain how well each forum's model can predict "good" (positive) and "bad" (negative) community engagement.
+
+While this research question fits into how communities react to and value questions, the focus is on validating the methodological measurement of community engagement quantitatively, rather than qualitative, causal or correlational explanatory analysis. It is hoped that the methodology validated in this analysis will be used as a stepping stone for further research to more precisely explore how and why diverse communities value and engage with questions differently.
+
+
+
+\newpage
+
+# Previous Work
+
+## Question-Answer Communities
+
+A substantial amount of research has investigated question-answer communities. Work has been done on quality of answers [@Jeon2006; @Tian2013; @Shah2010], questioner satisfaction [@Liu2008] and behaviour of expert users [@Riahi2012; @Sung2013]. Work on question-answer communities has also often been placed in the framework of a matching process where the goal is optimising the routing of user questions to expert resources [@Li2010; @Li2011; @Shah2018; @Zhou2012], or routing questions according to answerers' interests as a recommendation system [@Qu2009; @Szpektor2013; @Wu2008].
+
+My approach differs to this previous work in two main aspects. Firstly, rather than focusing on answer or user characteristics, I focus on questions. As @Agichtein2008 show, question quality can significantly impact answer quality. Trivially, questions also serve as the initial event in the question-answering process, upon which all community engagement follows. Thus, maximising the positive community engagement of questions will most certainly enhance the functioning and development of a community. 
+
+The second difference is the framework in which I place the research. I steer clear of the systems-based framework of optimising matching/routing mechanisms and instead centralise how users can be nudged to improve aspects of their question before exerting demand on expert resources. This framework coincides strongly with a large body of research on codifying question quality in question-answer communities, and so this is discussed next.
+
+
+
+## Question Quality
+
+Intuitively, question quality and community engagement are two sides of the same coin - high-quality questions assuredly lead to positive community engagement. As will be argued later, I consider community engagement a more robust characterisation of what is being measured in the following literature, however I will refer to "question quality"" rather than community engagement for the sake of this discussion.
+
+Question quality has been investigated using the online question-answer community [Yahoo! Answers](http://answers.yahoo.com) [@Agichtein2008; @Bian2009; @Li2012], but a considerable limitation of this dataset is that it lacks objective and clear-cut metrics for question quality. To address this, @Agichtein2008 use semantic features (punctuation, typos, lexical complexity etc.) to define quality questions, @Bian2009 make use of manual labels to identify quality in a sample of 250 questions, and @Li2012 use a combination of tag count, answer count and time-to-first-answer along with domain expert and author judgement to ascertain ground truth.
+
+Fortunately, the StackExchange fora that I will explore are richer datasets in the sense that a greater number of proxies for question quality and community engagement are available. More importantly, these metrics are more objective as they are derived from the data itself rather than manual human labeling. In this way, it is also possible to "automatically" define question quality with a robust\footnote{The key issue being the assumptions made and the manner in which this labeling occurs} response variable, vastly increasing the number of ground truth cases.
+
+Another substantial difference that has evolved over time in the question-quality literature is the chosen predictive model. Previous work [@Agichtein2008; @Anderson2012; @Bian2009; @Li2012] chose to use features such as the question category, lexical properties of the question (length, level of misspelling, words-per-sentence) and question-asker's reputation for prediction.
+
+By ignoring words, topics and other inherent question content and focusing instead on features of the question-asker, users asking questions for the first time would be largely ignored by models of this kind. This is directly opposed to my specific goal of predicting how communities will engage with all users, especially new and inexperienced users who are likely to not have their questions answered at all, let alone positively. For my modeling task, I therefore only focus on explanatory features derived from the contents of questions, not user attributes, history or other data.
+
+
+
+\newpage
+
+## Topic Modeling \label{model-lit}
+
+Focusing on the textual content of questions alone leads me to a discussion on how this text will be modeled. Bayesian models have gained popularity in solving diverse structured prediction tasks in Natural Language Processing (NLP) [@Chiang2010], and Latent Dirichlet Allocation (LDA) [@Blei2003] is a form of topic modeling where generative Bayesian models are applied to documents to model hidden topics as a probability distribution over words. LDA can thus be used to uncover the underlying semantic structure of documents and infer topics associated with these documents. 
+
+Indeed, @Ravi2014 show that using latent topics derived from LDA modeling allows for powerful prediction (accuracy scores of up to 72%) of "question quality" using the coding question-answer site, [StackOverflow](https://stackoverflow.com). My analysis will mirror not only the modeling methodology of @Ravi2014, but also critique and build on the methodology they use to define their metric for question quality.
+
+The final predictive model that @Ravi2014 employ is based on a model proposed by @Allamanis2013, who themselves analysed StackOverflow questions but did not use their model to predict "question quality". @Allamanis2013 use LDA models on three tiers: First across the entire question body, secondly on the code chunks in the body, and lastly on the body with noun phrases removed. 
+
+@Ravi2014 on the other hand choose the following three levels over which to model latent topics: Globally to capture topics over the entire question content, locally to capture sentence-level topics, and a Mallows model [@Fligner1986] global topic structure to enforce structural constraints on the sentence topics in questions. This is the same model that I will employ in task two of my research question.
+
+<!--
+and to my knowledge no previous research has used this methodology in the discussed framework to capture and measure community engagement.
+-->
+
+
+\newpage
+
+# Data \label{data}
+
+## StackExchange Fora 
+
+The data I will use are the 10 largest community question-answering fora from the family of websites, [StackExchange](https://stackexchange.com/sites#traffic), of which StackOverflow analysed by @Ravi2014 is the largest (10 million registered users and 18 million questions at time of writing). There are over 170 different StackExchange sites ranging from vegetarianism to robotics to Russian computer coding and all the data are publicly available for download in compressed XML format at [archive.org](https://archive.org/download/stackexchange). <!--(last updated 4 March 2019 at time of writing). -->
+
+The following files are available for each site:
+
+\setstretch{0.65}
+
+* `PostHistory.xml`: A history of the versions of each question and answer posted (questions can be edited)
+
+* `Posts.xml`: The final, up to date version of each question and answer posted
+
+* `Users.xml`: Data on registered users 
+
+* `Votes.xml`: Data on different votes cast (moderator-related, offensiveness, spam, votes to close, delete etc.)
+
+* `Comments.xml`: The final, up to date version of each comment posted
+
+* `Badges.xml`: Log of when badges (an incentive mechanism) are awarded to users for specific achievements
+
+* `PostLinks.xml`: Connects posts marked as linked or duplicated
+
+* `Tags.xml`: Data on the tags put forth with each question posted
+
+\setstretch{1.25}
+
+
+For my analysis I will only use the `Posts.xml` data for each community, and these are the variables recorded per post in this file:
+
+\setstretch{0.65}
+
+* `Id`: A chronological post identity variable
+
+* `PostTypeId`: Mainly an indicator of whether the post is an question (=1) or an answer (=2)
+
+* `ParentId`: An indicator of which question an answer belongs to (only answers)
+
+* `AcceptedAnswerId`: An indicator of which answer the original question poster selected as accepted (only questions)
+
+* `CreationDate`: A date variable relating to when the post was initially posted
+
+* `Score`: The difference between up-votes and down-votes for posts
+
+* `ViewCount`: The number of times that a post has been viewed by registered and non-registered users alike
+
+* `Body`: The main post content
+
+* `OwnerUserId`: An identity variable for the post owner
+
+* `LastEditorUserId`: An identity number for the last registered user that edited the post
+
+* `LastEditDate`: A date variable relating to when the post was last edited
+
+* `LastActivityDate`: A date variable relating to when last there was activity on the post
+
+* `Title`: The post title (questions only)
+
+* `Tags`: The collection of tags linked to a question
+
+* `AnswerCount`: The number of answers that a question receives (questions only)
+
+* `CommentCount`: The number of comments that a post receives
+
+* `FavoriteCount`: The number of times that users have favourited a question (questions only)
+
+* `ClosedDate`: A date variable relating to if the question was closed (questions only)
+
+\setstretch{1.25}
+
+Note: The word "post" above refers to both questions and answers.
+
+
+
+## Noteworthy Aspects \label{aspects}
+
+In order to develop a deeper understanding of the data, a brief discussion of the functioning of StackExchange websites is worthwhile. Questions on StackExchange fora are publicly available for anyone on the internet to view, however in order to ask a question on a specific forum one has to register an account with that forum using an email address and display name. Once a user is registered, they start off with 1 reputation\footnote{https://meta.stackexchange.com/questions/7237/how-does-reputation-work}. Most importantly for my analysis, having 15 reputation or more allows you to "up-vote" a post, a level of 50 or more allows you to comment on questions and answers, at or above 125 gives you the ability to "down-vote" a post, and finally reputation of 2000 allows you to edit any question or answer.
+
+There are a number of methodological complexities created by the structure of the sites. Firstly, since all questions are publicly viewable, not everyone who views a question (and thus adds to the `ViewCount`) is a registered user and thus has the ability to vote. The differing reputation levels for up- and down-voting privileges (15 and 125 respectively) also lead to the `Score` variable being highly negatively skewed (more high-scored questions and answers). Lastly, the fact that questions can be edited by the original posters and by users with 2000 reputation complicates most of the questioner-community engagement since there is no data on if answers, comments, votes, views etc.  occur before or after question edits.
+
+
+
+\newpage
+
+# Methodology
+
+## The `Score` Variable and Question Quality
+
+In addressing the first task of the research question, I examine a number of response variables relating to community engagement. @Ravi2014 choose to use the `Score` variable as an indicator of question quality, however I believe that a question's `Score` is better characterised as a proxy for community engagement since there are a number of confounding factors regarding this variable.
+
+One factor is that there seems to be a less-than-full consensus of when exactly to up- or down-vote\footnote{https://meta.stackexchange.com/questions/12772/should-i-upvote-bad-questions} despite general guidelines on StackExchange sites stating that up-votes should be given if a question shows prior research, is clear and useful, and down-voting the opposite. As mentioned in section \ref{aspects}, another potential issue with `Score` is its negatively skewed distribution - up-votes for questions can be orders of magnitude higher than down-votes, making it appear as if there are many more "good" questions on StackExchange sites versus "bad" ones. There is also the likely possibility that the `Score` variable is subject to bias via "rep-whoring"\footnote{A derogatory term describing users' chasing reputation points by any means necessary}.
+
+Lastly, I am of the opinion that question quality is a highly subjective issue, with different communities desiring different aspects of a question (closed-end for hard sciences or promoting-discussion in social sciences for example), hence why I choose to view the `Score` variable as a measure of community engagement instead of question quality. I further believe that this is not the only proxy for community engagement evident in the data, and so that it was I investigate next.
+
+
+
+\newpage
+
+## Additional Response Variables
+
+I propose 3 additional response variables to capture positive community engagement for questions:
+
+\setstretch{0.65}
+
+* The number of times a post is edited (conditional on non-closed down), `EditCount`
+
+* The sentiment of the answers, `AnswerSentiment`
+
+* The questioner has accepted an answer (conditional on positive `Score`), `AcceptedAnswer`
+
+\setstretch{1.25}
+
+My main assumption for the first variable, `EditCount`, is that the number of times a post is edited is inversely proportional to its positive community engagement, since more work is needed by the community to get the question into an answerable state. My central assumption for `AnswerSentiment` is that positive- and neutral-sentiment answers indicate positive community engagement as amicable responses to a question, and my main assumption for `AcceptedAnswer` is that a questioner accepting an answer is not only an indication that the community has responded to their question, but also indicates the questioner has had their request for information met (i.e. positive community engagement and questioner fulfillment).
+
+<!--
+The choices for the response variables above are not without caveats themselves. `AnswerCount` is the number of instances where community members have spent time and effort providing a formal answering response to a question, making it a good proxy for the amount of educational community engagement, however there is nuance in how users decide to answer or comment\footnote{https://meta.stackexchange.com/questions/17447/answer-or-comment-whats-the-etiquette}. Comments are often posted as answers ("clogging up" the answer list), to which a response is that these cases are either people who don't have the required reputation to comment yet or are "rep-whoring"\footnote{A derogatory term describing users' chasing reputation points by any means necessary}. Answers are also often posted as comments for various reasons, and jokes are often posted as answers, obscuring the **reputation metric** as users get voted up for being humourous rather than expertise.
+-->
+
+One important finding from @Ravi2014 is that highly-viewed questions are more likely to receive a higher `Score` (at least on the StackOverflow forum), and so they address this by considering the quantity `Score`/`ViewCount` to eliminate a "popularity-bias". Since `EditCount` is the only variable that would be affected by a popularity bias, I too normalise it by dividing by `ViewCount`. A last adjustment that @Ravi2014 make is to only consider questions above a certain `ViewCount` threshold (1000 in their case for StackOverflow) to eliminate the chance that questions are not viewed by users qualified to vote (or edit), and I replicate this for all response variables for the same reason.
+
+<!--
+@Ravi2014 choose to use the `Score` of questions to predict question quality yet this could potentially be just an indication of the popularity of a question, and it there are also a number of issues with how users treat this **ability**. While the **coding forum** specifically mandates " . One user in particular states that  "Downvoting should in some way indicate that the questioner didn't follow the rules or think very hard about the question." **Elaborate**
+
+One problem is that the questions are open to the public and thus not everyone who views a question can up-vote the question. This can be mitigated by, as in @Ravi2014, considering only questions with `ViewCounts` above a certain threshold.
+
+Since `ViewCount` could be seen as just a measure of popularity  - TALK ABOUT RAVI. @Ravi defines their response variable as just `Score`/`ViewCount` which results in values with an average of 0.002 specifically for the StackOverflow forum.
+
+### Composite Response Variable
+
+In addition to a question's `Score`, I have identified other variables that could signify positive community reaction to a question. These are `AnswerCount` (number of answers for a question), `CommentCount` (number of comments for a question) and answer/comment sentiment which is the degree to which answers and comments are positive/**pleasant** overall or the opposite.
+
+The problem still remains to have a single composite response variable to predict on in the second task. To do this, I run a Principle Components Analysis (PCA) to extract the latent direction of maximum variance in the `Score`, `AnswerCount`, `CommentCount`, overall answer/comment sentiment which I assume represents a measure of positive community engagement with a question. In initial data exploration, I constructed a composite response variable based on `Score`, `AnswerCount` and `CommentCount` using a number of smaller StackExchange datasets\footnote{I did not include answer/comment sentiment as yet since that requires linking more than one dataset}. Early results of the "best" and "worst" questions in **smaller fora** identified by the response variable in @Ravi2014 and my new response variable are promising since they appear to identify similar questions, as seen by table \ref{tab:1} below. However, since my composite variable includes the `Score` variable used in @Ravi2014, this is **less than surprising.**
+
+\renewcommand{\thetable}{\arabic{table}}
+
+\footnotesize
+\begin{longtable} {@{} ccccp{9cm} @{}}
+\caption{\textbf{Selected Best and Worst Questions from Small Test Fora}}
+\label{tab:1}\\ \hline \hline
+Metric & Forum & Score & ViewCount & Title \\ 
+\hline
+Ravi & Best: Economics & -9 & 102 & Has anyone made a successful economic prediction more than once? \\
+\hline
+PCA & Worst: Economics & -9 & 102 & Has anyone made a successful economic prediction more than once? \\
+\hline
+Ravi & Worst: Fitness & -5 & 201 & What is the best way to gain size in ankle area \\ 
+\hline
+PCA & Worst: Fitness & -5 & 201 & What is the best way to gain size in ankle area \\ 
+\hline
+Ravi & Best: Interpersonal & 24 & 1054 & How can I notice if someone is speaking with sarcasm or irony? \\ 
+\hline
+PCA & Best: Interpersonal &  9 &  951 & How to effectively communicate technical data/instructions without writing "too long" emails? \\ 
+\hline
+Ravi & Worst: Interpersonal & -9 & 1327 & How can I tell if family members consider my unvaccinated kids a threat? \\ 
+\hline
+PCA & Worst: Interpersonal & -8 & 2187 & How to tell a date I really enjoyed our dates so far and I would like to go on another, when I might have offended her? \\ 
+\hline \hline
+\end{longtable}
+\begin{center} Source: Own calculations in R.\end{center}
+\normalsize
+
+I can then validate the construction of this new response variable to see if the good/bad split results in questions that differ linguistically. I conducted preliminary results in this matter on smaller fora and the result of one the fora, Buddhism, are shown in table \ref{tab:2} below. These results, and the results of the other fora I tested, show that the new response variable results in approximately the same or even more differentiated linguistic features between good and bad questions.
+
+\newpage
+\footnotesize
+\begin{longtable} {@{} c|ccc|ccc @{}}
+\caption{\textbf{Buddhism Forum Descriptive Statistics}}
+\label{tab:2}\\ \hline \hline
+ &  & Ravi &  &  & PCA &  \\ 
+Metric & Good & Bad & Difference & Good & Bad & Difference \\ 
+\hline
+N & 2226.00 & 1141.00 & 1085 & 2226.00 & 1141.00 & 1085 \\ 
+N\% &   66.11 &   33.89 & 32.22 &   66.11 &   33.89 & 32.22 \\ 
+Punctuation Types &   45.00 &   31.00 & 14 &   47.00 &   25.00 & 22 \\ 
+Url-Text Types &  139.00 &  115.00 & 24 &  172.00 &   72.00 & 100 \\ 
+Stopword Types &  324.00 &  299.00 & 25 &  328.00 &  295.00 & 33 \\ 
+Character Length &  741.41 &  611.02 & 130.39\textasteriskcentered \textasteriskcentered \textasteriskcentered  &  774.44 &  546.58 & 227.85\textasteriskcentered \textasteriskcentered \textasteriskcentered  \\ 
+Token Length &  144.96 &  119.44 & 25.52\textasteriskcentered \textasteriskcentered \textasteriskcentered  &  151.45 &  106.79 & 44.66\textasteriskcentered \textasteriskcentered \textasteriskcentered  \\ 
+Guiraud's Root TTR &    6.58 &    6.23 & 0.34\textasteriskcentered \textasteriskcentered \textasteriskcentered  &    6.63 &    6.12 & 0.52\textasteriskcentered \textasteriskcentered \textasteriskcentered  \\ 
+Yule's K &  288.74 &  316.11 & -27.37\textasteriskcentered \textasteriskcentered \textasteriskcentered  &  285.81 &  321.83 & -36.02\textasteriskcentered \textasteriskcentered \textasteriskcentered  \\ 
+Flesch-Kincaid &   10.15 &    9.56 & 0.58\textasteriskcentered \textasteriskcentered \textasteriskcentered  &   10.16 &    9.52 & 0.64\textasteriskcentered \textasteriskcentered \textasteriskcentered  \\ 
+Gunning's Fog Index &   13.36 &   12.65 & 0.71\textasteriskcentered \textasteriskcentered \textasteriskcentered  &   13.36 &   12.66 & 0.69\textasteriskcentered \textasteriskcentered \textasteriskcentered  \\ 
+Sentiment &    0.33 &    0.35 & -0.01 &    0.33 &    0.35 & -0.03\textasteriskcentered  \\ 
+Moral Values &    0.49 &    0.54 & -0.05\textasteriskcentered \textasteriskcentered  &    0.49 &    0.54 & -0.05\textasteriskcentered \textasteriskcentered \textasteriskcentered  \\ 
+Euclidean Distance &  &  & 0.01 &  &  & 0.01 \\ 
+Cosine Similarity &  &  & 0.97 &  &  & 0.97 \\ 
+Jaccard Similarity &  &  & 0.36 &  &  & 0.34 \\ 
+\hline \hline
+\end{longtable}
+\begin{center} Note: Wilcoxon signed-rank test performed for values in Difference column. Statistical significance at \\ the 0.05, 0.01 and 0.001 level is represented as *, ** and *** respectively. Source: Own calculations in R. \end{center}
+\normalsize
+-->
+
+
+
+\newpage
+
+## Final Binary Response Variables
+
+The last step for the "capturing" task of the research question is to code the response candidates into binary variables (i.e. "good" questions versus "bad"\footnote{To be clear, when I refer to good and bad questions for my analysis, I am referring to questions attracting positive and negative community engagement respectively}). This step is a simplification that ignores the fact that community engagement is continuous rather than discrete, however it serves the purposes of the classification model employed later and it is left to further research to extend the analysis to consider a range of community engagement.
+
+In order to convert the `Score`/`ViewCount` variable to a binary response, @Ravi2014 appear to decide arbitrarily on a threshold of 0.001 (the average for `Score`/`ViewCount` being 0.002), resulting in approximately 60% of questions being classified as "good questions". I believe that this is a crucial step that shouldn't be overlooked, and thus needs to be validated before I too decide on a threshold to convert `EditCount`/`ViewCount` and `AnswerSentiment` into binary variables (`AcceptedAnswer` is already a binary response variable). 
+
+
+
+## Validation
+
+In order to make the split of good and bad questions as robust as possible, I plan to validate the splitting across all four response variables. This will be done by computing linguistic features of the good/bad split to ascertain the degree of differentiation between samples. The assumption here is of course that linguistic features represent a strong way in which questions that receive positive community engagement differ from those that don't. Furthermore, this also allows me to validate the thresholds of `Score`/`ViewCount`, `EditCount`/`ViewCount` and `AnswerSentiment` by uncovering which thresholds maximise the differentiation between the the two sets of questions.
+
+Linguistic features that I will examine include the following:
+
+\setstretch{0.65}
+
+* Textual Euclidean Distance, Cosine Similarity and Jacquard Similarity
+
+* Grammatical and semantic features such punctuation, URL-text, stop-word usage, number of words
+
+* Readability and lexical complexity
+
+* Dictionary methods to examine sentiment, appeal to moral values, emotion association etc.
+
+\setstretch{1.25}
+
+The differences between the above linguistic features across good and bad questions will also be tested for statistical significance using non-parametric difference-of-means tests such as the Kruskal-Wallis and Wilcoxon signed-rank test.
+
+
+
+## Modeling
+
+Having completed task one of my research question and ascertained robustly defined response variables, task two involves building a classification model to predict on these response variables. The prediction problem is linear classification regression with a binary dependent variable, and as previously mentioned the only explanatory variables are sourced from the user input when asking a question in a community (i.e. a question's `Title` and `Body`).
+
+Here I precisely replicate the methodology of @Ravi2014 by using the three-tiered LDA model discussed in section \ref{model-lit}, balancing the sample of good and bad questions and obtaining prediction results. While the model is complex and word constraints limit my detailing of the underlying mechanics, the work done forming robust good/bad question samples ensures that the predictions of this model accurately relate to community engagement, given the assumptions already discussed.
+
+Implementing this model on a range of large, diverse StackExchange sites including StackOverflow itself, I will be able to compare how prediction accuracies vary across the four response variables, how they vary across communities and how they compare to the 72% accuracy attained by @Ravi2014.
+
+
+
+\newpage
+
+# Predicted Data Outcomes
+
+For the first task of capturing community engagement through four different responses, the outcomes are a set of linguistic differences (with statistical significance) between good and bad questions for each response variable. Furthermore, the optimal thresholds of where positive and negative community engagement is defined for `Score`/`ViewCount`, `EditCount`/`ViewCount` and `AnswerSentiment` will be ascertained to improve robustness in this step of the methodology.
+
+Subsequently, employing the predictive model in task two of the research question will yield predictive accuracy results for the robust response variables across a multitude of large, diverse communities. I believe that comparing these accuracies to the 72% attained in @Ravi2014, comparing across response variables and comparing across fora will yield invaluable insight into A) how well this methodology is able to predict positive community engagement and B) if and how diverse communities engage with questions differently.
+
+
+\newpage
+
+# Limitations, Impact and Further Research
+
+## Limitations
+
+One limitation regarding my methodology concerns the proposed `AcceptedAnswer` variable. It is quite possible that questioners may find utility or even a solution to a question posed, yet neglect to make the effort to formally select which answer solved their question on the forum. This would bias the number of formally solved questions down and potentially confound good and bad questions. Furthermore, answers being posted as comments\footnote{https://meta.stackexchange.com/questions/17447/answer-or-comment-whats-the-etiquette} and vice-versa is a common occurrence (at least on StackOverflow) and this too would confound the predictive results for this variable. 
+
+An assumption to mitigate these issues with the `AcceptedAnswer` variable would be that these anomalies are minimal and not biased to occur on specific posts - thus with being small, even and randomly distributed across the data it would not have a significant effect on the results.
+
+<!--
+Complication of not all viewers of a question being registered on the respective site and thus not being able to vote is addressed by having a minimum threshold for the number of views of a question.
+
+Arbitrary choice of where to define good and bad community engagement. Addressed by validating where to put threshold. This also will address the negatively skewed distribution of the `Score` variable, most likely improving the split of good/bad questions for this response variable.
+
+One limitation specifically relates to the `AcceptedAnswer` variable - the fact that comments are often posted as answers and vice versa as this would confound the predictive results for this variable. The assumption made in this analysis though is that anomalies of this type are not biased to occur on specific posts, and are thus evenly and randomly distributed across the data, which should not have a significant effect on the results. `AnswerCount` variable also somewhat weaker, since only 
+-->
+
+A major concern is the fact that questions are editable\footnote{https://stackoverflow.com/help/privileges/edit}, not only by the original poster but by anyone with 2000 reputation. Editing guidelines include fixing grammar and spelling, clarifying, correcting minor mistakes or adding related resources and links - the consequence of this being that users could vote, comment and answer on essentially different questions as a question is continually edited. This would no doubt confound the prediction of community engagement for all four response variables, thus a decision would need to be made on whether to use the original text of questions across all models, or to use the final edited version of questions.
+
+Since the editing issue is particularly problematic for the `EditCount` response variable where it wouldn't make sense to link the final edited text and the number of edits for prediction (thus eliminating any explanatory features in the `Body` text that specifically led to the edits), I would choose to use the original text of questions across all response variables and models. The issue would now be that a substantial amount of views, votes and answers might occur after a question has been edited multiple times, thus it would be assumed that the majority of these events occur before edits take place. A temporal of analysis of average waiting times for answers, views and votes would be beneficial to support or disprove this assumption.
+
+<!--
+Sentiment - direction 
+ANSWER BEEN ACCEPTED/AT LEAST ONE ANSWER
+T-SNE DOESN'T CONSERVE DISTANCE
+NOISE IN PCA
+GOOD GREAT QUESTION STRING IN COMMENTS/ANSWER
+EMBEDDING
+HIGH REPUTATION ANSWERERS BEHAVIOUR - LOOK AT THE QUESTIONS THAT THEY LOOK AT
+
+THREE HYPOTHESES - SCORE OF ANSWERS, 
+RANK ACCORDING 
+Kruskal-Wallis TEST, WHAT THE DIFFERENT METRICS HAVE SCORED, CHECK ASSUMPTIONS
+
+TEST THE THRESHOLD FOR BINARY DECISION RAVI AND SEE HOW RESULTS DIFFER
+
+Can view this from a different angle as to how much a question adds value to a community, but since I decided to put the emphasis on the user and not the community to help improve initialy information retrieval requests, this is what I did.-->
+
+
+
+## Impact and Further Research
+
+As previously discussed, there is definitely a spectrum of community engagement rather than two good and bad classes. Predicting more than just "good" or "bad" would most definitely assist in the formulation of more constructive questions for users, thus this is one recommended area for further research. Another suggestion is to investigate the issue of question-editing by examining the average wait times for events like answers, votes and views to occur.
+
+There is also a large amount of data on the StackExchange fora that hasn't been explored, so there may yet be stronger response variable candidates that would increase the robustness of the analysis even further. While this analysis should be highly reliable, valid and generalisable owing to the robust methodology constructed, it still does not address causal or even correlational relationships. It is therefore strongly recommended that further research address the *how* and *why* of community engagement on question-answer communities, as opposed to just the *what* that was explored in this analysis.
+
+To my knowledge, no previous research has used the methodology here proposed in the respective framework to capture and measure community engagement. At the very least, this research will improve on the extent to which we can capture and predict positive community engagement from online question-answering communities, and yield insight into how homogeneously engagement lies across diverse communities with different subject matters. If it holds that we can accurately predict positive community engagement on a strong, robust and well-validated response variable, then there is room to implement this model on any collection of question-answering sites, including Massive Open Online Courses, to improve the efficacy and productiveness of these communities.
+
+
+
+
+
+\newpage
+
+# References
+
+

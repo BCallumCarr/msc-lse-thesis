@@ -10,6 +10,8 @@ $if(linestretch)$
 \setstretch{$linestretch$}
 $endif$
 
+\DeclareMathSizes{10}{12}{8}{8}
+
 % Wrap around which gives all figures included the [H] command, or places it "here". This can be tedious to code in Rmarkdown.
 \usepackage{float}
 \let\origfigure\figure
@@ -27,6 +29,7 @@ $endif$
 } {
     \endorigtable
 }
+
 
 \usepackage{ifxetex,ifluatex}
 \usepackage{fixltx2e} % provides \textsubscript
@@ -61,21 +64,17 @@ $endif$
 
 \usepackage{amssymb, amsmath, amsthm, amsfonts}
 
-\DeclareMathSizes{24}{26}{22}{22}
-
 \usepackage[round]{natbib}
 \bibliographystyle{natbib}
 \def\bibsection{\section*{References}} %%% Make "References" appear before bibliography
 \usepackage{longtable}
-
-% set margins
-\usepackage[left=3.5cm, right=2cm, top=30mm ,bottom=2cm, includefoot]{geometry}
+\usepackage[left=2cm, right=2cm, top=20mm, bottom=4cm, top=2.5cm, includefoot]{geometry}
 \usepackage{fancyhdr}
 \usepackage[bottom, hang, flushmargin]{footmisc}
 \usepackage{graphicx}
 \numberwithin{equation}{section}
 \numberwithin{figure}{section}
-%\numberwithin{table}{section} % commented out because it messes up table numbering
+\numberwithin{table}{section}
 \setlength{\parindent}{0cm}
 \setlength{\parskip}{1.3ex plus 0.5ex minus 0.3ex}
 \usepackage{textcomp}
@@ -90,6 +89,30 @@ $endif$
 
 \usepackage{array}
 \newcolumntype{x}[1]{>{\centering\arraybackslash\hspace{0pt}}p{#1}}
+
+%%%%  Remove the "preprint submitted to" part. Don't worry about this either, it just looks better without it:
+$if(RemovePreprintSubmittedTo)$
+\makeatletter
+\def\ps@pprintTitle{%
+  \let\@oddhead\@empty
+  \let\@evenhead\@empty
+  \let\@oddfoot\@empty
+  \let\@evenfoot\@oddfoot
+}
+\makeatother
+$else$
+$if(Journal)$
+\journal{$Journal$}
+$endif$
+$endif$
+
+\makeatletter
+\def\ps@pprintTitle{%
+  \let\@oddhead\@empty
+  \let\@evenhead\@empty
+  \let\@oddfoot\@empty
+  \let\@evenfoot\@oddfoot
+}
 
 \usepackage{hyperref}
 \hypersetup{breaklinks=true,
@@ -122,19 +145,15 @@ $if(verbatim-in-note)$
 \VerbatimFootnotes % allows verbatim text in footnotes
 $endif$
 
-% Use protect on footnotes to avoid problems with footnotes in titles
+%%% Use protect on footnotes to avoid problems with footnotes in titles
 \let\rmarkdownfootnote\footnote%
 \def\footnote{\protect\rmarkdownfootnote}
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
 
-% pass through extra packages specified by user
+%%% Include extra packages specified by user
 $if(header-includes)$
 $header-includes$
 $endif$
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%% EDIT TITLE %%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % change title format to be more compact
 \usepackage{titling}
@@ -149,22 +168,17 @@ $endif$
 \setlength{\droptitle}{-1em}
 \pretitle{\vspace{\droptitle}\centering\Huge}
 \posttitle{\par\vskip 5.5em}
-
 \title{
 {\scshape\Large $institute$}\\
 {\vskip 2.5em \scshape $title$}\\
 %{\includegraphics{lse.png}} % if you want to include LSE logo
 }
-
 \preauthor{\centering\LARGE}
 \postauthor{\par\vskip 4em}
-
 \author{$author$}
 \subtitle{\vspace{4em} $subtitle$} % comment this out and you get *Missing \begin{document}*
-
 \predate{\centering\Large}
 \postdate{\par}
-
 \date{\scshape $date$}
 
 \usepackage{color}
@@ -180,13 +194,13 @@ $endif$
 \renewcommand{\cftsubsecfont}{\normalfont\hypersetup{linkcolor=black}}
 \renewcommand{\cftsubsecafterpnum}{\hypersetup{linkcolor=black}}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%% BEGIN DOCUMENT %%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{document}
 
+%________________________
 % Header and Footers
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \pagestyle{fancy}
 \chead{$TopCHeader$}
 \rhead{$TopRHeader$}
@@ -196,18 +210,29 @@ $endif$
 %\rfoot{\footnotesize Page \thepage\ } % "e.g. Page 2"
 \cfoot{$BottomCFooter$}
 
-% i, ii, iii etc. page numbering
+%\setlength\headheight{30pt} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%________________________
+
+%\headsep 35pt % So that header does not go over title
+
+%\begin{frontmatter}
+
 \pagenumbering{roman}
 
 \maketitle
 
 \thispagestyle{empty}
 
+%\author{$author$}
+%\date{$date$}
+
+%\end{frontmatter}
+
 \clearpage
 
 \setcounter{page}{1}
 
-% table of contents, list of figures and tables
 $if(toc)$
 \renewcommand{\contentsname}{Table of Contents}
 \hypersetup{linkcolor=black}
@@ -226,13 +251,6 @@ $endif$
 \hypersetup{linkcolor=black}
 \newpage
 
-\section*{Summary}
-
-$summary$
-
-\clearpage
-
-% 1, 2, 3 etc. page numbering
 \pagenumbering{arabic}
 
 $body$
@@ -241,5 +259,7 @@ $body$
 \newcommand\wordcount{
     \immediate\write18{texcount -sub=section \jobname.tex  | grep "Section" |     sed -e 's/+.*//' | sed -n \thesection p > 'count.txt'}
 (\input{count.txt}words)}
+
+\section*{References}
 
 \end{document}
