@@ -66,7 +66,12 @@ $endif$
 \usepackage[round]{natbib}
 \bibliographystyle{natbib}
 \def\bibsection{\section*{References}} %%% Make "References" appear before bibliography
+
+% package for nice tables
 \usepackage{longtable}
+
+% package for ruling lines in tables
+\usepackage{booktabs}
 
 % set margins
 \usepackage[left=3.5cm, right=2cm, top=30mm ,bottom=2cm, includefoot]{geometry}
@@ -74,7 +79,7 @@ $endif$
 \usepackage[bottom, hang, flushmargin]{footmisc}
 \usepackage{graphicx}
 \numberwithin{equation}{section}
-\numberwithin{figure}{section}
+%\numberwithin{figure}{section} % commented out because it messes up figure numbering
 %\numberwithin{table}{section} % commented out because it messes up table numbering
 \setlength{\parindent}{0cm}
 \setlength{\parskip}{1.3ex plus 0.5ex minus 0.3ex}

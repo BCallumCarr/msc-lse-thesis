@@ -49,7 +49,12 @@
 \usepackage[round]{natbib}
 \bibliographystyle{natbib}
 \def\bibsection{\section*{References}} %%% Make "References" appear before bibliography
+
+% package for nice tables
 \usepackage{longtable}
+
+% package for ruling lines in tables
+\usepackage{booktabs}
 
 % set margins
 \usepackage[left=3.5cm, right=2cm, top=30mm ,bottom=2cm, includefoot]{geometry}
@@ -57,7 +62,7 @@
 \usepackage[bottom, hang, flushmargin]{footmisc}
 \usepackage{graphicx}
 \numberwithin{equation}{section}
-\numberwithin{figure}{section}
+%\numberwithin{figure}{section} % commented out because it messes up figure numbering
 %\numberwithin{table}{section} % commented out because it messes up table numbering
 \setlength{\parindent}{0cm}
 \setlength{\parskip}{1.3ex plus 0.5ex minus 0.3ex}
@@ -183,30 +188,30 @@ University of London} % comment this out and you get *Missing \begin{document}*
 \section*{Summary}
 
 Formulating constructive questions and receiving answers to these
-questions is not only a key part of how we learn, but also to scientific
-and human progress. The advent of the world wide web and the
+questions is not only a key part of how we learn, but to scientific
+progress and development. The evolution of the world wide web and the
 technologies it has provided us has given us an unprecendented ability
-to engage with and learn from the world and while substantial attention
+to engage with and learn from the world, and while substantial attention
 has been dedicated to finding correct answers (just ask Google),
 comparitively less has been devoted to how we can improve the
 constructiveness of our questions. One online setting where relevant and
 well-researched questions is of particular importance is online
-question-answer (Q\&A) communities, where professional resources are
-scarce and questions are in abundance. This research aims to address
-this challenge of information overload by the extent of community
-engagement with new questions submitted to various onlinw communities.
-In this way, questioners on online educational fora can be nudged to
-enhance the ``signal'' of their questions before adding demand to these
-communities, thereby improving the functioning and efficiency of these
-platforms. I build on work done on questions in Q\&A communities by
-constructing a model to predict on a metric comprising of the
-community-granted score and viewcount of questions in a number of
-diverse Q\&A communities. Using only the textual variables (i.e.~the
-question title and body) available at the time a user submits a question
-to a forum, I am able to \textbf{engineer features and build models}
-that improve upon baselines by up to \textbf{so-much-\%}. I further
-conclude, from the variation of performance of these models across fora,
-that \textbf{communities are diverse?}
+question-answer (Q\&A) communities such as Yahoo! Answers, Quora and the
+StackExchange family of websites. These knowledge-sharing platforms
+often suffer from a problem of scarce professional resources compared to
+an abundance of questions, and it is precisely this issue of information
+overload that this research aims to address. By successfully predicting
+the extent of community engagement with questions using only the textual
+content available when a user submits a new question, questioners can be
+informed and nudged to improve the ``signal'' of their questions before
+adding demand to these communities, thereby improving the functioning
+and efficiency of these platforms substantially. I build on work
+addressing questions in Q\&A communities and construct models to predict
+on the community-granted score of questions for a range of diverse
+StackExchange Q\&A communities. My results for topic modelling features
+show that community engagement \textbf{can be predicted}, however from
+the variation of performance of models across fora it appears that
+communities \textbf{engage heterogenously} with questions.
 
 \clearpage
 
@@ -221,30 +226,23 @@ that \textbf{communities are diverse?}
 Modern interpersonal communication technologies made possible by the
 internet have afforded us an exceptional level of connection and
 engagement with the world. Billions of individuals now interact online
-daily, not only with people that they know, but with strangers millions
-of miles away. There are now a multitude of online platforms and
-knowledge-sharing communities such as Yahoo! Answers, Quora, the
-StackExchange family and Massive Online Open Courses (MOOCs) where users
-seek discussions on and answers to complex questions that search engines
-are yet unable to fully address.
+every split second, not only with people that they know, but with
+strangers millions of miles away. An extremely popular manner in which
+internet users have chosen to engage online is by knowledge sharing
+through specific question-and-answer (Q\&A) websites such as Yahoo!
+Answers, Quora, the StackExchange family and forums of Massive Online
+Open Courses (MOOCs). These websites serve as platforms where users seek
+answers to and discussions on \textbf{complex and technical} questions
+that modern search engines are evidently yet unable to fully address.
 
-This research focuses on online social question-and-answer (Q\&A) fora,
-which are platforms for community knowledge-sharing and are particularly
-prone to the problem of ``information overload'' where cascades of new
-questions far outweigh the few expert resources available. \textbf{A
-substantial amount of research has been done on Q\&A sites, however the
-focus has been on identifying expert users and high quality answers and
-considerably less attention has been given to questions, despite their
-being the entry point for every interaction in the community}.
-
-I plan to address this issue of information overload in online Q\&A
-communities by building a model to predict community engagement with
-questions. This research thus has a concrete application to the real
-world: providing these predictions to questioners in real-time can
-encourage them to improve the ``signal'' of their questions before they
-submit new questions and add demand to the resources of a community.
-\textbf{In this way, it is hoped that the functioning and evolution of
-these online communities can be improved.}
+It goes without saying that producing legible, relevant and
+well-researched questions in online Q\&A fora is particularly valuable,
+not least since platforms are particularly prone to ``information
+overload'' where cascades of new questions far outweigh the few expert
+resources available. This research aims to address this problem by
+determining to what extent positive community engagement can be
+predicted using only the textual content of questions - i.e.~a
+question's \texttt{Title} and \texttt{Body}.
 
 The broad research question can therefore be defined as the following:
 
@@ -252,223 +250,217 @@ The broad research question can therefore be defined as the following:
 \emph{To what extent can community engagement with questions in online Q\&A communities be accurately captured and predicted?}
 \end{center}
 
-I draw heavily on and critique prior research done on Q\&A platforms by
-Ravi \emph{et al.} (2014) and analyse question content from the
+While there is a substantial amount of literature that has addressed
+Q\&A fora, it has focused on identifying expert users and high quality
+answers rather than given attention to questions, despite questions
+being the entry point for every interaction in communities. I draw
+heavily on and critique prior research done by Ravi \emph{et al.} (2014)
+and analyse question content from the
 \href{https://stackexchange.com/sites\#}{StackExchange} family of Q\&A
 communities. These Q\&A fora have a voting mechanism whereby registered
 community-members can signal how much value specific questions add to
 the community and it is precisely this metric which I identify as
-community engagement and aim to predict \textbf{and evaluate using
-root-mean-square error (RMSE)}. The inherent assumptions for the problem
-as it is stated are that: questions are heterogeneous in their
-formulation (along lines of clarity, showing prior research and
-community-relevance) and that the voting mechanism of a community for a
-question captures this heterogeneity.
+community engagement and aim to predict on.
 
 This research goal thus takes the form of quantitative prediction task
 rather than qualitative, causal or inferential analysis. I leave it to
 further research to address the \emph{how} and \emph{why} of community
 engagement on online Q\&A communities, rather than just the \emph{what}
-that is explored here. I believe that the fact that this research aims
-to predict a community-provided measurement of online engagement, has a
-direct real-life application and will be implemented on \textbf{diverse
-communities makes it the first of its kind.}
+that is explored here. I build a \textbf{elastic net, regularised}
+regression model to predict the community-assigned \texttt{Score} for
+each question, which is the result of aggregating all community up-votes
+and down-votes.
 
-\textbf{My results are this this and that, and I conclude that the LDA
-topic model is not universally effective as Ravi \emph{et al.} (2014)
-claimed.}
+This research thus has a concrete application to the real world:
+providing these predictions to questioners in real-time can encourage
+them to improve the ``signal'' of their questions before they submit new
+questions and add demand to the resources of a community. \textbf{In
+this way, it is hoped that the functioning and evolution of these online
+communities can be improved.} I believe that the fact that this research
+aims to predict a community-provided measurement of online engagement,
+has a direct real-life application and will be implemented on
+\textbf{diverse communities makes it the first of its kind.}
+
+I find that \textbf{\ldots{}\ldots{}\ldots{}. and I conclude that the
+LDA topic model is not universally effective as Ravi \emph{et al.}
+(2014) claimed.} \textbf{and evaluate using root-mean-square error
+(RMSE)}.
 
 Previous work in the field of questions in online Q\&A fora will now be
-discussed. This is followed by a discussion of the data, exploration of
-the concerned variables visually, a description of the model used, and
-presentation and discussion of the results. Finally, some concluding
-remarks and recommendations for areas of further research are made.
+discussed in more detail. This will be followed by a discussion of the
+data, exploration of the variables included in the model, a description
+of the model used, and a presentation and discussion of the results.
+Finally, some recommendations for areas of further research and
+concluding remarks are made.
 
 \newpage
 
 \section{\texorpdfstring{Literature Review
 \label{Lit}}{Literature Review }}\label{literature-review}
 
-\color{blue}
+\subsection{Question-Answer
+Communities}\label{question-answer-communities}
 
-Much work has gone into investigating online Q\&A communities. Research
-has looked at answer quality (Jeon \emph{et al.}, 2006; Shah and
-Pomerantz, 2010; Tian, Zhang and Li, 2013), behaviour of community
-experts (Riahi \emph{et al.}, 2012; Sung, Lee and Lee, 2013) and
-question-asker satisfaction (Liu, Bian and Agichtein, 2008). Also, a
-common framework for engagement in Q\&A communities is the optimisation
-of matching questions and community experts (Li and King, 2010; Li, King
-and Lyu, 2011; Zhou, Lyu and King, 2012; Shah \emph{et al.}, 2018), or
-recommending questions in line with answerers' interests (Wu, Wang and
+Much research has concerned Q\&A communities - i.e.~on answer quality
+(Jeon \emph{et al.}, 2006; Shah and Pomerantz, 2010; Tian, Zhang and Li,
+2013), on satisfaction of questioners (Liu, Bian and Agichtein, 2008)
+and on the behaviour of so-called ``expert'' community members (Riahi
+\emph{et al.}, 2012; Sung, Lee and Lee, 2013). Often, the framework for
+Q\&A fora has been the optimising the routing of questions to experts
+(Li and King, 2010; Li, King and Lyu, 2011; Zhou, Lyu and King, 2012;
+Shah \emph{et al.}, 2018), or question routing in accordance with
+answerer interest in the form of a recommendation system (Wu, Wang and
 Cheng, 2008; Qu \emph{et al.}, 2009; Szpektor, Maarek and Pelleg, 2013).
 
-I choose to focus on questions, not only because they have received far
-less attention in the literature, but because question quality impacts
-answer quality (Agichtein \emph{et al.}, 2008) and because they are
-trivially the initial touch-point of a community/questioner interaction.
-It is highly likely therefore that increasing positive community
-engagement will improve how these communities function and evolve.
+The research here contrasts with this prior work on Q\&A fora in that I
+focus on the questions rather than user or answer characteristics, not
+only owing to questions having received substantially less attention
+literature-wise, but because the quality of questions can significantly
+impact the quality of answers (Agichtein \emph{et al.}, 2008). Evidently
+as questions also serve as the initially entry-point for the question
+answering process after which all community engagement follows, I
+believe this focus on questions is well-placed and will enhance the
+development and functioning of communities.
 
-Since community engagement and question quality can be seen as two sides
-of the same coin (``good'' questions leading to favourable community
-engagement), this research corresponds to a body of work on capturing
-question quality in online question-answer communities which I briefly
-discuss next. Note that while I consider community engagement a more
-accurate definition of what the following literature measures, I refer
-to ``question quality'' instead of community engagement to aid the
-discussion.
+Another difference is that I place the research problem in a framework
+discordant of systems-based optimisation of question-answer matching and
+instead focus on predicting community engagement using only question
+content. Thus this is aimed at the very real application of potentially
+nudging users to update and enhance their question content before
+encumbering community resources. Owing to the large intuitive overlap
+between question quality and community engagement in Q\&A communities,
+the body of work on question quality in Q\&A fora is discussed next.
 
-Recent work (Agichtein \emph{et al.}, 2008; Bian \emph{et al.}, 2009; Li
-\emph{et al.}, 2012) attempted to model question quality using
-\href{http://answers.yahoo.com}{Yahoo! Answers}, however this dataset
-lacks objective and definitive measures for question quality. The data
-that I will be using on the other hand is richer in that there a
-numerous proxies for question quality/community engagement available for
-large sets of observations. Most importantly, these variables are
-derived directly from the data rather than labeled manually, which
-enables a more objective, automatic and principled characterisation of
-the variable of interest.
+\subsection{Question Quality}\label{question-quality}
 
-One paper that made strides in classifying and predicting what they
-assume to be question quality is Ravi \emph{et al.} (2014). Using latent
-topics extracted from Latent Dirichlet Allocation models on question
-content, they predict ``question quality'' with accuracy levels of 72\%
-for the computer coding StackExchange community, StackOverflow.
+High-quality questions assuredly lead to positive community engagement,
+however \textbf{the only difference may be the specific aspects of
+question content that communities value across communities.} Thus, while
+the literature discussed here refer to measuring and predicting
+``question quality'', I assert that ``community engagement'' is a more
+robust interpretation of what they are measuring and so for the sake of
+discussion I will refer to question quality as well.
 
-Ravi \emph{et al.} (2014) decide on using a question's \texttt{Score} as
-an indicator of question quality. I question this assumption and put
-forth the notion that a question's \texttt{Score} better characterises
-community engagement, since I believe it is difficult to define
-``quality'' subjectively owing to communities valuing different facets
-of questions (i.e.~closed-end for natural sciences or
-discussion-promoting in the social sciences). I thus characterise it as
-such and also use it as a response variable. This brings me to the aim
-of this paper, which is to critique and build on how to use the
-\texttt{Score} variable to label questions as attracting positive or
-negative community engagement.
+Recent work has looking at predicting question quality for the large
+Q\&A community \href{http://answers.yahoo.com}{Yahoo! Answers}
+(Agichtein \emph{et al.}, 2008; Bian \emph{et al.}, 2009; Li \emph{et
+al.}, 2012), but while this dataset has metrics for assessing answer
+quality in the form of answer ``up-votes'', it lacks a similarly
+community-attributed and objective metric for question quality.
+Agichtein \emph{et al.} (2008) thus define question quality using
+question semantic features (lexical complexity, punctuation, typos
+etc.), Bian \emph{et al.} (2009) manually label 250 questions and Li
+\emph{et al.} (2012) combine the number of answers, number of tags, time
+until the first answer, author judgement and domain expertise to
+construct their ground truth.
 
-\subsection{Question Quality - All before
-Ravi}\label{question-quality---all-before-ravi}
+Fortunately, my datasets are from the StackExchange family of Q\&A fora
+which are rich in community engagement variables like question
+up-/down-votes and view-counts. Coming directly from the data, these
+metrics are objective rather than human-labelled and are also therefore
+not limited in terms of samples from the data (we can use the whole
+dataset).
 
-Intuitively, question quality and community engagement are two sides of
-the same coin - high-quality questions assuredly lead to positive
-community engagement. As will be argued later, I consider community
-engagement a more robust characterisation of what is being measured in
-the following literature, however I will refer to ``question quality''"
-rather than community engagement for the sake of this discussion.
+The predictive models employed in the question quality literature have
+also evolved substantially. Previous work has modelled question quality
+based on the reputation of the questioner, question categories and
+lexical characteristics of questions (length, misspelling, words per
+sentence etc.) (Agichtein \emph{et al.}, 2008; Bian \emph{et al.}, 2009;
+Anderson \emph{et al.}, 2012; Li \emph{et al.}, 2012).
 
-Question quality has been investigated using the online question-answer
-community \href{http://answers.yahoo.com}{Yahoo! Answers} (Agichtein
-\emph{et al.}, 2008; Bian \emph{et al.}, 2009; Li \emph{et al.}, 2012),
-but a considerable limitation of this dataset is that it lacks objective
-and clear-cut metrics for question quality. To address this, Agichtein
-\emph{et al.} (2008) use semantic features (punctuation, typos, lexical
-complexity etc.) to define quality questions, Bian \emph{et al.} (2009)
-make use of manual labels to identify quality in a sample of 250
-questions, and Li \emph{et al.} (2012) use a combination of tag count,
-answer count and time-to-first-answer along with domain expert and
-author judgement to ascertain ground truth.
+A fundamental distinction is that I use only the features available at
+the time a question is initially asked which is congruent with the goal
+of being able to provide real-time information to questioners before
+they submit questions to a community. I also don't use any features
+derived from user attributes, since doing otherwise would not work well
+for questions asked by new users.
 
-Fortunately, the StackExchange fora that I will explore are richer
-datasets in the sense that a greater number of proxies for question
-quality and community engagement are available. More importantly, these
-metrics are more objective as they are derived from the data itself
-rather than manual human labeling. In this way, it is also possible to
-``automatically'' define question quality with a
-robust\footnote{The key issue being the assumptions made and the manner in which this labeling occurs}
-response variable, vastly increasing the number of ground truth cases.
+\subsection{\texorpdfstring{Ravi \emph{et al.}
+(2014)}{Ravi et al. (2014)}}\label{ravi2014}
 
-Another substantial difference that has evolved over time in the
-question-quality literature is the chosen predictive model. Previous
-work (Agichtein \emph{et al.}, 2008; Bian \emph{et al.}, 2009; Anderson
-\emph{et al.}, 2012; Li \emph{et al.}, 2012) chose to use features such
-as the question category, lexical properties of the question (length,
-level of misspelling, words-per-sentence) and question-asker's
-reputation for prediction.
+A paper that made much headway in the classification and prediction of
+what they assume is question quality is Ravi \emph{et al.} (2014), who
+use the largest and oldest StackExchange site,
+\href{https://stackoverflow.com}{StackOverflow} I mirror much of the
+analysis in Ravi \emph{et al.} (2014), however I believe I build on
+their analysis significantly and distinctly in a number of ways.
 
-By ignoring words, topics and other inherent question content and
-focusing instead on features of the question-asker, users asking
-questions for the first time would be largely ignored by models of this
-kind. This is directly opposed to my specific goal of predicting how
-communities will engage with all users, especially new and inexperienced
-users who are likely to not have their questions answered at all, let
-alone positively. For my modeling task, I therefore only focus on
-explanatory features derived from the contents of questions, not user
-attributes, history or other data.
+Firstly, as mentioned the literature speaks a lot about ``question
+quality'' and Ravi \emph{et al.} (2014) decide to incorporate a
+question's \texttt{Score} into their ground truth for question quality,
+yet I posit that what these studies are measuring is instead more
+accurately characterised as community engagement. My opinion is that
+question quality is much more nuanced than prior research has asserted,
+i.e.~while most communities will value universal aspects of questions
+like legibility, coherence, relevance and prior-research, it is
+difficult to accurately define how much of this contributes to a
+universal inherent ``quality'' objectively compared to
+community-specific traits that communities will naturally value
+(i.e.~closed-end questions in the natural sciences, discussion-promoting
+for social sciences). Thus while I also incorporate the \texttt{Score}
+metric into a response variable, my characterisation of this ground
+truth as community engagement is broader and more inclusive.
 
-\subsection{Question-Answer Communities - Others then
-Ravi}\label{question-answer-communities---others-then-ravi}
+Another departure from the analysis in Ravi \emph{et al.} (2014) that I
+make, is I consider a far more diverse range of communities to compare
+how models perform across fora. Ravi \emph{et al.} (2014) specifically
+state that ``{[}their{]} methods do not rely on domain-specific
+knowledge'' and therefore ``{[}they{]} believe {[}the methods{]} are
+applicable to other CQA settings as well'' - this is something I
+particularly want to test and believe will be interesting to flesh out.
 
-A substantial amount of research has investigated question-answer
-communities. Work has been done on quality of answers (Jeon \emph{et
-al.}, 2006; Shah and Pomerantz, 2010; Tian, Zhang and Li, 2013),
-questioner satisfaction (Liu, Bian and Agichtein, 2008) and behaviour of
-expert users (Riahi \emph{et al.}, 2012; Sung, Lee and Lee, 2013). Work
-on question-answer communities has also often been placed in the
-framework of a matching process where the goal is optimising the routing
-of user questions to expert resources (Li and King, 2010; Li, King and
-Lyu, 2011; Zhou, Lyu and King, 2012; Shah \emph{et al.}, 2018), or
-routing questions according to answerers' interests as a recommendation
-system (Wu, Wang and Cheng, 2008; Qu \emph{et al.}, 2009; Szpektor,
-Maarek and Pelleg, 2013).
+A last distinction between my analysis and Ravi \emph{et al.} (2014) is
+that they treat the research aim as a classification problem, quite
+arbitrarily defining a threshold for their response variable to
+distinguish between ``good'' and ``bad'' questions. Despite
+\textbf{making it a more complex problem}, I opt to predict on a
+continuous response since that would provide a better indication to
+users of how well it is predicted that a community will react to their
+question.
 
-My approach differs to this previous work in two main aspects. Firstly,
-rather than focusing on answer or user characteristics, I focus on
-questions. As Agichtein \emph{et al.} (2008) show, question quality can
-significantly impact answer quality. Trivially, questions also serve as
-the initial event in the question-answering process, upon which all
-community engagement follows. Thus, maximising the positive community
-engagement of questions will most certainly enhance the functioning and
-development of a community.
-
-The second difference is the framework in which I place the research. I
-steer clear of the systems-based framework of optimising
-matching/routing mechanisms and instead centralise how users can be
-nudged to improve aspects of their question before exerting demand on
-expert resources. This framework coincides strongly with a large body of
-research on codifying question quality in question-answer communities,
-and so this is discussed next.
-
-\textbf{Why I choose a continuous response}
+Ravi \emph{et al.} (2014) manage impressive results however: using
+textual features and latent topics extracted from question content
+(i.e.~question \texttt{Title} and \texttt{Body}), their predictions on
+\texttt{Score}/\texttt{ViewCount} yield accuracy levels of 72\% on their
+StackOverflow dataset. I will be emulating this part of their research,
+and thus a discussion of topic modelling is necessary.
 
 \subsection{\texorpdfstring{Topic Modeling
 \label{model_lit}}{Topic Modeling }}\label{topic-modeling}
 
-Focusing on the textual content of questions alone leads me to a
-discussion on how this text will be modeled. Bayesian models have gained
-popularity in solving diverse structured prediction tasks in Natural
-Language Processing (NLP) (Chiang \emph{et al.}, 2010), and Latent
-Dirichlet Allocation (LDA) (Blei, Ng and Jordan, 2003) is a form of
-topic modeling where generative Bayesian models are applied to documents
-to model hidden topics as a probability distribution over words. LDA can
-thus be used to uncover the underlying semantic structure of documents
-and infer topics associated with these documents.
+Bayesian models have recently achieved immense popularity to solve a
+diverse range of structured prediction challenges in Natural Language
+Processing (NLP) (Chiang \emph{et al.}, 2010). Blei, Ng and Jordan
+(2003) presented Latent Dirichlet Allocation (LDA) topic models as
+generative Bayesian models for documents to uncover hidden topics as
+probability distributions over words. LDA can therefore be useful in
+unearthing underlying semantic structures of documents and to infer
+topics of the documents.
 
-Indeed, Ravi \emph{et al.} (2014) show that using latent topics derived
-from LDA modeling allows for powerful prediction (accuracy scores of up
-to 72\%) of ``question quality'' using the coding question-answer site,
-\href{https://stackoverflow.com}{StackOverflow}. My analysis will mirror
-not only the modeling methodology of Ravi \emph{et al.} (2014), but also
-critique and build on the methodology they use to define their metric
-for question quality.
+Attaining accuracy scores of up to 72\% for ``good'' and ``bad''
+questions, Ravi \emph{et al.} (2014) have indeed shown the capability of
+using latent topics derived from LDA modeling. Ravi \emph{et al.}
+(2014)'s final predictive model is based on work by Allamanis and Sutton
+(2013), who also analysed the StackOverflow dataset, but did not look at
+\textbf{any form} of ``question quality''. They uses LDA models at three
+levels: across the whole question body, on code chunks in the question
+body, and on the question body without noun phrases.
 
-The final predictive model that Ravi \emph{et al.} (2014) employ is
-based on a model proposed by Allamanis and Sutton (2013), who themselves
-analysed StackOverflow questions but did not use their model to predict
-``question quality''. Allamanis and Sutton (2013) use LDA models on
-three tiers: First across the entire question body, secondly on the code
-chunks in the body, and lastly on the body with noun phrases removed.
-Ravi \emph{et al.} (2014) on the other hand choose the following three
-levels over which to model latent topics: Globally to capture topics
-over the entire question content, locally to capture sentence-level
-topics, and a Mallows model (Fligner and Verducci, 1986) global topic
-structure to enforce structural constraints on the sentence topics in
-questions. This is the same model that I will employ in task two of my
-research question.
+Ravi \emph{et al.} (2014) choose to model latent topics 1) Globally in
+order to capture topics over questions as a whole, 2) locally to seize
+sentence-level topics, and finally use a Mallows model (Fligner and
+Verducci, 1986) for a global topic structure to administer structural
+constraints on sentence topics in all questions.
 
-\newpage 
+Since Ravi \emph{et al.} (2014) see no substantial gains in predictive
+accuracy using the Mallows model, I only employ the LDA features
+(\textbf{and maybe word-embedding features}), I also split my train/test
+temporally and differ in deleting low viewcount questions. Despite
+mirroring the methodology in Ravi \emph{et al.} (2014), I critique and
+build on it in many ways and will begin this discussion on my
+methodology now.
 
-\color{black}
+\newpage
 
 \section{\texorpdfstring{Methodology
 \label{Method}}{Methodology }}\label{methodology}
@@ -477,21 +469,23 @@ research question.
 
 The \href{https://stackexchange.com/sites\#traffic}{StackExchange}
 family of online Q\&A fora are a diverse range of over 170 community
-websites ranging from vegetarianism to quantum computing to bicycles,
-and a rich amount of data from all the communities is publicly available
-in XML files compressed in 7-Zip format at
-\href{http://archive.org/download/stackexchange}{archive.org}.
+websites covering topics from vegetarianism to quantum computing to
+bicycles. Over and above the textual content of all questions, answers
+and comments posted since each communities initiation, rich meta-data on
+all communities is publicly available in XML files compressed in 7-Zip
+format at \href{http://archive.org/download/stackexchange}{archive.org}.
 
 The \textbf{five} datasets that I chose to analyse are displayed in
-table \ref{tab:fora}, along with their descriptions.
+table \ref{tab:fora}, along with a short description.
 
 \footnotesize
 
 \begin{longtable} {@{} cccp{9cm} @{}}
-\caption{\textbf{Datasets}}
-\label{tab:fora}\\ \hline \hline
+\caption{\textbf{Dataset Details}}
+\label{tab:fora}\\ 
+\toprule
 Forum & Questions & Answers & Description \\ 
-\hline
+\midrule
 StackOverflow & 18m & 27m & Q\&A for professional and enthusiast programmers \\
 Math & 1.1m & 1.5m & Q\&A for people studying math at any level \\
 SuperUser & 415k & 601k & Q\&A for computer enthusiasts and power users \\ 
@@ -502,16 +496,16 @@ Economics & 7.7k & 9.9k & For those studying, teaching, researching and applying
 Fitness & 8.2k & 16k & Q\&A for athletes, trainers and physical fitness professionals \\ 
 Health & 5.6k & 4.5k & For professionals in the medical and allied health fields \\ 
 Interpersonal & 3.1k & 13k & Q\&A for anyone wanting to improve their interpersonal skills \\ 
-\hline \hline
+\bottomrule
 \end{longtable}
 
 \normalsize
 
 \textbf{I extracted the full number of questions from each forum for
-analysis, resulting in a total number of questions of \emph{so-much} },
-with the following variables of interest per community:
+analysis, resulting in a total number of questions of \emph{so-much}},
+where the following variables are of interest to my analysis:
 
-\setstretch{0.65}
+\setstretch{0.85}
 
 \begin{itemize}
 \item
@@ -519,7 +513,8 @@ with the following variables of interest per community:
   up-votes and down-votes for a question
 \item
   \texttt{ViewCount}: A counter for the number of page views the
-  question receives (by both registered and non-registered users)
+  question receives (both registered and non-registered users views are
+  taken into account)
 \item
   \texttt{Title}: The text of the question title
 \item
@@ -543,17 +538,69 @@ Health: 2015-03-31 to 2019-03-02
 
 Interpersonal: 2017-06-27 to 2019-03-02
 
-I now move onto some noteworthy aspects of the data.
+\subsection{Exploratory Analysis}\label{exploratory-analysis}
 
-\subsection{\texorpdfstring{Noteworthy elements
-\label{noteworthy}}{Noteworthy elements }}\label{noteworthy-elements}
+The entire PySpark codebase for the processing and modelling of the data
+done can be found
+\href{https://github.com/BCallumCarr/msc-lse-thesis/tree/master/01-python-code}{here}.
+I downloaded the full data from the 5 selected fora, decompressed the
+7-Zip files and converted the XML files into
+\href{https://parquet.apache.org}{Parquet} format.
 
-\textbf{A discussion of the underlying functioning of StackExchange
-sites is necessary to gain insight to abilities and limitations of the
-research goal.} While questions on all StackExchange sites are open to
-the public, posting a question in a community requires registration with
-an email address and a username. Once registered, users start with a
-\emph{reputation} level of 1
+Figure \ref{fig:desc} displays the question counts for each dataset.
+Fora with the largest question activity are Fitness at around 8000
+questions, followed by Economics at just over 7000. Buddhism and Health
+both look approximately equal at 5500, and then substantially lower is
+Interpersonal at just under 3000.
+
+\footnotesize
+
+\begin{figure}
+\caption{\textbf{Fora Descriptives}}
+\label{fig:desc}
+\begin{minipage}{1\textwidth}
+
+\includegraphics[width=0.32\linewidth]{../../01-python-code/00-workspace/01-graphs/post-counts-bar-graph} 
+\includegraphics[width=0.32\linewidth]{../../01-python-code/00-workspace/01-graphs/ave-score-bar-graph} 
+\includegraphics[width=0.32\linewidth]{../../01-python-code/00-workspace/01-graphs/ave-views-bar-graph} 
+\\ \centering
+{\footnotesize Source: Own calculations in PySpark.}
+\end{minipage}
+\end{figure}
+
+\normalsize
+
+Interpersonal has a substantially higher average \texttt{Score} per
+question at over 16 compared to others which are just below, indicating
+that this community hands out votes the easiest. However, Interpersonal
+also has the highest \texttt{ViewCount}, signalling that it has the most
+viewing activity from both community-members and non-community members
+alike. When considering the composite variable,
+\texttt{Score}/\texttt{ViewCount}, Interpersonal interestingly comes
+last, showing that although they are overall the most generous at
+handing out up-votes, when compensating for how much viewing traffic the
+questions get the community actually has on average the least votes
+being cast out of the amount of views questions get (due to many
+non-community member views, many up-votes being offset by down-votes
+i.e.~contentious issues??).
+
+Needless to say, these communities appear to operate quite distinctly,
+making predicting community engagement by a single topic-based-model
+quite challenging, which would be contrary to the claim made by Ravi
+\emph{et al.} (2014). The above average figures only display one
+dimension however, so we further graph the density curves for all three
+variables in figures blah through blah.
+
+\subsection{A Clear Definition of the Response
+Variable}\label{a-clear-definition-of-the-response-variable}
+
+In order to robustly define a response variable capturing community
+engagement, there are certain aspects of the data and functioning of the
+StackExchange sites that should be discussed. First of all, although
+questions on all StackExchange sites being open to the public, posting a
+question in a community requires registration with an email address and
+a username. Once registered, users start with a \emph{reputation} level
+of 1
 (\url{https://meta.stackexchange.com/questions/7237/how-does-reputation-work}).
 The reputation levels key to my analysis are laid out as follows:
 
@@ -570,117 +617,165 @@ The reputation levels key to my analysis are laid out as follows:
 
 \setstretch{1.25}
 
-A number of complexities are created by the structure of the websites.
-First of all, the contrasting reputation levels for up- and down-voting
-privileges (15 and 125 respectively) lead to a \texttt{Score} variable
-that is highly negatively skewed and thus questions are more likely to
-have a higher \texttt{Score}, thus making it appear as if more questions
-are highly value in the community than could actually be. Table
-\ref{tab:score_table} below confirms this:
+One factor is that there seems to be a less-than-full consensus of when
+exactly to up- or
+down-vote\footnote{https://meta.stackexchange.com/questions/12772/should-i-upvote-bad-questions}
+despite general guidelines on StackExchange sites stating that up-votes
+should be given if a question shows prior research, is clear and useful,
+and down-voting the opposite.
+
+One possible confounding factor for the response variable that is worth
+considering is that questions can be edited, not only by the original
+poster, but by anyone with a level of reputation of 1000 or more.
+General cross-community guidelines for editing include addressing
+grammar and spelling issues, clarifying concepts, correcting minor
+mistakes, and adding related resources and links. The concern here is
+that users could vote, comment and answer on substantially different
+questions over time as a question is edited from it's original form.
+\textbf{The simplifying assumption that I make here is that most edits,
+if any at all, would happen quickly as moderators are made aware of
+offending questions and thus the majority of views and votes would
+happen on final, edited questions. I therefore choose final edited
+question content to predict on.}
+
+The contrasting reputation levels for up- and down-voting privileges (15
+and 125 respectively) also lead to a \texttt{Score} variable that is
+highly negatively skewed, making it more likely that questions will have
+a higher \texttt{Score} and giving the appearance that most questions
+are highly valued by a community. The density curves of the
+\texttt{Score} variable per community in figure \ref{fig:density} below
+confirm this. The negative skewness of all 5 curves is clearly evident,
+and all except Interpersonal are steeply centred just after 0.
 
 \footnotesize
 
-\begin{longtable}[htbp] {@{} lccc @{}} 
-\caption{\textbf{Score Distribution}} 
-\label{tab:score_table} \\
-\hline \hline
-\textbf{Score} &  \textbf{<0} &  \textbf{=0} &  \textbf{>0} \\
-\hline \hline
-\% of questions Economics    &              0 &              0 &                0 \\
-\% of questions Buddhism      &              0 &              0 &                0 \\
-\% of questions Fitness       &              0 &              0 &                0 \\
-\% of questions Health        &              0 &              0 &                0 \\
-\% of questions Interpersonal &              0 &              0 &                0 \\
-\hline \hline
-\end{longtable}\begin{center} Source: Own calculations in PySpark\end{center}
+\begin{figure}
+\caption{\textbf{Density Plots}}
+\label{fig:density}
+
+\begin{center}\includegraphics[width=0.8\linewidth]{../../01-python-code/00-workspace/01-graphs/views-density-plot} \end{center}
+
+
+
+\begin{center}\includegraphics[width=0.8\linewidth]{../../01-python-code/00-workspace/01-graphs/score-density-plot} \end{center}
+\centering {\footnotesize Source: Own calculations in PySpark.}
+\end{figure}
 
 \normalsize
 
-\textbf{This does not serve much of an issue for our model however,
-because the \texttt{Score} variable is continuous and thus can just view
-that as a range where it is easy to get percentiles of new questions to
-see how they rank versus old ones.}
+Despite the negative skewness, because I am predicting a continuous
+response variable as opposed to binary, \textbf{I believe this won't be
+an issue.} It is just the way that the site functions and thus my
+prediction model will not not be altered to try and force the data to my
+whim.
 
-One challenge in just considering the \texttt{Score} as the target
-variable alone, is that it does not take into account what
-\emph{proportion} of users have decided to vote - i.e.~the percentage of
-voters that decided to up-vote a question could be small in comparison
-to the total amount of users that viewed the question.
+A really interesting aspect of the data and of the functioning of the
+StackExchange sites concerns the \texttt{Score} and \texttt{ViewCount}
+variables. \textbf{As mentioned}, only members that have registered with
+the community are able to up-vote and down-vote, thus contributing to
+the \texttt{Score}, but owing to all questions being open to the public,
+\texttt{ViewCount} variable registers views from 1) registered users
+that can vote, 2) registered users that can't vote due to a reputation
+level below 15), and 3) non-registered members.
 
-Thus as As Ravi \emph{et al.} (2014) note suggest, a natural improvement
-upon only using the \texttt{Score} variable would be to consider the
-\texttt{Score} variable normalised by \texttt{ViewCount}, i.e.
-\texttt{Score}/\texttt{ViewCount}. This raises a further issue however,
-since the fact that all questions are open to the public, not everyone
-who views a question (and thus adds to the \texttt{ViewCount}) has the
-ability to vote on the question (i.e.~non-registered members, those
-registered who cannot vote due to a reputation level below 15). In order
-to address this issue in their own analysis, Ravi \emph{et al.} (2014)
-decide on a minimum \texttt{ViewCount} threshold so that they are more
-confident that their final dataset contains questions that have been
-viewed by qualifying users that can vote. I opt not to discard questions
-below a certain \texttt{ViewCount} in my analysis, since I believe there
-is no material manner in which to ascertain if questions have been
-viewed by qualifying or non-qualifying users, despite how low their
-\texttt{ViewCount}.
+This caveat influences the methodology of Ravi \emph{et al.} (2014) in
+two ways. First, they decide to use a composite response variable,
+\texttt{Score}/\texttt{ViewCount}, since thise would move in the
+direction of taking the proportion of users that have decided to vote
+out of the total number into account (i.e.~the percentage of voters that
+decided to up-vote a question could be small in comparison to the total
+amount of users that viewed the question). As they rightly point out,
+considering \texttt{Score} alone might lead to conflating popularity
+with their goal of measuring question quality, since a higher
+\texttt{ViewCount} would definitely bias the \texttt{Score} variable
+upwards owing to the unsymmetrical reputation privileges.
 
-Lastly, a possible confounding factor is that questions can be edited,
-not only by the original poster, but by anyone with a level of
-reputation of 1000 or more. General cross-community guidelines for
-editing include addressing grammar and spelling issues, clarifying
-concepts, correcting minor mistakes, and adding related resources and
-links. The concern here is that users could vote, comment and answer on
-substantially different questions over time as a question is edited from
-it's original form. \textbf{The simplifying assumption that I make here
-is that most edits, if any at all, would happen quickly as moderators
-are made aware of offending questions and thus the majority of views and
-votes would happen on final, edited questions. I therefore choose final
-edited question content to predict on.}
+That said, here we have a look at the correlations between the
+\texttt{Score} and \texttt{ViewCount} variable:
 
-\textbf{It seems that ViewCount and Score could be working
-counteractively at times, since a high viewcount and low score could
-mean high outside community interaction, whereas the opposite indicates
-high inside community interaction. I focus on within community
-interaction.}
+\footnotesize
 
-\subsection{Preprocessing and Exploratory
-Analysis}\label{preprocessing-and-exploratory-analysis}
+\begin{longtable} {@{} cp{11cm} @{}}
+\caption{\textbf{Best and Worst Fora Questions}}
+\label{tab:bestworst}\\ 
+\toprule
+\textbf{Forum} & \textbf{Score/ViewCount Correlation} \\ 
+\midrule
+Buddhism & 0.441583990377997 \\
+Economics & 0.29542738683698866 \\
+Fitness & 0.35391344729176477 \\
+Health & 0.14507264715830742 \\
+Interpersonal & 0.8805605882358185 \\
+\bottomrule
+\end{longtable}\begin{center} Source: Own calculations in PySpark.\end{center}
 
-The PySpark code for the processing and modelling of the data done can
-be found
-\href{https://github.com/BCallumCarr/msc-lse-thesis/tree/master/01-python-code}{here}.
-I downloaded the full data from the 5 selected fora, decompressed the
-7-Zip files and converted the XML files into
-\href{https://parquet.apache.org}{Parquet} format.
+\normalsize
 
-\textbf{Table \ref{tab:bestworst} displays the titles of a selection of
-``best'' and ``worst'' questions across fora according to the final
-response variable \texttt{Score}/\texttt{ViewCount} (the best questions
-have positive \texttt{Scores} whereas the worst have negative
-\texttt{Scores}).}
+I like to place this challenge in a framework of ``within-community''
+engagement, and ``outer-community engagement''. Votes from community
+members, and consequently the \texttt{Score} variable, is purely a
+within-community metric since you have to be registered with the
+community to contribute to this variable. \texttt{ViewCount} on the
+other hand, is both a within- and outer- community engagement variable,
+since it does not distinguish voting or non-voting status when
+registering question views. I choose not to mix these two metrics and
+focus solely on within-community engagement through the \texttt{Score}
+variable - although this may mean popularity may be entangled in this
+response variable I have chosen, I would assert that popularity is in
+itself a measurement of community engagement and users would really only
+be interested in this final \texttt{Score} prediction rather than
+something like \texttt{Score}/\texttt{ViewCount}.
+
+The second methodological adjustment that Ravi \emph{et al.} (2014) make
+with their data is to only consider questions above a certain minimum
+\texttt{ViewCount} threshold. Their reasoning behind this is so that
+they can be more confident of the final dataset containing questions
+that have been viewed by qualifying users that can vote, or in other
+words their claim is that questions with higher \texttt{ViewCounts} have
+a higher probability of having been seen by community members able to
+vote.
+
+I believe this is a false claim, since one could just as easily argue
+that new questions that begin with a low \texttt{ViewCount} are more
+likely to see engagement from proactive community members, especially if
+these questions doesn't generate enough webpage activity to rise as the
+top hit for search engines (which would lead to more non-community
+member activity contribution to views). Since there is additionally no
+data on the distribution of qualifying and non-qualifying user
+contributions to the \texttt{ViewCount} variable, therefore I opt to not
+disregard any questions below a certain \texttt{ViewCount} threshold.
+
+Table \ref{tab:bestworst} displays the titles of a selection of
+community questions with the highest and lowest \texttt{Scores}, i.e.~a
+selection of the ``best'' and ``worst'' questions according to the
+methodology I have chosen.
 
 \footnotesize
 
 \begin{longtable} {@{} cccp{11cm} @{}}
-\caption{\textbf{Best and Worst Fora Questions According to Score/ViewCount}}
-\label{tab:bestworst}\\ \hline \hline
+\caption{\textbf{Best and Worst Fora Questions}}
+\label{tab:bestworst}\\ 
+\toprule
 \textbf{Forum} & \textbf{Score} & \textbf{ViewCount} & \textbf{Title} \\ 
+\midrule
+Buddhism &     55 &       6491 &  Is rebirth a delusional belief? \\
+Buddhism &     -7 &        435 &       Why are buddhists hostile? \\
+Buddhism &     -7 &        100 &        Who remembers the Buddha? \\
 \hline
-Buddhism & 13 & 176 & What are the texts that contain words which can be attributed directly to the Buddha? \\
+Economics &     94 &      17337 &  How will non-rich citizens make a living if jobs keep getting replaced by robots and are outsourced? \\
+Economics &     -9 &        102 &                                      Has anyone made a successful economic prediction more than once? \\
 \hline
-Economics & -9 & 102 & Has anyone made a successful economic prediction more than once? \\
+Fitness &    111 &     132387 &  Is it healthy to exercise a muscle when it's still sore? \\
+Fitness &     -7 &         51 &                       Gaining fat for muscles-stomach fat \\
 \hline
-Health & 14 & 95 & In which order to put on a mask, a gown and to disinfect when visiting a hospital patient? \\ 
+Health &    103 &       5218 &                            How can I protect my eyesight when using computers? \\
+Health &     -6 &        120 &  Would a stomach/bladder port allow for infinite and safe eating of junk food? \\
 \hline
-Fitness & -5 & 201 & What is the best way to gain size in ankle area \\ 
-\hline
-Interpersonal & 24 & 1054 & How can I notice if someone is speaking with sarcasm or irony? \\ 
-\hline
-Interpersonal & -9 & 1327 & How can I tell if family members consider my unvaccinated kids a threat? \\ 
-\hline
-Spanish & 20 & 330 & Is the use of @ instead of 'a' or 'o' in order to refer to both masculine and femenine accepted? \\ 
-\hline \hline
-\end{longtable}\begin{center} Source: Own calculations in Python.\end{center}
+Interpersonal &    263 &      31487 &                     What to do if you are accidentally following someone? \\
+Interpersonal &     -9 &       1327 &  How can I tell if family members consider my unvaccinated kids a threat? \\
+Interpersonal &     -9 &        884 &             How to tell employees that I don't mean my insults seriously? \\
+\bottomrule
+\end{longtable}\begin{center} Source: Own calculations in PySpark.\end{center}
 
 \normalsize
 
@@ -692,44 +787,7 @@ Fitness fora illustrate this. Social norms also appear to play a strong
 part, since the ``worst'' question on the Interpersonal forum eludes to
 children being unvaccinated, which I assume would upset many individuals
 on the forum and lead to lowest \texttt{Score} per \texttt{ViewCount}
-for that forum.}
-
-Some descriptive graphs of the initial variables are displayed in figure
-\ref{fig:desc}. Here we see a number of differences across fora.
-\textbf{StackOverflow} has by far the highest number of questions, no
-doubt as a result of it being the first and oldest StackExchange site,
-followed by Mathematics. We see that \ldots{}.
-
-\renewcommand{\thefigure}{\arabic{figure}}
-
-\footnotesize
-
-\begin{figure}
-\caption{\textbf{Fora Descriptive Statistics}}
-\label{fig:desc}
-\begin{minipage}{1\textwidth}
-
-\includegraphics[width=0.32\linewidth]{../../01-python-code/00-workspace/01-graphs/post-counts-bar-graph} 
-\includegraphics[width=0.32\linewidth]{../../01-python-code/00-workspace/01-graphs/ave-views-bar-graph} 
-\includegraphics[width=0.32\linewidth]{../../01-python-code/00-workspace/01-graphs/ave-score-bar-graph} 
-\\ \centering
-{\footnotesize Source: Own calculations in Python.}
-\end{minipage}
-\end{figure}
-
-\normalsize
-
-\textbf{Graph response variable score to see skewness}
-
-It looks like the claim in Ravi \emph{et al.} (2014) that their model
-should work across disciplines is on thin ice, but we will look deeper
-into this with the modelling results.
-
-\textbf{Talk about assumptions of response variable?}
-
-\subsection{\texorpdfstring{Model \label{Model}}{Model }}\label{model}
-
-\color{black}
+for that forum.} We can see that this is now validated.
 
 I split that set of questions, \(Q\), into a training set
 \(Q_\text{train}\) and testing set \(Q_\text{train}\) using a point in
@@ -743,6 +801,8 @@ literature and introduces a temporal element into the analysis. While I
 do not employ time-series models, I leave it to further research to
 incorporate a way to ``remember'' which questions are good, so that in
 future there are no duplicates.}
+
+\subsection{\texorpdfstring{Model \label{Model}}{Model }}\label{model}
 
 I employ a simple regularised regression with the \texttt{Body} and
 \texttt{Title} as inputs from questions \(q_i\) out of
@@ -779,66 +839,133 @@ of tokens.
 \section{\texorpdfstring{Results
 \label{Results}}{Results }}\label{results}
 
+The results of the various models are displayed in tables. From it, we
+can see this this and that.
+
 \footnotesize
 
 \begin{longtable}[htbp] {@{} lccc @{}} 
 \caption{\textbf{Constant Mean Model}} 
 \label{tab:mean_model} \\
-\hline \hline
+\toprule
 \textbf{Forum} &  \textbf{Train RMSE} &  \textbf{Test RMSE} &  \textbf{Time (s)} \\
-\hline \hline
-Economics     &              0.026557 &              0.037792 &                0.93 \\
-Buddhism      &              0.014359 &              0.015749 &                0.75 \\
-Fitness       &              0.012305 &              0.020767 &                0.41 \\
-Health        &              0.035457 &              0.040167 &                0.67 \\
-Interpersonal &              0.004935 &              0.008395 &                0.56 \\
-\hline \hline
+\midrule
+Buddhism      &              3.744804 &              3.026707 &                0.19 \\
+Economics     &              3.558443 &              2.629807 &                0.20 \\
+Fitness       &              5.630797 &              3.168150 &                0.37 \\
+Health        &              4.331709 &              2.568920 &                0.29 \\
+Interpersonal &             25.585999 &             16.252211 &                0.16 \\
+\bottomrule
+\end{longtable}\begin{center} Source: Own calculations in PySpark\end{center}
+
+\normalsize
+
+We use the mean of the training set as predictions for the test set in
+table \ref{tab:mean_model}, which is the low benchmark. Interestingly,
+test RMSE is lower for all communities than train RMSE, thus it appears
+that there is substantially more noise in the training sets (remember
+that the training sets are older questions as well).
+
+This leads us to investigate the variation among train/test samples for
+the communities:
+
+\footnotesize
+
+\begin{longtable}[htbp] {@{} lccc @{}} 
+\caption{\textbf{Random 80/20 Train/Test Descriptives}} 
+\label{tab:tr-te} \\
+\toprule
+\textbf{Forum} &  \textbf{Train StdDev} &  \textbf{Test StdDev} \\
+\midrule
+Buddhism & 3.68 & 3.33 \\
+Economics & 3.51 & 2.96 \\
+Fitness & 5.28 & 5.28 \\
+Health & 4.22 & 3.54 \\
+Interpersonal & 24.33 & 23.09 \\
+\bottomrule
 \end{longtable}\begin{center} Source: Own calculations in PySpark\end{center}
 
 \normalsize
 
 \footnotesize
 
-\begin{longtable}[htbp] {@{} lcccc @{}} 
-\caption{\textbf{Viewcount Model}} 
-\label{tab:vc_model} \\
-\hline \hline
-\textbf{Forum} &  \textbf{Train RMSE} &  \textbf{Test RMSE} &  \textbf{Test Gain (\%)} &  \textbf{Time (s)} \\
-\hline \hline
-Economics     &             0.026223 &          0.037722 &              0.185 &               5.96 \\
-Buddhism      &             0.014088 &          0.015799 &             -0.317 &               5.23 \\
-Fitness       &             0.012161 &          0.020627 &              0.674 &               4.32 \\
-Health        &             0.035242 &          0.040102 &              0.162 &               4.07 \\
-Interpersonal &             0.004805 &          0.008177 &              2.597 &               4.09 \\
-\hline \hline
+\begin{longtable}[htbp] {@{} lccc @{}} 
+\caption{\textbf{Temporal 80/20 Train/Test Descriptives}} 
+\label{tab:tr-te} \\
+\toprule
+\textbf{Forum} &  \textbf{Train StdDev} &  \textbf{Test StdDev} \\
+\midrule
+Buddhism & 3.75 & 1.77 \\
+Economics & 3.56 & 1.98 \\
+Fitness & 5.63 & 2.2 \\
+Health & 4.33 & 2.15 \\
+Interpersonal & 25.59 & 11.72 \\
+\bottomrule
 \end{longtable}\begin{center} Source: Own calculations in PySpark\end{center}
 
 \normalsize
+
+Data has heterogeneity when considered temporally, possibly because of
+interventions in communitites to effect answers?
+
+\footnotesize
+
+\begin{longtable}[htbp] {@{} lcccc @{}} 
+\caption{\textbf{ViewCount Model}} 
+\label{tab:vc_model} \\
+\toprule
+\textbf{Forum} &  \textbf{Train RMSE} &  \textbf{Test RMSE} &  \textbf{Test Gain (\%)} &  \textbf{Time (s)} \\
+\midrule
+Buddhism      &             3.374630 &          2.613928 &             13.638 &               5.22 \\
+Economics     &             3.415546 &          2.394207 &              8.959 &               4.94 \\
+Fitness       &             5.281202 &          2.798655 &             11.663 &               4.92 \\
+Health        &             4.287559 &          2.522763 &              1.797 &               4.32 \\
+Interpersonal &            12.321576 &          5.702388 &             64.913 &               4.30 \\
+\bottomrule
+\end{longtable}\begin{center} Source: Own calculations in PySpark\end{center}
+
+\normalsize
+
+Table \ref{tab:vc_model} is the high benchmark, since it is vacuous (the
+final \texttt{ViewCount} of a question is not available for new
+questions) and a higher \texttt{ViewCount} would definitely lead to
+higher \texttt{Score}.
 
 \footnotesize
 
 \begin{longtable}[htbp] {@{} lcccccc @{}} 
 \caption{\textbf{Tokens Model}} 
-\label{tab:vc_model} \\
-\hline \hline
+\label{tab:token_model} \\
+\toprule
 \textbf{Forum} &  \textbf{Train RMSE} &  \textbf{Test RMSE} &  \textbf{Test Gain (\%)} &  \textbf{Time (s)} & \textbf{Elastic Param} &  \textbf{Reg'tion Param} \\
-\hline \hline
-Economics     &          0.026446 &       0.037769 &           0.061 &          606.66 &             0.001 &             1.000 \\
-Buddhism      &          0.014281 &       0.015740 &           0.057 &          385.50 &             1.000 &             0.001 \\
-Fitness       &          0.012305 &       0.020767 &          -0.000 &          571.22 &             0.001 &             1.000 \\
-Health        &          0.035030 &       0.040057 &           0.274 &          374.23 &             0.001 &             1.000 \\
-Interpersonal &          0.004935 &       0.008395 &          -0.000 &          458.33 &             1.000 &             1.000 \\
-\hline \hline
+\midrule
+Buddhism      &          3.744804 &       3.026707 &           0.00 &           87.81 &               1.0 &               1.0 \\
+Economics     &          3.558443 &       2.629807 &           0.00 &          139.93 &               1.0 &               1.0 \\
+Fitness       &          5.630797 &       3.168150 &           0.00 &          141.84 &               1.0 &               1.0 \\
+Health        &          4.331709 &       2.568920 &           0.00 &           91.37 &               1.0 &               1.0 \\
+Interpersonal &         20.579032 &      17.264799 &           -6.23 &          120.35 &               1.0 &               1.0 \\
+\bottomrule
 \end{longtable}\begin{center} Source: Own calculations in PySpark\end{center}
 
 \normalsize
+
+The results of using unigram text of question titles and bodies is
+displayed in table \ref{tab:token_model}. This model struggles
+particularly, only predicting constant mean predictions for every
+community except for Interpersonal, where it actually performs worse
+than just predicting the mean by 6\%. Interestingly, the grid search
+gives an elastic parameter of 1 and regularisation parameter of 1 for
+all models.
 
 DISCUSS WHY RMSE IS DIFFERENT PER COMMUNTIY
 
 \section{\texorpdfstring{Limitations
 \label{Limit}}{Limitations }}\label{limitations}
 
-Different motivations behind voting
+Different motivations behind voting.
+
+Different interventions from StackExchange sites (nudges introduced
+already.)
 
 One aspect of this research that stands out as an area for further
 research is the fact that only one target variable was considered (i.e.
@@ -889,6 +1016,8 @@ positive community engagement), or more edits signify more energy
 willingly devoted to improving the question because it will add value to
 the community (and thus it is directly proportional to positive
 community engagement).
+
+Temporal aspect
 
 \newpage
 
