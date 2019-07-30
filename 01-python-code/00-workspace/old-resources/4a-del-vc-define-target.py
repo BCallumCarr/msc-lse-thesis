@@ -1,3 +1,19 @@
+#########################################################################
+### Delete low ViewCount qs
+#########################################################################
+
+# get rid of viewcounts below a certain threshold
+from pyspark.sql.functions import lit
+
+for i in data_array:
+    thresh = datasets[i].approxQuantile('viewcount', [0.1], 0.0005)[0] #0.1
+    datasets[i] = datasets[i].filter(datasets[i]['viewcount'] >= lit(thresh))
+    
+
+#########################################################################
+### Define Response
+#########################################################################
+
 ## create response variable normalised by views
 for i in data_array:
     datasets[i] = datasets[i].withColumn('y_ravi', datasets[i]['score']/datasets[i]['viewcount'])
@@ -41,3 +57,4 @@ with (open("best_worst_qs/best_worst_qs.pickle", "rb")) as openfile:
 
 ## loading from pickle puts it in a list, so put it back in dictionary:
 best_worst_qs = best_worst_qs[0]
+

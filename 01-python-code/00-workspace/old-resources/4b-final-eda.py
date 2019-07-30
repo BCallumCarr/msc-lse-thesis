@@ -12,9 +12,9 @@ for i in data_array:
     datasets[i].describe(['viewcount']).show()
 
 ## describe y_ravi
-'''for i in data_array:
+for i in data_array:
     print("----- " + i + " -----")
-    datasets[i].describe(['y_ravi']).show()'''
+    datasets[i].describe(['y_ravi']).show()
 
 ## describe score
 for i in data_array:
@@ -95,7 +95,7 @@ plt.close('all')
 
 ## bar plot of y_ravi per post in descending order
 
-'''# collect data
+# collect data
 for i in data_array:
     plot_data[i] = datasets[i].groupBy().avg('y_ravi').collect()[0][0]
 
@@ -107,7 +107,7 @@ plt.bar(x, y, align='center', alpha=.8)
 plt.xticks(range(len(plot_list)), list([i[0] for i in plot_list]), rotation=90)
 plt.title('Average Score/ViewCount per post')
 plt.savefig('01-graphs/ave-y_ravi-bar-graph.png', bbox_inches="tight")
-plt.close('all')'''
+plt.close('all')
 
 #########################################################################
 
@@ -138,7 +138,7 @@ plt.close('all')
 ## plot cumulative distribution of y_ravi score across fora
 
 # collect data
-'''for i in data_array:
+for i in data_array:
     plot_data[i] = datasets[i].select("y_ravi").rdd.flatMap(lambda x: x).collect()
     #plot_data[i] = [x for x in plot_data[i] if x is not None] don't need this just yet
 
@@ -154,7 +154,7 @@ ax.set_title('Cumulative Score/ViewCount')
 ax.set_xlabel('Score/ViewCount')
 ax.set_ylabel('Cumulative percentage of question posts')
 plt.savefig('01-graphs/cumul-y_ravi.png', bbox_inches="tight")
-plt.close('all')'''
+plt.close('all')
 
 #########################################################################
 
@@ -281,7 +281,7 @@ plt.close('all')
 
 ## density plot y_ravi
 
-'''# collect data
+# collect data
 for i in data_array:
     plot_data[i] = datasets[i].select('y_ravi').rdd.flatMap(lambda x: x).collect() 
 
@@ -338,7 +338,7 @@ ax1.set_ylabel('Density')
 
 # save figure
 plt.savefig('01-graphs/y_ravi-density-plot.png', bbox_inches="tight")
-plt.close('all')'''
+plt.close('all')
 
 
 
