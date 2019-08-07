@@ -2,6 +2,7 @@
 import findspark 
 findspark.init()
 
+# import pyspark
 import pyspark
 
 spark = (
@@ -11,5 +12,7 @@ spark = (
     .getOrCreate()
 )
 
+# print out relevant info
 p = spark.sparkContext.defaultParallelism
-print(f'The Spark UI is available at: http://192.168.0.26:4040/ and the defaultParallelism is {p}')
+v = spark.sparkContext.version
+print(f'The Spark UI, version {v}, is available at: http://192.168.0.26:4040/ and the defaultParallelism is {p}')

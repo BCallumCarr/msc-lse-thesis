@@ -1,11 +1,3 @@
-## find range of dates for datasets
-from pyspark.sql.functions import col
-
-for i in data_array:
-    print(f'{i.title()}:')
-    print(datasets[i].sort(col('clean_date')).select('clean_date').take(1)[0][0])
-    print(f"{datasets[i].sort(col('clean_date').desc()).select('clean_date').take(1)[0][0]}\n")
-
 ## describe viewcount per fora
 for i in data_array:
     print("----- " + i + " -----")
@@ -36,6 +28,54 @@ for i in data_array:
 import seaborn as sns
 import matplotlib.pyplot as plt
     
+#########################################################################
+
+## violin plot of score
+
+# collect data
+plot_data = pd.DataFrame()
+for i in data_array:
+    temp = datasets[i].select('score').toPandas()
+    temp['forum'] = i.title()
+    plot_data = plot_data.append(temp)
+
+# plot
+fig, ax = plt.subplots(figsize=(7, 7))
+sns.violinplot( x=plot_data['forum'], y=plot_data['score'] )
+
+# axis labels
+ax.set_xlabel('Score')
+ax.set_ylabel('')
+
+# save figure
+plt.savefig('01-graphs/score-violin-plot.png', bbox_inches="tight")
+plt.close('all')
+
+#########################################################################
+
+## violin plot of viewcount
+
+# collect data
+plot_data = pd.DataFrame()
+for i in data_array:
+    temp = datasets[i].select('viewcount').toPandas()
+    temp['forum'] = i.title()
+    plot_data = plot_data.append(temp)
+
+# plot
+fig, ax = plt.subplots(figsize=(7, 7))
+sns.violinplot( x=plot_data['forum'], y=plot_data['viewcount'] )
+
+# axis labels
+ax.set_xlabel('ViewCount')
+ax.set_ylabel('')
+
+# save figure
+plt.savefig('01-graphs/viewcount-violin-plot.png', bbox_inches="tight")
+plt.close('all')
+
+#########################################################################
+
 ## bar plot of post counts in descending order
 
 # empty dictionary of df skeleton
@@ -340,7 +380,52 @@ ax1.set_ylabel('Density')
 plt.savefig('01-graphs/y_ravi-density-plot.png', bbox_inches="tight")
 plt.close('all')'''
 
+#########################################################################
 
+## content of "best" and "worst" questions based on target
+best_worst_qs = {}
+
+for i in data_array:
+    best_worst_qs[i] = pd.concat(
+        [
+            datasets[i].where(datasets[i].score == datasets[i].select('score').
+                           rdd.flatMap(lambda x: x).max()).toPandas(),
+            datasets[i].where(datasets[i].score == datasets[i].select('score').
+                           rdd.flatMap(lambda x: x).min()).toPandas()
+        ]
+        , axis=0)
+
+## look at certain fora best and worst questions
+pd.DataFrame.from_dict(best_worst_qs['fitness'][['title', 'viewcount', 'score', 'clean_body']])
+
+## save results to csv
+for i in data_array:
+    best_worst_qs[i].to_csv(f'best_worst_qs/bwqs{i}.csv')
+
+## pickle best/worst results
+import pickle
+
+with open('best_worst_qs/best_worst_qs.pickle', 'wb') as handle:
+    pickle.dump(best_worst_qs, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+## load pickle file to check
+best_worst_qs = []
+with (open("best_worst_qs/best_worst_qs.pickle", "rb")) as openfile:
+    while True:
+        try:
+            best_worst_qs.append(pickle.load(openfile))
+        except EOFError:
+            break
+
+## loading from pickle puts it in a list, so put it back in dictionary:
+best_worst_qs = best_worst_qs[0]
+
+## get latex output
+# get rid of ellips'
+pd.set_option('display.max_colwidth',1000)
+
+for i in data_array:
+    print(pd.DataFrame.from_dict(best_worst_qs[i][['score', 'viewcount', 'title']]).to_latex())
 
 
 ################

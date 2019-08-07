@@ -10,7 +10,7 @@ from pyspark.sql.functions import lit
 
 ## 80/20 split
 if 'economics' in data_array:
-    date = '2018-06-15' # date used to split data
+    date = '2018-06-12' # date used to split data
     i = 'economics'
     train[i] = datasets[i].filter(datasets[i]['clean_date'] < lit(date))
     test[i] = datasets[i].filter(datasets[i]['clean_date'] >= lit(date))
@@ -31,7 +31,7 @@ if 'buddhism' in data_array:
     print(f'{i}: {frac}, from {numer} and {denom}')
 
 if 'fitness' in data_array:
-    date = '2017-05-01'
+    date = '2017-05-13'
     i = 'fitness'
     train[i] = datasets[i].filter(datasets[i]['clean_date'] < lit(date))
     test[i] = datasets[i].filter(datasets[i]['clean_date'] >= lit(date))
@@ -41,7 +41,7 @@ if 'fitness' in data_array:
     print(f'{i}: {frac}, from {numer} and {denom}')
 
 if 'health' in data_array:
-    date = '2018-04-01'
+    date = '2018-03-12'
     i = 'health'
     train[i] = datasets[i].filter(datasets[i]['clean_date'] < lit(date))
     test[i] = datasets[i].filter(datasets[i]['clean_date'] >= lit(date))
@@ -51,7 +51,7 @@ if 'health' in data_array:
     print(f'{i}: {frac}, from {numer} and {denom}')
 
 if 'interpersonal' in data_array:
-    date = '2018-09-15'
+    date = '2018-09-23'
     i = 'interpersonal'
     train[i] = datasets[i].filter(datasets[i]['clean_date'] < lit(date))
     test[i] = datasets[i].filter(datasets[i]['clean_date'] >= lit(date))
