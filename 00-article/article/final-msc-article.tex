@@ -188,30 +188,33 @@ University of London} % comment this out and you get *Missing \begin{document}*
 \section*{Summary}
 
 Formulating constructive questions and receiving answers to these
-questions is not only a key part of how we learn, but to scientific
-progress and development. The evolution of the world wide web and the
-technologies it has provided us has given us an unprecendented ability
-to engage with and learn from the world, and while substantial attention
-has been dedicated to finding correct answers (just ask Google),
-comparitively less has been devoted to how we can improve the
+questions is not only a key part of how we learn as humankind, but of
+scientific progress and development. The evolution of the world wide web
+and the technologies it has provided us has given us an unprecendented
+ability to engage with and learn from the world, and while substantial
+attention has been dedicated to finding correct answers (just ask
+Google), comparitively less has been devoted to how we can improve the
 constructiveness of our questions. One online setting where relevant and
 well-researched questions is of particular importance is online
-question-answer (Q\&A) communities such as Yahoo! Answers, Quora and the
-StackExchange family of websites. These knowledge-sharing platforms
-often suffer from a problem of scarce professional resources compared to
-an abundance of questions, and it is precisely this issue of information
-overload that this research aims to address. By successfully predicting
-the extent of community engagement with questions using only the textual
-content available when a user submits a new question, questioners can be
-informed and nudged to improve the ``signal'' of their questions before
-adding demand to these communities, thereby improving the functioning
-and efficiency of these platforms substantially. I build on work
-addressing questions in Q\&A communities and construct models to predict
-on the community-granted score of questions for a range of diverse
-StackExchange Q\&A communities. My results for topic modelling features
-show that community engagement \textbf{can be predicted}, however from
-the variation of performance of models across fora it appears that
-communities \textbf{engage heterogenously} with questions.
+question-answer (Q\&A) communities where expert resources are scarce in
+comparison to cascades of new questions, or what has been termed
+information overload. This research aims to address this problem by
+analysing a diverse range of StackExchange Q\&A communities: I build on
+work concerning questions in online Q\&A communities and construct
+models to predict on the community-granted score for each question as a
+measurement of community engagement, using only textual question content
+available at the time questions are initially submitted. I confirm
+findings of prior research showing that features derived from the length
+and topics of questions yield improvements over baseline predictions,
+and also am able to gain insight into the degree of heterogeneity across
+online Q\&A communities. My analysis shows that there is still much to
+be done to predict online community engagement effectively, especially
+on data with temporal aspects. Nevertheless, this research serves as a
+stepping stone to accurately informing questioners of how their
+questions will be received by an online community and potentially
+nudging them to improve their questions before adding demand to these
+communities, thereby improving the functioning and efficiency of these
+platforms substantially.
 
 \clearpage
 
@@ -226,14 +229,14 @@ communities \textbf{engage heterogenously} with questions.
 Modern interpersonal communication technologies made possible by the
 internet have afforded us an exceptional level of connection and
 engagement with the world. Billions of individuals now interact online
-every split second, not only with people that they know, but with
-strangers millions of miles away. An extremely popular manner in which
-internet users have chosen to engage online is by knowledge sharing
-through specific question-and-answer (Q\&A) websites such as Yahoo!
-Answers, Quora, the StackExchange family and forums of Massive Online
-Open Courses (MOOCs). These websites serve as platforms where users seek
-answers to and discussions on \textbf{complex and technical} questions
-that modern search engines are evidently yet unable to fully address.
+instantly, not only with people that they know, but with strangers
+millions of miles away. Online question-and-answer (Q\&A) websites such
+as Yahoo! Answers, Quora, the StackExchange family and forums of Massive
+Online Open Courses (MOOCs) have become an extremely popular way in
+which internet users share knowledge about specific fields and subjects.
+These websites serve as platforms where users seek answers to and
+discussions on \textbf{complex and technical} questions that modern
+search engines are evidently yet unable to fully address.
 
 It goes without saying that producing legible, relevant and
 well-researched questions in online Q\&A fora is particularly valuable,
@@ -247,7 +250,7 @@ question's \texttt{Title} and \texttt{Body}.
 The broad research question can therefore be defined as the following:
 
 \begin{center}
-\emph{To what extent can community engagement with questions in online Q\&A communities be accurately captured and predicted?}
+\emph{To what extent can community engagement with questions in online Q\&A communities be accurately predicted?}
 \end{center}
 
 While there is a substantial amount of literature that has addressed
@@ -262,6 +265,8 @@ community-members can signal how much value specific questions add to
 the community and it is precisely this metric which I identify as
 community engagement and aim to predict on.
 
+\textbf{Community engagement}
+
 This research goal thus takes the form of quantitative prediction task
 rather than qualitative, causal or inferential analysis. I leave it to
 further research to address the \emph{how} and \emph{why} of community
@@ -269,7 +274,7 @@ engagement on online Q\&A communities, rather than just the \emph{what}
 that is explored here. I build a \textbf{elastic net, regularised}
 regression model to predict the community-assigned \texttt{Score} for
 each question, which is the result of aggregating all community up-votes
-and down-votes.
+and down-votes. I evaluate models using root-mean-square error (RMSE).
 
 This research thus has a concrete application to the real world:
 providing these predictions to questioners in real-time can encourage
@@ -281,10 +286,20 @@ aims to predict a community-provided measurement of online engagement,
 has a direct real-life application and will be implemented on
 \textbf{diverse communities makes it the first of its kind.}
 
-I find that \textbf{\ldots{}\ldots{}\ldots{}. and I conclude that the
-LDA topic model is not universally effective as Ravi \emph{et al.}
-(2014) claimed.} \textbf{and evaluate using root-mean-square error
-(RMSE)}.
+I find that models including features derived from the lengths and
+topics of questions perform slightly better than a baseline of just mean
+\texttt{Score} prediction, indicating that \textbf{there is still much
+work to be done and more features to be engineered before we can
+accurately predict community engagement in online Q\&A fora.} I also
+find that different models various levels of performance across fora,
+contradicting previous research claims that topic models would be
+universally successful across disciplines and fora. Lastly, contrary to
+prior research I evaluate the best performing model using a temporal
+train/test split, i.e.~where the training set contains questions that
+chronologically precede the testing set questions. Here I find
+\textbf{almost no gain in predictive performance}, leading me to believe
+that \textbf{models lacking a temporal element will always underperform
+when considering the chronological order of questions}.
 
 Previous work in the field of questions in online Q\&A fora will now be
 discussed in more detail. This will be followed by a discussion of the
@@ -301,37 +316,37 @@ concluding remarks are made.
 \subsection{Question-Answer
 Communities}\label{question-answer-communities}
 
-Much research has concerned Q\&A communities - i.e.~on answer quality
-(Jeon \emph{et al.}, 2006; Shah and Pomerantz, 2010; Tian, Zhang and Li,
-2013), on satisfaction of questioners (Liu, Bian and Agichtein, 2008)
-and on the behaviour of so-called ``expert'' community members (Riahi
-\emph{et al.}, 2012; Sung, Lee and Lee, 2013). Often, the framework for
-Q\&A fora has been the optimising the routing of questions to experts
-(Li and King, 2010; Li, King and Lyu, 2011; Zhou, Lyu and King, 2012;
-Shah \emph{et al.}, 2018), or question routing in accordance with
-answerer interest in the form of a recommendation system (Wu, Wang and
-Cheng, 2008; Qu \emph{et al.}, 2009; Szpektor, Maarek and Pelleg, 2013).
+There is a substantial collection of research that has investigated Q\&A
+communities. This includes work on answer quality (Jeon \emph{et al.},
+2006; Shah and Pomerantz, 2010; Tian, Zhang and Li, 2013), satisfaction
+of questioners (Liu, Bian and Agichtein, 2008) and the behaviour of
+highly productive, ``expert'' community members (Riahi \emph{et al.},
+2012; Sung, Lee and Lee, 2013). Two common frameworks for prior work has
+been the optimisation of routing questions to experts (Li and King,
+2010; Li, King and Lyu, 2011; Zhou, Lyu and King, 2012; Shah \emph{et
+al.}, 2018), and matching questions in accordance with answerer interest
+as a recommendation system (Wu, Wang and Cheng, 2008; Qu \emph{et al.},
+2009; Szpektor, Maarek and Pelleg, 2013).
 
-The research here contrasts with this prior work on Q\&A fora in that I
-focus on the questions rather than user or answer characteristics, not
-only owing to questions having received substantially less attention
-literature-wise, but because the quality of questions can significantly
-impact the quality of answers (Agichtein \emph{et al.}, 2008). Evidently
-as questions also serve as the initially entry-point for the question
-answering process after which all community engagement follows, I
-believe this focus on questions is well-placed and will enhance the
-development and functioning of communities.
+The framework I use for this research is discordant of a systems-based
+optimisation of question-answer matching, and is instead placed in the
+framework of how communities engage and react to phenomena. I focus on
+questions rather than user or answer characteristics, not only because
+they have received substantially less attention in the literature, but
+it has been shown that the quality of questions can significantly impact
+the quality of answers (Agichtein \emph{et al.}, 2008).
 
-Another difference is that I place the research problem in a framework
-discordant of systems-based optimisation of question-answer matching and
-instead focus on predicting community engagement using only question
-content. Thus this is aimed at the very real application of potentially
-nudging users to update and enhance their question content before
-encumbering community resources. Owing to the large intuitive overlap
-between question quality and community engagement in Q\&A communities,
-the body of work on question quality in Q\&A fora is discussed next.
+With the promise of a real-life application in nudging users to enhance
+their question content before encumbering community resources, I believe
+that the development and functioning of these communities can be
+substantially improved if community engagement in online Q\&A fora can
+be successfully predicted. Owing to a large overlap between literature
+on question quality in online Q\&A fora and what I have defined as
+community engagement, I discuss this literature next.
 
 \subsection{Question Quality}\label{question-quality}
+
+\textbf{LOTS OF WORK}
 
 High-quality questions assuredly lead to positive community engagement,
 however \textbf{the only difference may be the specific aspects of
@@ -375,17 +390,23 @@ they submit questions to a community. I also don't use any features
 derived from user attributes, since doing otherwise would not work well
 for questions asked by new users.
 
+\subsection{Community engagement?}\label{community-engagement}
+
+\subsection{Temporality?}\label{temporality}
+
 \subsection{\texorpdfstring{Ravi \emph{et al.}
 (2014)}{Ravi et al. (2014)}}\label{ravi2014}
+
+\textbf{LOTS OF WORK}
 
 A paper that made much headway in the classification and prediction of
 what they assume is question quality is Ravi \emph{et al.} (2014), who
 use the largest and oldest StackExchange site,
 \href{https://stackoverflow.com}{StackOverflow} I mirror much of the
-analysis in Ravi \emph{et al.} (2014), however I believe I build on
-their analysis significantly and distinctly in a number of ways.
+analysis in Ravi \emph{et al.} (2014), however I believe I build and
+diverge from their analysis significantly in a number of ways.
 
-Firstly, as mentioned the literature speaks a lot about ``question
+As discussed, much of the literature ir oriented towards ``question
 quality'' and Ravi \emph{et al.} (2014) decide to incorporate a
 question's \texttt{Score} into their ground truth for question quality,
 yet I posit that what these studies are measuring is instead more
@@ -427,6 +448,8 @@ and thus a discussion of topic modelling is necessary.
 
 \subsection{\texorpdfstring{Topic Modeling
 \label{model_lit}}{Topic Modeling }}\label{topic-modeling}
+
+\textbf{LOTS OF WORK}
 
 Bayesian models have recently achieved immense popularity to solve a
 diverse range of structured prediction challenges in Natural Language
@@ -471,7 +494,7 @@ The \href{https://stackexchange.com/sites\#traffic}{StackExchange}
 family of online Q\&A fora are a diverse range of over 170 community
 websites covering topics from vegetarianism to quantum computing to
 bicycles. Over and above the textual content of all questions, answers
-and comments posted since each communities initiation, rich meta-data on
+and comments posted since each communities conception, rich meta-data on
 all communities is publicly available in XML files compressed in 7-Zip
 format at \href{http://archive.org/download/stackexchange}{archive.org}.
 
@@ -481,7 +504,7 @@ table \ref{tab:fora}, along with a short description.
 \footnotesize
 
 \begin{longtable} {@{} cccp{9cm} @{}}
-\caption{\textbf{Dataset Details}}
+\caption{\textbf{Details of Datasets}}
 \label{tab:fora}\\ 
 \toprule
 Forum & Questions & Answers & Description \\ 
@@ -491,9 +514,9 @@ Math & 1.1m & 1.5m & Q\&A for people studying math at any level \\
 SuperUser & 415k & 601k & Q\&A for computer enthusiasts and power users \\ 
 Russian StackOverflow & 273k & 310k & Q\&A for programmers (Russian) \\ 
 English & 106k & 249k & Q\&A for linguists, etymologists, English language enthusiasts \\ 
-Buddhism & 5.7k & 19k & Discussions on Buddhist philosophy, teaching and practice \\
-Economics & 7.7k & 9.9k & For those studying, teaching, researching and applying economics/econometrics \\
 Fitness & 8.2k & 16k & Q\&A for athletes, trainers and physical fitness professionals \\ 
+Economics & 7.8k & 9.9k & For those studying, teaching, researching and applying economics/econometrics \\
+Buddhism & 5.8k & 19k & Discussions on Buddhist philosophy, teaching and practice \\
 Health & 5.6k & 4.5k & For professionals in the medical and allied health fields \\ 
 Interpersonal & 3.1k & 13k & Q\&A for anyone wanting to improve their interpersonal skills \\ 
 \bottomrule
@@ -501,11 +524,17 @@ Interpersonal & 3.1k & 13k & Q\&A for anyone wanting to improve their interperso
 
 \normalsize
 
-\textbf{I extracted the full number of questions from each forum for
-analysis, resulting in a total number of questions of \emph{so-much}},
-where the following variables are of interest to my analysis:
+The entire PySpark codebase for the processing and modelling of the data
+done can be found
+\href{https://github.com/BCallumCarr/msc-lse-thesis/tree/master/01-python-code}{here}.
+I downloaded the data from the 5 selected fora, decompressed the 7-Zip
+files, converted the XML files into
+\href{https://parquet.apache.org}{Parquet} format and extracted the full
+number of questions from each forum for analysis, resulting in a total
+number of questions of 30 636 across all fora. From the data, the
+following variables are of interest to my analysis:
 
-\setstretch{0.85}
+\setstretch{0.95}
 
 \begin{itemize}
 \item
@@ -526,32 +555,20 @@ where the following variables are of interest to my analysis:
 
 \setstretch{1.25}
 
-The date ranges for questions from each community are as follows:
+I use the most recent 3120 questions from each dataset. This evidently
+means that the time period that each forum's dataset ranges over will be
+different, potentially opening the analysis open up to bias in the form
+of different temporal effects across the different time periods for each
+dataset, but since this analysis will not be a temporal one, I assume
+there are no confounding temporal effects.
 
-Buddhism: 2014-06-17 to 2019-03-02
-
-Economics: 2014-11-18 to 2019-03-03
-
-Fitness: 2011-03-01 to 2019-03-03
-
-Health: 2015-03-31 to 2019-03-02
-
-Interpersonal: 2017-06-27 to 2019-03-02
+I now move onto an exploratory analysis of the data.
 
 \subsection{Exploratory Analysis}\label{exploratory-analysis}
 
-The entire PySpark codebase for the processing and modelling of the data
-done can be found
-\href{https://github.com/BCallumCarr/msc-lse-thesis/tree/master/01-python-code}{here}.
-I downloaded the full data from the 5 selected fora, decompressed the
-7-Zip files and converted the XML files into
-\href{https://parquet.apache.org}{Parquet} format.
-
-Figure \ref{fig:desc} displays the question counts for each dataset.
-Fora with the largest question activity are Fitness at around 8000
-questions, followed by Economics at just over 7000. Buddhism and Health
-both look approximately equal at 5500, and then substantially lower is
-Interpersonal at just under 3000.
+From the fora descriptives displayed in digure \ref{fig:violin} displays
+violin plots for each forum. In it we see that \texttt{Score} across all
+fora except for Interpersonal is centred around
 
 \footnotesize
 
@@ -560,9 +577,24 @@ Interpersonal at just under 3000.
 \label{fig:desc}
 \begin{minipage}{1\textwidth}
 
-\includegraphics[width=0.32\linewidth]{../../01-python-code/00-workspace/01-graphs/post-counts-bar-graph} 
-\includegraphics[width=0.32\linewidth]{../../01-python-code/00-workspace/01-graphs/ave-score-bar-graph} 
-\includegraphics[width=0.32\linewidth]{../../01-python-code/00-workspace/01-graphs/ave-views-bar-graph} 
+\includegraphics[width=0.49\linewidth]{../../01-python-code/00-workspace/01-graphs/score-violin-plot} 
+\includegraphics[width=0.49\linewidth]{../../01-python-code/00-workspace/01-graphs/viewcount-violin-plot} 
+\\ \centering
+{\footnotesize Source: Own calculations in PySpark.}
+\end{minipage}
+\end{figure}
+
+\normalsize
+
+\footnotesize
+
+\begin{figure}
+\caption{\textbf{Fora Descriptives}}
+\label{fig:desc}
+\begin{minipage}{1\textwidth}
+
+\includegraphics[width=0.49\linewidth]{../../01-python-code/00-workspace/01-graphs/ave-score-bar-graph} 
+\includegraphics[width=0.49\linewidth]{../../01-python-code/00-workspace/01-graphs/ave-views-bar-graph} 
 \\ \centering
 {\footnotesize Source: Own calculations in PySpark.}
 \end{minipage}
@@ -593,6 +625,9 @@ variables in figures blah through blah.
 
 \subsection{A Clear Definition of the Response
 Variable}\label{a-clear-definition-of-the-response-variable}
+
+\subsubsection{\texorpdfstring{The \texttt{Score}
+Variable}{The Score Variable}}\label{the-score-variable}
 
 In order to robustly define a response variable capturing community
 engagement, there are certain aspects of the data and functioning of the
@@ -669,6 +704,9 @@ an issue.} It is just the way that the site functions and thus my
 prediction model will not not be altered to try and force the data to my
 whim.
 
+\subsubsection{\texorpdfstring{The \texttt{ViewCount}
+variable}{The ViewCount variable}}\label{the-viewcount-variable}
+
 A really interesting aspect of the data and of the functioning of the
 StackExchange sites concerns the \texttt{Score} and \texttt{ViewCount}
 variables. \textbf{As mentioned}, only members that have registered with
@@ -695,17 +733,17 @@ That said, here we have a look at the correlations between the
 
 \footnotesize
 
-\begin{longtable} {@{} cp{11cm} @{}}
-\caption{\textbf{Best and Worst Fora Questions}}
-\label{tab:bestworst}\\ 
+\begin{longtable} {@{} cc @{}}
+\caption{\textbf{Score and ViewCount Correlations Across Fora}}
+\label{tab:corr}\\ 
 \toprule
-\textbf{Forum} & \textbf{Score/ViewCount Correlation} \\ 
+\textbf{Forum} & \textbf{Score and ViewCount Correlation} \\ 
 \midrule
-Buddhism & 0.441583990377997 \\
-Economics & 0.29542738683698866 \\
-Fitness & 0.35391344729176477 \\
-Health & 0.14507264715830742 \\
-Interpersonal & 0.8805605882358185 \\
+Buddhism & 0.41 \\
+Economics & 0.67 \\
+Fitness & 0.26 \\
+Health & 0.21 \\
+Interpersonal & 0.87 \\
 \bottomrule
 \end{longtable}\begin{center} Source: Own calculations in PySpark.\end{center}
 
@@ -745,6 +783,8 @@ data on the distribution of qualifying and non-qualifying user
 contributions to the \texttt{ViewCount} variable, therefore I opt to not
 disregard any questions below a certain \texttt{ViewCount} threshold.
 
+\subsubsection{Final Response Variable}\label{final-response-variable}
+
 Table \ref{tab:bestworst} displays the titles of a selection of
 community questions with the highest and lowest \texttt{Scores}, i.e.~a
 selection of the ``best'' and ``worst'' questions according to the
@@ -753,27 +793,27 @@ methodology I have chosen.
 \footnotesize
 
 \begin{longtable} {@{} cccp{11cm} @{}}
-\caption{\textbf{Best and Worst Fora Questions}}
+\caption{\textbf{Highest and Lowest Scored Questions Across Fora}}
 \label{tab:bestworst}\\ 
 \toprule
 \textbf{Forum} & \textbf{Score} & \textbf{ViewCount} & \textbf{Title} \\ 
 \midrule
-Buddhism &     55 &       6491 &  Is rebirth a delusional belief? \\
-Buddhism &     -7 &        435 &       Why are buddhists hostile? \\
-Buddhism &     -7 &        100 &        Who remembers the Buddha? \\
+Buddhism &     24 &       7228 &  Is low self-esteem a Western phenomenon? \\
+Buddhism &     -7 &        103 &                 Who remembers the Buddha? \\
+Buddhism &     -7 &        447 &                Why are buddhists hostile? \\
 \hline
-Economics &     94 &      17337 &  How will non-rich citizens make a living if jobs keep getting replaced by robots and are outsourced? \\
-Economics &     -9 &        102 &                                      Has anyone made a successful economic prediction more than once? \\
+Economics &     61 &      14055 &  What are some results in Economics that are both a consensus and far from common sense? \\
+Economics &     -7 &        179 &                                                              What is feminist economics? \\
 \hline
-Fitness &    111 &     132387 &  Is it healthy to exercise a muscle when it's still sore? \\
-Fitness &     -7 &         51 &                       Gaining fat for muscles-stomach fat \\
+Fitness 28 &      12376 &  Why does one person have lots of stamina and another doesn't? \\
+Fitness &     -6 &         54 &                            Gaining fat for muscles-stomach fat \\
 \hline
-Health &    103 &       5218 &                            How can I protect my eyesight when using computers? \\
-Health &     -6 &        120 &  Would a stomach/bladder port allow for infinite and safe eating of junk food? \\
+Health &     27 &       4364 &  What are known health effects of smoking e-cigarettes \\
+Health &     -5 &         35 &  Do "whole body jolts" experienced from things like tasting vinegar, a puppy licking one's hear, chalk screeching, etc. reach the median nerve? \\
 \hline
-Interpersonal &    263 &      31487 &                     What to do if you are accidentally following someone? \\
+Interpersonal &    265 &      32147 &                     What to do if you are accidentally following someone? \\
 Interpersonal &     -9 &       1327 &  How can I tell if family members consider my unvaccinated kids a threat? \\
-Interpersonal &     -9 &        884 &             How to tell employees that I don't mean my insults seriously? \\
+Interpersonal &     -9 &        937 &             How to tell employees that I don't mean my insults seriously? \\
 \bottomrule
 \end{longtable}\begin{center} Source: Own calculations in PySpark.\end{center}
 
@@ -789,6 +829,167 @@ children being unvaccinated, which I assume would upset many individuals
 on the forum and lead to lowest \texttt{Score} per \texttt{ViewCount}
 for that forum.} We can see that this is now validated.
 
+\footnotesize
+
+\begin{longtable} {@{} ccc @{}}
+\caption{\textbf{Descriptives for the Score Variable}}
+\label{tab:bestworst}\\ 
+\toprule
+\textbf{Forum} & \textbf{Mean} & \textbf{Standard Deviation} \\ 
+\midrule
+Buddhism &     24 &       7228 \\
+Economics &     24 &       7228 \\
+Fitness &     24 &       7228 \\
+Health &     24 &       7228 \\
+Interpersonal &     24 &       7228 \\
+\bottomrule
+\end{longtable}\begin{center} Source: Own calculations in PySpark.\end{center}
+
+\normalsize
+
+\subsection{\texorpdfstring{Model \label{Model}}{Model }}\label{model}
+
+\subsubsection{Train/Test Split}\label{traintest-split}
+
+Let \(q_i\) denote question \(i\) out of all questions \(Q\) for a given
+forum. I split the datasets into a training set \(Q_\text{train}\)
+(50\%) and a testing set \(Q_\text{test}\) (50\%), each with 1 560
+questions. \textbf{I choose a 50/50 train/test split because I believe
+that the size of the datasets allows for enough training data.} The
+standard deviations of a random splitting of training and testing sets
+is displayed in table \ref{tab:rand_tr_te} below.
+
+\textbf{Use SD or \(\sigma\)?}
+
+\footnotesize
+
+\begin{longtable}[htbp] {@{} lccc @{}} 
+\caption{\textbf{Random Train/Test Split Standard Deviations}} 
+\label{tab:rand_tr_te} \\
+\toprule
+\textbf{Forum} &  \textbf{Train SD} &  \textbf{Test SD} \text{\% Difference} \\
+\midrule
+Buddhism & 2.1 & 2.27 & 8.1 \\
+Economics & 1.86 & 3.34 & 79.57 \\
+Fitness & 2.18 & 2.1 & -3.67 \\
+Health & 2.11 & 2.01 & -4.74 \\
+Interpersonal & 22.37 & 24.96 & 11.58 \\
+\bottomrule
+\end{longtable}\begin{center} Source: Own calculations in PySpark\end{center}
+
+\normalsize
+
+We see in table \ref{tab:rand_tr_te} that the standard deviations of
+\textbf{one forum} are clearly distinct from the others.
+
+However, when the train/test split is done so that the training set
+questions chronologically precede the testing set questions, there are
+substantial differences in standard deviations, as shown in table
+\ref{tab:time_tr_te}.
+
+\footnotesize
+
+\begin{longtable}[htbp] {@{} lccc @{}} 
+\caption{\textbf{Temporal Train/Test Split Standard Deviations}} 
+\label{tab:time_tr_te} \\
+\toprule
+\textbf{Forum} &  \textbf{Train SD} &  \textbf{Test SD} \text{\% Difference} \\
+\midrule
+Buddhism & 2.42 & 1.82 & -24.79 \\
+Economics & 3.16 & 2.1 & -33.54 \\
+Fitness & 2.17 & 2.09 & -3.69 \\
+Health & 1.96 & 2.16 & 10.2 \\
+Interpersonal & 25.97 & 20.47 & -21.18 \\
+\bottomrule
+\end{longtable}\begin{center} Source: Own calculations in PySpark\end{center}
+
+\normalsize
+
+This shows that the data is heterogenous with regard to time, either due
+to how the communities have evolved over time or how questions have
+evolved.
+
+I use the random train/test split for the first part of the analysis and
+the temporal split for the second. This touches on a point that was not
+considered in Ravi \emph{et al.} (2014) nor in previous research to my
+knowledge - the temporal nature of online Q\&A questions. I believe that
+predicting \texttt{Scores} of future questions may prove a substantially
+more difficult task than just randomising the training and testing
+question sets.
+
+\subsubsection{Elastic-net Regularised Regression
+Model}\label{elastic-net-regularised-regression-model}
+
+I use elastic-net regularised regression to predict the score, denoted
+\(s_i\), of each question using only features derived from the raw
+textual \texttt{Body} and \texttt{Title} independent variables, which I
+shall denote \(\bm{x'}_i\). The learning objective can therefore be
+summarised as finding a coefficient vector \(\bm{\beta}\) which
+minimises the Root Mean Squared Error:
+
+\begin{align} \label{eq:rmse}
+\underset{\bm{\beta}}{\text{minimise}} \quad \sqrt{ \frac{1}{|Q_\text{train}|} \sum_{ q_{i} \in Q_{\text{train}} } ( s_i - {\bm{\beta}\bm{x'}_i} )^2 + \Psi }
+\end{align}
+
+where
+
+\begin{align} \label{eq:penalty}
+\Psi = \lambda \sum_{j=1}^p ( \alpha\beta_j^2 + (1-\alpha)|\beta_j| )
+\end{align}
+
+is the elastic net penalty term. \textbf{WHY CHOSE RMSE AS METRIC}
+
+In this term, \(\lambda\) is the regularisation parameter, \(\alpha\) is
+a weighting coefficient for the \(L_1\) and \(L_2\) norms of the input
+variables, corresponding to the lasso and ridge penalties respectively.
+\textbf{MORE}
+
+\textbf{LASSO better when there are variables that are useless (they get
+shrunken to 0), RIDGE better when all are useful because it will shrink
+parameters but not eliminate.}
+
+I use 2-fold cross validation - 2 because increasing the number of folds
+did not lead to large gains in RMSE reduction over models in general,
+and also drastically increased computation time.
+
+\subsubsection{Question Content}\label{question-content}
+
+A number of preprocessing steps are applied to the \texttt{Body} and
+\texttt{Title} to obtain the final features \(\bm{x'}_i\) that are
+discussed subsequently - I parsed the HTML of the question content in
+the \texttt{Body} variable, tokenised (with punctuation) both the
+\texttt{Body} and \texttt{Title} texts, removed English stopwords and
+stemmed tokens using Porter-stemming ({\textbf{???}}).
+
+I first extract features relating to the length of questions'
+\texttt{Body} and \texttt{Title}, i.e.~token count, sentence count and
+character count. Then, the actual unigram text of the question
+\texttt{Body} and \texttt{Title} are used as features in the form of
+term frequency -- inverse document frequencies (TF-IDF). \textbf{MORE}
+\textbf{Since Ravi \emph{et al.} (2014) do not use higher order ngrams,
+I also stick to unigrams, resulting in quick and compact learning.}
+
+\subsubsection{Topic Modelling}\label{topic-modelling}
+
+I train an LDA model globally over all questions in \(Q\). I use the
+online LDA learning framework in the Pyspark \texttt{pyspark.sql.ml}
+package to generate topic distributions over words for each question and
+add these as model features. This results in features made up of weights
+\(\theta_{qt}\) for a topic \(t\) in a question \(q\), and
+\(\theta_{qt}=P(t|q).\)
+
+I choose \(K=10\) topics
+
+\textbf{Online LDA works like this}
+
+\subsection{Temporality}\label{temporality-1}
+
+Since a large concern of my analysis (that hasn't been considered
+before) is temporality of the data, I explore a temporal splitting of I
+have two sets of results - non-temporal results that mirror Ravi
+\emph{et al.} (2014), and temporal results where we try and predict
+future question \texttt{Scores}.
+
 I split that set of questions, \(Q\), into a training set
 \(Q_\text{train}\) and testing set \(Q_\text{train}\) using a point in
 time to mimic the reality of employing this tool at a certain point in
@@ -796,168 +997,197 @@ time with historical training data. With the chosen date of
 \textbf{1/1/2017}, the ratio of \(Q_\text{train}\) to \(Q_\text{train}\)
 are \ldots{}\ldots{}. for \ldots{}\ldots{}\ldots{} respectively.
 
-\textbf{This addresses something that has not been considered in the
-literature and introduces a temporal element into the analysis. While I
-do not employ time-series models, I leave it to further research to
-incorporate a way to ``remember'' which questions are good, so that in
-future there are no duplicates.}
+**This addresses something that has not been considered in the
+literature and introduces a temporal element into the analysis.
 
-\subsection{\texorpdfstring{Model \label{Model}}{Model }}\label{model}
+We look at the descriptive statistics of the train/test split:
 
-I employ a simple regularised regression with the \texttt{Body} and
-\texttt{Title} as inputs from questions \(q_i\) out of
-\(Q_\text{train}\), i.e.~the learning goal is to find a coefficient
-vector \(\bm{\beta}\) that minimises the Root Mean Squared Error:
-
-\begin{align} \label{rmse}
-\underset{\bm{\beta}}{\text{minimise}} \quad \sqrt{ \frac{1}{|Q_\text{train}|} \sum_{ q_{i} \in Q_{\text{train}} } ( y_i - {\bm{\beta}\phi(\bm{x'}_i}) )^2 + \lambda \bm{\beta}\bm{\beta'} }
-\end{align}
-
-The \(y_i\) is the true value of the response variable,
-\texttt{Score}/\texttt{ViewCount}, and \(\bm{\beta}\phi(\bm{x'}_i)\) is
-the predicted response. \(\phi(\cdot)\) is a function on the features,
-and leads to the feature engineering, of which lda is discussed in
-section \ref{lda}. \(\lambda\) is the regularisation parameter
-\ldots{}\ldots{}.
-
-I use the \texttt{pyspark.sql.mllib} package in PySpark and inherent
-online LDA learning framework to solve the optimisation problem
-\ref{rmse}.
-
-I use 2-fold cross validation - 2 because increasing the number of folds
-did not lead to large gains in RMSE reduction, and also drastically
-increased computation time.
-
-\subsection{Feature Engineering}\label{feature-engineering}
-
-A number of preprocessing steps was then applied to the question
-\texttt{Body} and \texttt{Title} - HTML parsing for the question content
-in the \texttt{Body} variable, tokenisation, removal of English
-stopwords and Russian stopwords for Russian StackOverflow and stemming
-of tokens.
+Note however that I have not included a temporal element to my model, so
+if there are some time-series trends in the data (to do with the
+struture of the websites changing etc.), then the temporal prediction
+will be poor.
 
 \section{\texorpdfstring{Results
 \label{Results}}{Results }}\label{results}
 
-The results of the various models are displayed in tables. From it, we
-can see this this and that.
+\subsection{Random Train/Test Split}\label{random-traintest-split}
+
+To establish a baseline for the predictive performance of the models,
+table \ref{tab:rand_mean_model} displays training and testing RMSE
+values across fora for a model that predicts the constant mean of the
+training set for every question in the testing set.
 
 \footnotesize
 
 \begin{longtable}[htbp] {@{} lccc @{}} 
 \caption{\textbf{Constant Mean Model}} 
-\label{tab:mean_model} \\
+\label{tab:rand_mean_model} \\
 \toprule
 \textbf{Forum} &  \textbf{Train RMSE} &  \textbf{Test RMSE} &  \textbf{Time (s)} \\
 \midrule
-Buddhism      &              3.744804 &              3.026707 &                0.19 \\
-Economics     &              3.558443 &              2.629807 &                0.20 \\
-Fitness       &              5.630797 &              3.168150 &                0.37 \\
-Health        &              4.331709 &              2.568920 &                0.29 \\
-Interpersonal &             25.585999 &             16.252211 &                0.16 \\
+Buddhism      &                  2.10 &               2.27 &                0.50 \\
+Economics     &                  1.86 &               3.34 &                0.58 \\
+Fitness       &                  2.18 &               2.10 &                0.52 \\
+Health        &                  2.11 &               2.01 &                0.49 \\
+Interpersonal &                 22.36 &              24.96 &                0.58 \\
 \bottomrule
 \end{longtable}\begin{center} Source: Own calculations in PySpark\end{center}
 
 \normalsize
 
-We use the mean of the training set as predictions for the test set in
-table \ref{tab:mean_model}, which is the low benchmark. Interestingly,
-test RMSE is lower for all communities than train RMSE, thus it appears
-that there is substantially more noise in the training sets (remember
-that the training sets are older questions as well).
+The values in the Test RMSE column in table \ref{tab:rand_mean_model}
+are considered the low benchmarks that future models must improve upon.
+Interestingly, test RMSE is lower for all communities than train RMSE,
+thus it appears that there is substantially more noise in the training
+sets (remember that the training sets are older questions as well).
 
-This leads us to investigate the variation among train/test samples for
-the communities:
-
-\footnotesize
-
-\begin{longtable}[htbp] {@{} lccc @{}} 
-\caption{\textbf{Random 80/20 Train/Test Descriptives}} 
-\label{tab:tr-te} \\
-\toprule
-\textbf{Forum} &  \textbf{Train StdDev} &  \textbf{Test StdDev} \\
-\midrule
-Buddhism & 3.68 & 3.33 \\
-Economics & 3.51 & 2.96 \\
-Fitness & 5.28 & 5.28 \\
-Health & 4.22 & 3.54 \\
-Interpersonal & 24.33 & 23.09 \\
-\bottomrule
-\end{longtable}\begin{center} Source: Own calculations in PySpark\end{center}
-
-\normalsize
-
-\footnotesize
-
-\begin{longtable}[htbp] {@{} lccc @{}} 
-\caption{\textbf{Temporal 80/20 Train/Test Descriptives}} 
-\label{tab:tr-te} \\
-\toprule
-\textbf{Forum} &  \textbf{Train StdDev} &  \textbf{Test StdDev} \\
-\midrule
-Buddhism & 3.75 & 1.77 \\
-Economics & 3.56 & 1.98 \\
-Fitness & 5.63 & 2.2 \\
-Health & 4.33 & 2.15 \\
-Interpersonal & 25.59 & 11.72 \\
-\bottomrule
-\end{longtable}\begin{center} Source: Own calculations in PySpark\end{center}
-
-\normalsize
-
-Data has heterogeneity when considered temporally, possibly because of
-interventions in communitites to effect answers?
+\textbf{The RMSE is different per community owing to the different
+standard deviations of the data as a whole seen in the EDA\ldots{}}
 
 \footnotesize
 
 \begin{longtable}[htbp] {@{} lcccc @{}} 
 \caption{\textbf{ViewCount Model}} 
-\label{tab:vc_model} \\
+\label{tab:rand_view_model} \\
 \toprule
 \textbf{Forum} &  \textbf{Train RMSE} &  \textbf{Test RMSE} &  \textbf{Test Gain (\%)} &  \textbf{Time (s)} \\
 \midrule
-Buddhism      &             3.374630 &          2.613928 &             13.638 &               5.22 \\
-Economics     &             3.415546 &          2.394207 &              8.959 &               4.94 \\
-Fitness       &             5.281202 &          2.798655 &             11.663 &               4.92 \\
-Health        &             4.287559 &          2.522763 &              1.797 &               4.32 \\
-Interpersonal &            12.321576 &          5.702388 &             64.913 &               4.30 \\
+Buddhism      &                 1.95 &              2.03 &              10.57 &               7.07 \\
+Economics     &                 1.70 &              2.55 &              23.65 &               4.36 \\
+Fitness       &                 2.06 &              2.13 &              -1.43 &               5.70 \\
+Health        &                 2.06 &              1.98 &               1.49 &               5.61 \\
+Interpersonal &                10.98 &             12.72 &              49.04 &               5.94 \\
 \bottomrule
 \end{longtable}\begin{center} Source: Own calculations in PySpark\end{center}
 
 \normalsize
 
-Table \ref{tab:vc_model} is the high benchmark, since it is vacuous (the
-final \texttt{ViewCount} of a question is not available for new
-questions) and a higher \texttt{ViewCount} would definitely lead to
-higher \texttt{Score}.
+Table \ref{tab:rand_view_model} is the high benchmark owing to the
+strong correlations seen in table \ref{tab:corr}. It is also vacuous,
+since the final \texttt{ViewCount} of a question is not available for
+new questions.
 
 \footnotesize
 
 \begin{longtable}[htbp] {@{} lcccccc @{}} 
-\caption{\textbf{Tokens Model}} 
-\label{tab:token_model} \\
+\caption{\textbf{Length Model}} 
+\label{tab:rand_count_model} \\
 \toprule
 \textbf{Forum} &  \textbf{Train RMSE} &  \textbf{Test RMSE} &  \textbf{Test Gain (\%)} &  \textbf{Time (s)} & \textbf{Elastic Param} &  \textbf{Reg'tion Param} \\
 \midrule
-Buddhism      &          3.744804 &       3.026707 &           0.00 &           87.81 &               1.0 &               1.0 \\
-Economics     &          3.558443 &       2.629807 &           0.00 &          139.93 &               1.0 &               1.0 \\
-Fitness       &          5.630797 &       3.168150 &           0.00 &          141.84 &               1.0 &               1.0 \\
-Health        &          4.331709 &       2.568920 &           0.00 &           91.37 &               1.0 &               1.0 \\
-Interpersonal &         20.579032 &      17.264799 &           -6.23 &          120.35 &               1.0 &               1.0 \\
+Buddhism      &              2.08 &           2.25 &            0.88 &           14.04 &              0.01 &              0.01 \\
+Economics     &              1.86 &           3.33 &            0.30 &           10.34 &              0.01 &              1.00 \\
+Fitness       &              2.17 &           2.09 &            0.48 &            7.60 &              0.01 &              1.00 \\
+Health        &              2.09 &           2.01 &           -0.00 &            7.93 &              1.00 &              0.01 \\
+Interpersonal &             22.31 &          24.88 &            0.32 &           14.51 &              1.00 &              1.00 \\
+\bottomrule
+\end{longtable}\begin{center} Source: Own calculations in PySpark\end{center}
+
+\normalsize
+
+Table \ref{tab:rand_count_model} shows mild gains from approximately
+0.3\% above the constant mean benchmark in the Test Gain column. We also
+see that the Interpersonal forum differs from the others in that the
+grid search found a regularisation parameter of 1 to be the most
+optimal, implying \ldots{}
+
+\footnotesize
+
+\begin{longtable}[htbp] {@{} lcccccc @{}} 
+\caption{\textbf{Unigram Textual Model}} 
+\label{tab:rand_token_model} \\
+\toprule
+\textbf{Forum} &  \textbf{Train RMSE} &  \textbf{Test RMSE} &  \textbf{Test Gain (\%)} &  \textbf{Time (s)} & \textbf{Elastic Param} &  \textbf{Reg'tion Param} \\
+\midrule
+Buddhism      &              2.10 &           2.27 &           -0.00 &          221.30 &               1.0 &               1.0 \\
+Economics     &              1.86 &           3.34 &           -0.00 &          201.97 &               1.0 &               1.0 \\
+Fitness       &              2.18 &           2.10 &           -0.00 &          190.30 &               1.0 &               1.0 \\
+Health        &              2.11 &           2.01 &           -0.00 &          186.69 &               1.0 &               1.0 \\
+Interpersonal &             15.06 &          25.87 &           -3.65 &          358.41 &               1.0 &               1.0 \\
 \bottomrule
 \end{longtable}\begin{center} Source: Own calculations in PySpark\end{center}
 
 \normalsize
 
 The results of using unigram text of question titles and bodies is
-displayed in table \ref{tab:token_model}. This model struggles
-particularly, only predicting constant mean predictions for every
-community except for Interpersonal, where it actually performs worse
-than just predicting the mean by 6\%. Interestingly, the grid search
-gives an elastic parameter of 1 and regularisation parameter of 1 for
-all models.
+displayed in table \ref{tab:rand_token_model}. This model struggles
+particularly, only predicting means of the training set questions'
+\texttt{Score} for every community except for Interpersonal, where it
+actually performs worse than just predicting the mean by 3.5\%.
+\textbf{What does this imply???}
 
-DISCUSS WHY RMSE IS DIFFERENT PER COMMUNTIY
+Interestingly, the grid search gives an elastic parameter of 1 and
+regularisation parameter of 1 for all models.
+
+\footnotesize
+
+\begin{longtable}[htbp] {@{} lcccccc @{}} 
+\caption{\textbf{Global and Local Topic Model}} 
+\label{tab:rand_topic_model} \\
+\toprule
+\textbf{Forum} &  \textbf{Train RMSE} &  \textbf{Test RMSE} &  \textbf{Test Gain (\%)} &  \textbf{Time (s)} & \textbf{Elastic Param} &  \textbf{Reg'tion Param} \\
+\midrule
+Buddhism      &              2.05 &           2.25 &            0.88 &           11.36 &              0.01 &               1.0 \\
+Economics     &              1.86 &           3.34 &           -0.00 &            9.98 &              1.00 &               1.0 \\
+Fitness       &              2.18 &           2.10 &           -0.00 &           12.33 &              1.00 &               1.0 \\
+Health        &              2.11 &           2.01 &           -0.00 &           14.49 &              1.00 &               1.0 \\
+Interpersonal &             22.31 &          24.95 &            0.04 &           11.47 &              1.00 &               1.0 \\
+\bottomrule
+\end{longtable}\begin{center} Source: Own calculations in PySpark\end{center}
+
+\normalsize
+
+It looks like predicting the score variable using just the textual
+content of questions is not going well. What we have garnered is that
+the fora are very heterogenous, having seen large differences in both
+the descriptive statistics and predictive results - different parameters
+come out as optimal for the length and topic models.
+
+\footnotesize
+
+\begin{longtable}[htbp] {@{} lcccccc @{}} 
+\caption{\textbf{Length and Topic Model}} 
+\label{tab:rand_final_model} \\
+\toprule
+\textbf{Forum} &  \textbf{Train RMSE} &  \textbf{Test RMSE} &  \textbf{Test Gain (\%)} &  \textbf{Time (s)} & \textbf{Elastic Param} &  \textbf{Reg'tion Param} \\
+\midrule
+Buddhism      &             2.04 &          2.24 &           1.32 &          11.24 &             0.01 &              1.0 \\
+Economics     &             1.86 &          3.34 &          -0.00 &           8.96 &             1.00 &              1.0 \\
+Fitness       &             2.18 &          2.10 &          -0.00 &           8.26 &             1.00 &              1.0 \\
+Health        &             2.08 &          2.00 &           0.50 &           8.27 &             0.01 &              1.0 \\
+Interpersonal &            22.26 &         24.87 &           0.36 &           8.44 &             1.00 &              1.0 \\
+\bottomrule
+\end{longtable}\begin{center} Source: Own calculations in PySpark\end{center}
+
+\normalsize
+
+\subsection{Temporal Results}\label{temporal-results}
+
+\footnotesize
+
+\begin{longtable}[htbp] {@{} lcccccc @{}} 
+\caption{\textbf{Length and Topic Model For Temporal Train/Test Split}} 
+\label{tab:time_token_model} \\
+\toprule
+\textbf{Forum} &  \textbf{Train RMSE} &  \textbf{Test RMSE} &  \textbf{Test Gain (\%)} &  \textbf{Time (s)} & \textbf{Elastic Param} &  \textbf{Reg'tion Param} \\
+\midrule
+Buddhism      &             2.35 &          2.00 &           0.99 &          17.09 &             0.01 &             1.00 \\
+Economics     &             3.08 &          2.25 &          -1.35 &          11.54 &             0.01 &             1.00 \\
+Fitness       &             2.11 &          2.13 &          -0.47 &           9.23 &             1.00 &             0.01 \\
+Health        &             1.93 &          2.16 &          -0.00 &           8.43 &             0.01 &             1.00 \\
+Interpersonal &            25.57 &         22.02 &          -0.55 &           8.27 &             1.00 &             1.00 \\
+\bottomrule
+\end{longtable}\begin{center} Source: Own calculations in PySpark\end{center}
+
+\normalsize
+
+While I do not employ time-series models, I leave it to further research
+to incorporate a way to also ``remember'' which questions are good, so
+that in future there are no duplicates.
+
+\textbf{EVEN AFTER GETTING RID OF A SUBSTANTIAL AMOUNT OF DATA FOR
+CERTAIN DATASETS BY ONLY USING THE LAST TWO YEARS WORTH OF DATA, THE
+TEMPORAL MODEL STILL STRUGGLES SUBSTANTIALLY.}
 
 \section{\texorpdfstring{Limitations
 \label{Limit}}{Limitations }}\label{limitations}
