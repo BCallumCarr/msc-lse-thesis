@@ -70,7 +70,7 @@ for (k in 1:length(datasets)) {
   ## point to directory with data
   cat("\n------------------\n", datasets[k], "\n------------------\n")
   cat("The time is", format(Sys.time(), "%X"), "\n\n")
-  dir <- paste("/Users/brad/Dropbox/lse-msc/03-lent/qta-my459/final-assignment/data/", datasets[k], 
+  dir <- paste("/Users/brad/Dropbox/lse-msc/02-lent/qta-my459/final-assignment/data/", datasets[k], 
                ".stackexchange.com/Posts.xml", sep = "")
   
   ## parse to list from xml, files larger than 45MB are a pain because they take ages when collecting columns
@@ -191,9 +191,9 @@ for (k in 1:length(datasets)) {
   ## NOT GOING TO DO THIS BECAUSE THE DATASETS ARE SO SMALL???
   thresh <- round(quantile(sxdf_q$ViewCount, .40), -1)
   temp <- nrow(sxdf_q)
-  # sxdf_q <- sxdf_q[sxdf_q$ViewCount > thresh,]
-  # temp <- temp - nrow(sxdf_q)
-  # cat("Removed", temp, "questions below chosen threshold of", thresh, "views\n")
+  sxdf_q <- sxdf_q[sxdf_q$ViewCount > thresh,]
+  temp <- temp - nrow(sxdf_q)
+  cat("Removed", temp, "questions below chosen threshold of", thresh, "views\n")
   cat("\nDID NOT remove any questions below a threshold of", thresh, "views\n")
   
   ##### RAVI ET AL #####
