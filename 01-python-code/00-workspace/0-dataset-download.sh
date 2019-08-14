@@ -5,17 +5,12 @@ brew install p7zip
 ## move to folder and create datasets array (SO must be done separately)
 cd initial-data
 
+# EDIT this step to feed in user data_array from Python
 declare -a arr=(
-   'buddhism.stackexchange.com'
-   'economics.stackexchange.com'
-   'fitness.stackexchange.com'
-   'health.stackexchange.com'
-   'interpersonal.stackexchange.com'
-#"english.stackoverflow.com"
-#"ru.stackoverflow.com"
-#"superuser.com"
-#"stackoverflow.com-Posts"
-#"math.stackexchange.com"
+   'stats.stackexchange.com'
+   'superuser.com'
+   'math.stackexchange.com'
+   'english.stackexchange.com'
 )
 
 ## loop downloading, unzipping and extracting all XML data
@@ -32,7 +27,7 @@ done
 
 ## rename folders for ease of import later
 #mv stackoverflow.com-Posts stackoverflow.stackexchange.com
-#mv superuser.com superuser.stackexchange.com
+mv superuser.com superuser.stackexchange.com
 #mv askubuntu.com askubuntu.stackexchange.com
 #mv serverfault.com serverfault.stackexchange.com
 #mv ru.stackoverflow.com rus_stackoverflow.stackexchange.com

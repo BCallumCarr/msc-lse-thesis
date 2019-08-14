@@ -85,35 +85,6 @@ for i in data_array:
         thresh = datasets[i].approxQuantile('viewcount', [0.1], 0.0005)[0] 
         datasets[i] = datasets[i].filter(datasets[i]['viewcount'] >= lit(thresh))'''
 
-
-#########################################################################
-### Trim data to get most recent 3120 questions
-#########################################################################
-
-## import pyspark function set
-from pyspark.sql.functions import col, lit
-
-# Using 3123 as cutoff of recent questions for small data
-for i in data_array:
-        # sort and get most recent questions
-        datasets[i] = datasets[i].sort(col('clean_date').desc()).limit(3120)
-        # to get all questions past a certain date
-        #datasets[i] = datasets[i].filter(datasets[i]['clean_date'] >= lit('2017-06-30'))
-
-
-#########################################################################
-### Find range of dates for datasets
-#########################################################################
-
-## import pyspark function set
-from pyspark.sql.functions import col
-
-for i in data_array:
-    print(f'{i.title()}:')
-    print(datasets[i].sort(col('clean_date')).select('clean_date').take(1)[0][0])
-    print(f"{datasets[i].sort(col('clean_date').desc()).select('clean_date').take(1)[0][0]}\n")
-
-
 ####################################
 ###### Define y_ravi response ######
 ####################################

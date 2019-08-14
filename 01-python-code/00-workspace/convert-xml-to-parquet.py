@@ -5,7 +5,7 @@ import pandas as pd
 import xml.etree.ElementTree as ET
 
 uput = sys.argv[1]
-print(uput)
+print(f'\nOn to {uput}!\n')
 
 root = ET.parse(f'./initial-data/{uput}.stackexchange.com/Posts.xml').getroot() #create an ElementTree object
 
