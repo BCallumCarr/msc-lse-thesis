@@ -20,16 +20,31 @@ for i in data_array:
         # loop through viewcount and score
         datasets[i] = datasets[i].withColumn(j, datasets[i][j].cast("long"))
 
-## fixing stackoverflow date column
-if ('stackoverflow' in data_array):        
-        # delete last 4 characters of date string
-        datasets['stackoverflow'] = datasets['stackoverflow'].\
-                withColumn("creation_date", expr("substring(creation_date, 1, length(creation_date)-4)"))
+#########################################################################
+### Sorting out date columns for both Stackoverflow and others
+#########################################################################
+
+## function to check if numbers in string
+def hasNumbers(inputString):
+        '''
+        function to check if numbers in string
+        '''
+        return any(char.isdigit() for char in inputString)
 
 ## changing date column to timestamp
 for i in data_array:
+        # weird way to check if dealing with a stackoverflow dataset
+        if (hasNumbers(i)):
+                # stackoverflow specific date column handling
+                # delete last 4 characters of date string
+                datasets[i] = datasets[i].\
+                withColumn("creation_date", expr("substring(creation_date, 1, length(creation_date)-4)"))
+        
+        # then ALL fora date column handling
         datasets[i] = datasets[i].\
-                withColumn('clean_date', to_timestamp(datasets[i].creation_date).alias('dt'))
+        withColumn('clean_date', to_timestamp(datasets[i].creation_date).alias('dt'))
+
+#########################################################################
 
 ## create regex user-defined function to clean body column
 import re
@@ -94,3 +109,41 @@ for i in data_array:
     datasets[i] = datasets[i].withColumn('y_ravi', datasets[i]['score']/datasets[i]['viewcount'])
     round_mean = round(datasets[i].select("y_ravi").rdd.flatMap(lambda x: x).mean(),7)
     print(f"The average value of \033[94m{i}\033[0m y_ravi is {round_mean}")'''
+
+
+#########################################################################
+### Create shifted score variable
+#########################################################################
+
+# import lit function
+from pyspark.sql.functions import lit, expr
+
+# find minimum of score for shifting
+minp = 1000
+for i in data_array:
+    if (min(datasets[i].select('score').rdd.flatMap(lambda x: x).collect()) < minp):
+        # absolute value because min score is negative
+        minp = min( datasets[i].select('score').rdd.flatMap(lambda x: x).collect() )
+
+# adjust minimum to incremented absolute value
+minp = abs(minp) + 2
+
+# create new shifted score variable
+for i in data_array:
+    datasets[i] = datasets[i].withColumn('new_column', lit(minp)).\
+    withColumn('score_shift', expr("new_column + score")).drop('new_column')
+
+#########################################################################
+### Create logged score and viewcount variables
+#########################################################################
+
+# import log function
+from pyspark.sql.functions import log
+
+# create new logged score variable
+for i in data_array:
+    datasets[i] = datasets[i].withColumn('score_shift_log', log('score_shift'))
+    
+# create new logged viewcount variable
+for i in data_array:
+    datasets[i] = datasets[i].withColumn('viewcount_log', log('viewcount'))

@@ -13,11 +13,12 @@ from pyspark.sql.window import Window
 # select date column to sort
 w = Window.orderBy('clean_date') 
 
-# store middle question count
-hlfwy_mrk = datasets['economics'].count()/2
-
 ## 50/50 split
 for i in data_array:
+    
+    # store middle question count
+    hlfwy_mrk = datasets[i].count()/2
+
     # add index column with sorted data
     datasets[i] = datasets[i].withColumn('index', row_number().over(w))
     train[i] = datasets[i].filter(datasets[i]['index'] <= lit(hlfwy_mrk))

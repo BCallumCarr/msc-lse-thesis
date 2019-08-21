@@ -1,4 +1,4 @@
-def load_parquet_data(dataArray, kind='clean', printSchema=False):
+def load_parquet_data(dataArray, kind='clean', gcpath='', printSchema=False):
         '''
         function to read in parquet files which are all named file-01.parquet in respective folders
         '''        
@@ -13,7 +13,7 @@ def load_parquet_data(dataArray, kind='clean', printSchema=False):
                                 spark
                                 .read
                                 # type can either be clean or initial
-                                .load(f'{kind}-data/{i.lower()}.stackexchange.com/file-01.parquet')
+                                .load(f'{gcpath}{kind}-data/{i.lower()}.stackexchange.com/file-01.parquet')
                         )
         
         # load clean datasets
@@ -22,7 +22,7 @@ def load_parquet_data(dataArray, kind='clean', printSchema=False):
                         datasets[i] = (
                                 spark
                                 .read
-                                .load(f'{kind}-data/{i.lower()}.parquet')
+                                .load(f'{gcpath}{kind}-data/{i.lower()}.parquet')
                         )
 
         # print schema option
