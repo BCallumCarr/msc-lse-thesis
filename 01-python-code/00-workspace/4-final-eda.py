@@ -69,7 +69,12 @@ for i in data_array:
 import seaborn as sns
 import matplotlib.pyplot as plt
 import matplotlib
-matplotlib.rcParams.update({'font.size': 18})
+
+# choose graph font size
+font_size = 14
+
+# choose graph fig size
+fig_size = (14, 7)
 
 #########################################################################
 ### Bar plot post counts descending order
@@ -161,6 +166,8 @@ plt.close('all')'''
 ### Violin plots
 #########################################################################
 
+matplotlib.rcParams.update({'font.size': font_size})
+
 for k in desc_array:
     print(f'\033[1m{k.title()}\033[0m violin plot\n')
     
@@ -172,11 +179,17 @@ for k in desc_array:
         plot_data = plot_data.append(temp)
 
     # plot
-    fig, ax = plt.subplots(figsize=(7, 7))
-    sns.violinplot( x=plot_data['dataset'], y=plot_data[k] )
+    fig, ax = plt.subplots(figsize=fig_size)
+    sns.violinplot( y=plot_data['dataset'], x=plot_data[k], color="darkorange" )
 
     # axis labels
-    ax.set_xlabel(k.title())
+    # get nice log(Var) x-axis label
+    if (k == 'viewcount_log'):
+        ax.set_xlabel('log(ViewCount)')
+    elif (k == 'score_shift_log'):
+        ax.set_xlabel('log(Score)')
+    else:
+        ax.set_xlabel(k.title())
     ax.set_ylabel('')
 
     # set y-axis to log
@@ -190,9 +203,7 @@ for k in desc_array:
 ### Boxplots
 #########################################################################
 
-# set colour palette
-seq_col_brew = sns.color_palette("YlOrRd_r", 8)
-sns.set_palette(seq_col_brew)
+matplotlib.rcParams.update({'font.size': font_size})
 
 for k in desc_array:
     print(f'\033[1m{k.title()}\033[0m boxplot plot\n')
@@ -205,14 +216,20 @@ for k in desc_array:
         plot_data = plot_data.append(temp)
 
     # log of variable
-    plot_data[k] = np.log(plot_data[k])
+    #plot_data[k] = np.log(plot_data[k])
     
     # plot
-    fig, ax = plt.subplots(figsize=(14, 7))
-    sns.boxplot( y=plot_data['dataset'], x=plot_data[k], palette='YlOrRd_r' )
+    fig, ax = plt.subplots(figsize=fig_size)
+    sns.boxplot( y=plot_data['dataset'], x=plot_data[k], color="darkorange" )
 
     # axis labels
-    ax.set_xlabel(k.title())
+    # get nice log(Var) x-axis label
+    if (k == 'viewcount_log'):
+        ax.set_xlabel('log(ViewCount)')
+    elif (k == 'score_shift_log'):
+        ax.set_xlabel('log(Score)')
+    else:
+        ax.set_xlabel(k.title())
     ax.set_ylabel('')
 
     # set y-axis to log
@@ -240,7 +257,7 @@ sns.set_palette(seq_col_brew)
 
 # plot
 n_bins = 500000
-fig, ax = plt.subplots(figsize=(20, 8))
+fig, ax = plt.subplots(figsize=fig_size)
 for i in data_array:
     n, bins, patches = ax.hist(plot_data[i], n_bins, density=True, histtype='step',
                                cumulative=True, label=i)
@@ -256,6 +273,8 @@ plt.close('all')
 ### Single density plot viewcount
 #########################################################################
 
+matplotlib.rcParams.update({'font.size': font_size})
+
 # re-establish empty dictionary of plotting data skeleton
 plot_data = {}
 
@@ -268,7 +287,7 @@ seq_col_brew = sns.color_palette("YlOrRd_r", 8)
 sns.set_palette(seq_col_brew)
 
 # plot
-fig, ax = plt.subplots(figsize=(20, 8))
+fig, ax = plt.subplots(figsize=fig_size)
 for i in data_array:
     sns.kdeplot(plot_data[i], label=i, shade=True)
 
@@ -284,6 +303,40 @@ ax.set_ylabel('Density')
 
 # save figure
 plt.savefig('01-eda/01-graphs/viewcount-sgl-density-plot.png', bbox_inches="tight")
+plt.close('all')
+
+#########################################################################
+### Single density plot viewcount_log
+#########################################################################
+
+# re-establish empty dictionary of plotting data skeleton
+plot_data = {}
+
+# collect data
+for i in data_array:
+    plot_data[i] = datasets[i].select('viewcount_log').rdd.flatMap(lambda x: x).collect() 
+
+# set colour palette
+seq_col_brew = sns.color_palette("YlOrRd_r", 8)
+sns.set_palette(seq_col_brew)
+
+# plot
+fig, ax = plt.subplots(figsize=fig_size)
+for i in data_array:
+    sns.kdeplot(plot_data[i], label=i, shade=True)
+
+# set x-axis to log
+ax.set_xscale('log')
+
+# set grids to true
+ax.grid(True)
+
+# axis labels
+ax.set_xlabel('log(ViewCount)')
+ax.set_ylabel('Density')
+
+# save figure
+plt.savefig('01-eda/01-graphs/viewcount_log-sgl-density-plot.png', bbox_inches="tight")
 plt.close('all')
 
 
@@ -309,7 +362,7 @@ seq_col_brew = sns.color_palette("YlOrRd_r", 8)
 sns.set_palette(seq_col_brew)
 
 # plot outliers and data from: https://matplotlib.org/examples/pylab_examples/broken_axis.html
-fig, (ax1, ax2) = plt.subplots(1, 2, sharey=True, figsize=(20, 8))
+fig, (ax1, ax2) = plt.subplots(1, 2, sharey=True, figsize=fig_size)
 
 # plot the same data on both axes
 for i in data_array:
@@ -317,7 +370,7 @@ for i in data_array:
     sns.kdeplot(plot_data[i], ax=ax2, shade=True)
 
 # these zoom-in limits are for SMALL datasets
-ax1.set_xlim(0, 100000)  
+ax1.set_xlim(0, 400000)  
 ax2.set_xlim(5400000, maxp-10) # outliers only
 
 # set x-axis to log
@@ -355,20 +408,26 @@ plt.close('all')
 
 
 #########################################################################
-### Single density plot score_shift_log
+### Single density plot score
 #########################################################################
+
+matplotlib.rcParams.update({'font.size': font_size})
 
 from pyspark.sql.functions import lit, expr
 
 # re-establish empty dictionary of plotting data skeleton
 plot_data = {}
 
+# collect data
+for i in data_array:
+    plot_data[i] = datasets[i].select('score').rdd.flatMap(lambda x: x).collect() 
+
 # set colour palette
 seq_col_brew = sns.color_palette("YlOrRd_r", 8)
 sns.set_palette(seq_col_brew)
 
 # plot
-fig, ax = plt.subplots(figsize=(20, 8))
+fig, ax = plt.subplots(figsize=fig_size)
 for i in data_array:
     sns.kdeplot(plot_data[i], label=i, shade=True)
 
@@ -386,9 +445,45 @@ ax.set_ylabel('Density')
 plt.savefig('01-eda/01-graphs/score-sgl-density-plot.png', bbox_inches="tight")
 plt.close('all')
 
+#########################################################################
+### Single density plot score_shift_log
+#########################################################################
+
+from pyspark.sql.functions import lit, expr
+
+# re-establish empty dictionary of plotting data skeleton
+plot_data = {}
+
+# collect data
+for i in data_array:
+    plot_data[i] = datasets[i].select('score_shift_log').rdd.flatMap(lambda x: x).collect() 
+
+# set colour palette
+seq_col_brew = sns.color_palette("YlOrRd_r", 8)
+sns.set_palette(seq_col_brew)
+
+# plot
+fig, ax = plt.subplots(figsize=fig_size)
+for i in data_array:
+    sns.kdeplot(plot_data[i], label=i, shade=True)
+
+# set grids to true
+ax.grid(True)
+
+# set x-axis to log
+#ax.set_xscale('log')
+
+# axis labels
+ax.set_xlabel('log(Score)')
+ax.set_ylabel('Density')
+
+# save figure
+plt.savefig('01-eda/01-graphs/score_shift_log-sgl-density-plot.png', bbox_inches="tight")
+plt.close('all')
+
 
 #########################################################################
-### Single density plot for score
+### Double density plot for score
 #########################################################################
 
 # re-establish empty dictionary of plotting data skeleton
@@ -414,7 +509,7 @@ seq_col_brew = sns.color_palette("YlOrRd_r", 8)
 sns.set_palette(seq_col_brew)
 
 # plot outliers and data from: https://matplotlib.org/examples/pylab_examples/broken_axis.html
-fig, (ax1, ax2) = plt.subplots(1, 2, sharey=True, figsize=(20, 8))
+fig, (ax1, ax2) = plt.subplots(1, 2, sharey=True, figsize=fig_size)
 
 # plot the same data on both axes
 for i in data_array:
@@ -422,7 +517,7 @@ for i in data_array:
     sns.kdeplot(plot_data[i], ax=ax2, shade=True)
 
 # these zoom-in limits are for SMALL datasets
-ax1.set_xlim(minp-10, 100)  
+ax1.set_xlim(minp-10, 500)  
 ax2.set_xlim(4000, maxp+10) # outliers only
 
 # set grids to true

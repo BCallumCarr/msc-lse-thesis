@@ -45,10 +45,14 @@ class nltkWordPunctTokeniser(Transformer, HasInputCol, HasOutputCol):
             #    tokens = [t for t in tokens if t not in nltk.corpus.stopwords.words('russian')]
             # remove english stopwords
             tokens = [t for t in tokens if t not in stopwords]
+            # remove extra stopwords
+            tokens = [t for t in tokens if t not in ['lt', 'ol', 'gt', 'xA', 'lt', 'li', 'td', 'tr']]
             # remove single letters (and single punctuation as well)
-            #tokens = [t for t in tokens if not len(t)==1]
+            tokens = [t for t in tokens if not len(t)==1]
             # stemming the words
             tokens = [ps.stem(t) for t in tokens]
+            # remove punctuation
+            tokens = [t.lower() for t in tokens if t.isalpha()] #
             # convert to lower case
             return [t.lower() for t in tokens]
     
