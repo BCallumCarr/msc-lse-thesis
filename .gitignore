@@ -6,7 +6,6 @@ Icon?
 *.dropbox
 
 # folders
-
 articles
 data-ideas
 extra
@@ -15,7 +14,11 @@ msc-research-proposals
 01-python-code/00-workspace/initial-data
 01-python-code/00-workspace/clean-data
 01-python-code/large-resources
+01-not-for-github
+03-articles
 
+# lse submission
+CN10140dissertation.*
 
 # r stuff
 .Rhistory

@@ -4,7 +4,13 @@
 
 \usepackage{lmodern}
 
-% spacing passed through from .Rmd doc
+% LANDSCAPE package
+\usepackage{pdflscape}
+
+% MATH packages
+\usepackage{amssymb,amsmath} %amsthm, amsfonts}
+
+% SPACING passed through from .Rmd doc
 \usepackage{setspace}
 $if(linestretch)$
 \setstretch{$linestretch$}
@@ -28,39 +34,6 @@ $endif$
     \endorigtable
 }
 
-\usepackage{ifxetex,ifluatex}
-\usepackage{fixltx2e} % provides \textsubscript
-\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
-  \usepackage[T1]{fontenc}
-  \usepackage[utf8]{inputenc}
-$if(euro)$
-  \usepackage{eurosym}
-$endif$
-\else % if luatex or xelatex
-  \ifxetex
-    \usepackage{mathspec}
-    \usepackage{xltxtra,xunicode}
-  \else
-    \usepackage{fontspec}
-  \fi
-  \defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
-  \newcommand{\euro}{€}
-$if(mainfont)$
-    \setmainfont{$mainfont$}
-$endif$
-$if(sansfont)$
-    \setsansfont{$sansfont$}
-$endif$
-$if(monofont)$
-    \setmonofont[Mapping=tex-ansi]{$monofont$}
-$endif$
-$if(mathfont)$
-    \setmathfont(Digits,Latin,Greek){$mathfont$}
-$endif$
-\fi
-
-\usepackage{amssymb, amsmath, amsthm, amsfonts}
-
 \DeclareMathSizes{24}{26}{22}{22}
 
 \usepackage[round]{natbib}
@@ -70,15 +43,15 @@ $endif$
 % package for nice tables
 \usepackage{longtable}
 
-% package for ruling lines in tables
+% package for ruling lines in tables e.g. midrule
 \usepackage{booktabs}
 
 % set margins
 \usepackage[left=3.5cm, right=2cm, top=30mm ,bottom=2cm, includefoot]{geometry}
 \usepackage{fancyhdr}
 \usepackage[bottom, hang, flushmargin]{footmisc}
-\usepackage{graphicx}
-\numberwithin{equation}{section}
+\usepackage{graphicx,grffile}
+%\numberwithin{equation}{section} % commented out because it messes up equation numbering
 %\numberwithin{figure}{section} % commented out because it messes up figure numbering
 %\numberwithin{table}{section} % commented out because it messes up table numbering
 \setlength{\parindent}{0cm}
@@ -93,16 +66,18 @@ $if(addfootrule)$
 \renewcommand{\footrulewidth}{0.3pt}
 $endif$
 
+% HERE we try to create a custom table column
 \usepackage{array}
 \newcolumntype{x}[1]{>{\centering\arraybackslash\hspace{0pt}}p{#1}}
 
+% CHANGE this to change how hyperlinks appear in text
 \usepackage{hyperref}
 \hypersetup{breaklinks=true,
             bookmarks=true,
             colorlinks=true,
-            citecolor=blue,
-            urlcolor=blue,
-            linkcolor=blue,
+            citecolor=black,
+            urlcolor=black, % CHANGE this to make url links coloured
+            linkcolor=black, % CHANGE this to make section links coloured
             pdfborder={0 0 0}}
 						
 \urlstyle{same}  % don't use monospace font for urls
@@ -110,14 +85,22 @@ $if(links-as-notes)$
 % Make links footnotes instead of hotlinks:
 \renewcommand{\href}[2]{#2\footnote{\url{#1}}}
 $endif$
+
 $if(strikeout)$
 \usepackage[normalem]{ulem}
 % avoid problems with \sout in headers with hyperref:
 \pdfstringdefDisableCommands{\renewcommand{\sout}{}}
 $endif$
+
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{6pt plus 2pt minus 1pt}
+
 \setlength{\emergencystretch}{3em}  % prevent overfull lines
+
+% STILL haven't figured tightlist out
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
 $if(numbersections)$
 \setcounter{secnumdepth}{5}
 $else$
@@ -173,17 +156,10 @@ $endif$
 \date{\scshape $date$}
 
 \usepackage{color}
-\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
-\usepackage{hyperref}
-\hypersetup{
-     colorlinks = true,
-     citecolor = gray
-}
+
+\usepackage[usenames, dvipsnames, svgnames, table]{xcolor}
 
 \usepackage{tocloft}
-
-\renewcommand{\cftsubsecfont}{\normalfont\hypersetup{linkcolor=black}}
-\renewcommand{\cftsubsecafterpnum}{\hypersetup{linkcolor=black}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%% BEGIN DOCUMENT %%%%%%%%%%%%%%%%
@@ -215,22 +191,27 @@ $endif$
 % table of contents, list of figures and tables
 $if(toc)$
 \renewcommand{\contentsname}{Table of Contents}
-\hypersetup{linkcolor=black}
 \tableofcontents
 $endif$
 \newpage
 $if(lof)$
-\hypersetup{linkcolor=black}
 \listoffigures
 $endif$
 \newpage
 $if(lot)$
-\hypersetup{linkcolor=black}
 \listoftables
 $endif$
-\hypersetup{linkcolor=black}
 \newpage
 
+% ACKNOWLEDGEMENTS SECTION
+\begin{center}
+\section*{Acknowledgement}
+\end{center}
+I would like to dedicate this work to my wife Bronwyn. Words cannot describe how much I appreciate your unending love, support and patience over this past year that we have spent together in London.
+
+\clearpage
+
+% SUMMARY SECTION
 \section*{Summary}
 
 $summary$
