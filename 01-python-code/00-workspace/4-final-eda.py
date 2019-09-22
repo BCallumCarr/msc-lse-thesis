@@ -166,6 +166,7 @@ plt.close('all')'''
 ### Violin plots
 #########################################################################
 
+## set font size
 matplotlib.rcParams.update({'font.size': font_size})
 
 for k in desc_array:
@@ -203,6 +204,7 @@ for k in desc_array:
 ### Boxplots
 #########################################################################
 
+## set font size
 matplotlib.rcParams.update({'font.size': font_size})
 
 for k in desc_array:
@@ -273,6 +275,7 @@ plt.close('all')
 ### Single density plot viewcount
 #########################################################################
 
+## set font size
 matplotlib.rcParams.update({'font.size': font_size})
 
 # re-establish empty dictionary of plotting data skeleton
@@ -411,6 +414,7 @@ plt.close('all')
 ### Single density plot score
 #########################################################################
 
+## set font size
 matplotlib.rcParams.update({'font.size': font_size})
 
 from pyspark.sql.functions import lit, expr
@@ -636,7 +640,7 @@ pd.DataFrame.from_dict(best_worst_qs[data_array[0]][['title', 'viewcount', 'scor
 
 ## save results to csv
 for i in data_array:
-    best_worst_qs[i].to_csv(f'01-eda/best_worst_qs/bwqs{i}.csv')
+    best_worst_qs[i].to_csv(f'01-eda/best_worst_qs/bwqs-{i}.csv')
 
 ## pickle best/worst results
 import pickle

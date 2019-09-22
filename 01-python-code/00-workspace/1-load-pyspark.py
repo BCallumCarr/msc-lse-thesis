@@ -5,6 +5,7 @@ findspark.init()
 # import pyspark
 import pyspark
 
+# create pyspark session
 spark = (
     pyspark.sql.SparkSession
     .builder

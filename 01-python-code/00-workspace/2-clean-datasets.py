@@ -17,7 +17,7 @@ for i in data_array:
 ## changing numeric columns to long type
 for i in data_array:
     for j in ['viewcount', 'score']:
-        # loop through viewcount and score
+        # loop through viewcount and score variables
         datasets[i] = datasets[i].withColumn(j, datasets[i][j].cast("long"))
 
 #########################################################################

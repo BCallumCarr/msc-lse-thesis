@@ -42,7 +42,8 @@ def to_array(col):
 from pyspark.ml.clustering import LDA
 # docCon is alpha, or parameter of Dirichlet prior on distribution of topics over docs
 # topicCon is rho/delta, or parameter of Dirichlet prior on distribution of words over topics
-lda = LDA(k=10, maxIter=10, optimizer='online', topicConcentration=0.01, docConcentration=[0.01])
+# maxIter needs to be at least 20 to pass through whole dataset since batchsize default is 5%
+lda = LDA(k=10, maxIter=20, optimizer='online', topicConcentration=0.01, docConcentration=[0.01])
 
 lda_model_list = {}
 cntvcr_models = {}
